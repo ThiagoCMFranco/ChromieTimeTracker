@@ -1,0 +1,27 @@
+## Interface: 110007, 110100
+## Title: Chromie Time Tracker
+## Title-ptBR: Rastreador de Linha Temporal da Crona
+## Notes: Easily track your current Timewalking Campaign (Chromie Time).
+## Notes-ptBR: Identifique facilmente sua linha de campanha de caminhada temporal (Cromie Time).
+## Author: Thiago Franco (Topolino)
+## Version: 1.0.0
+## RequiredDeps:
+## X-Curse-Project-ID: 1209023
+## SavedVariables:
+## SavedVariablesPerCharacter: ChromieTimeTrackerDB
+## IconTexture: Interface\AddOns\ChromieTimeTracker\Chromie.png
+
+# Libraries
+Libs\embeds.xml
+Libs\LibStub\LibStub.lua
+Libs\LibSharedMedia-3.0\lib.xml
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\lib.xml
+
+# Localization
+localization\enUS.lua
+localization\ptBR.lua
+
+# Main Files
+ChromieTimeTracker.lua
+Settings.lua
