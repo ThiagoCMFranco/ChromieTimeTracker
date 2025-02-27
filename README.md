@@ -1,5 +1,7 @@
 # ChromieTimeTracker
 
+This is a World of Warcraft addon.
+
 Easily track your current Timewalking Campaign (Chromie Time).  
 
 Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.  
@@ -16,7 +18,6 @@ Currently Supported Languages: Brazilian Portuguese (ptBR) and English (enUS).
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
 /ChromieTimeTracker: toggle addon visibility.  
 /ctt: toggle addon visibility.  
-/ctt config: toggle addon configuration window.  
 /ctt config: toggle addon configuration window.  
 /ctt commands: show the availiable command list on chat.  
 /ctt resetPosition: reset the addon position to screen center if accidentaly dragged offscreen.  
@@ -36,7 +37,7 @@ Right Click: toggle addon configuration window.
 ## Troubleshooting
 Most problems can be solved by reseting the addon variables:  
 1. Close your game.  
-2. Go to your game folder under "\_retail_\WTF\Account\[YOUR_ACCOUNT_ID]\[CHARACTER_REALM_NAME]\[CHARACTER_NAME]\SavedVariables"  
+2. Go to your game folder under "\_retail_\WTF\Account\\[YOUR_ACCOUNT_ID]\\[CHARACTER_REALM_NAME]\\[CHARACTER_NAME]\SavedVariables"  
 3. Delete te files named ChromieTimeTracker.lua and ChromieTimeTracker.lua.bak.  
 4. Open tha game.  
 

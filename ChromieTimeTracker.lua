@@ -95,8 +95,10 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
+        ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
+        ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
 
-        ChromieTimeTrackerDB.AlreadyUsed = true
+        ChromieTimeTrackerDB.AlreadyUsed = true    
     end
 end
 
@@ -141,6 +143,12 @@ mainFrame:SetScript("OnDragStop", function(self)
     ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.Point[4]
     ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.Point[5]
 
+    if (not ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox) then
+        ChromieTimeTrackerDB.BasePointIcon = ChromieTimeTrackerDB.BasePoint
+        ChromieTimeTrackerDB.RelativePointIcon =ChromieTimeTrackerDB.RelativePoint
+        ChromieTimeTrackerDB.OffsetXIcon = ChromieTimeTrackerDB.OffsetX
+        ChromieTimeTrackerDB.OffsetYIcon = ChromieTimeTrackerDB.OffsetY
+    end
 end)
 
 mainFrame:SetScript("OnShow", function()
@@ -209,10 +217,7 @@ function CTT_updateChromieTime()
             iconFrame.playerTimeline:SetText("")
             iconFrame.icon = iconFrame:CreateTexture()
             iconFrame.icon:SetAllPoints()
-            --iconFrame.icon:SetTexture("Interface\\AddOns\\ChromieTimeTracker\\Chromie.png", false) --Interface\\Icons\\Ability_Ambush Interface\\Icons\\Inv_dragonwhelp3_bronze
             iconFrame.icon:SetTexture("Interface\\Icons\\Inv_dragonwhelp3_bronze", false)
-            --Interface\\Garrison\\OrderHallLandingButtonDruid
-
         else 
             mainFrame.playerTimeline:SetText(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption])
         end
@@ -270,6 +275,13 @@ iconFrame:SetScript("OnDragStop", function(self)
     ChromieTimeTrackerDB.RelativePointIcon = ChromieTimeTrackerDB.PointIcon[3]
     ChromieTimeTrackerDB.OffsetXIcon = ChromieTimeTrackerDB.PointIcon[4]
     ChromieTimeTrackerDB.OffsetYIcon = ChromieTimeTrackerDB.PointIcon[5]
+
+    if(not ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox) then
+        ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.BasePointIcon
+        ChromieTimeTrackerDB.RelativePoint =ChromieTimeTrackerDB.RelativePointIcon
+        ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.OffsetXIcon
+        ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.OffsetYIcon
+    end
 
 end)
 
@@ -550,7 +562,12 @@ function CTT_ShowToolTip(tooltip, mode)
             MClickAction = L["MClickAction"]
         end
 
-        tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+        else
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        end
+        
 else
     if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
 
@@ -570,9 +587,17 @@ else
             MClickAction = L["MClickAction"]
         end
 
-        tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+        else
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        end
     else
-        tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+        else
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        end      
     end
 end
 
@@ -647,6 +672,8 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
             ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
             ChromieTimeTrackerDB.LockMiddleClickOption = false;
+            ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
+            ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
             CTT_updateChromieTime();
 
             print(L["RunCommandMessage_ResetSettings"])

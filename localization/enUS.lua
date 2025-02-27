@@ -58,3 +58,5 @@ L["SlashCommands"] = "Chat Command List:\n\n|cFFFFC90E/ChromieTimeTracker:|r tog
 L["RunCommandMessage_ResetPosition"] = "Chromie Time Tracker  window and icon location reset."
 L["RunCommandMessage_ResetSettings"] = "Chromie Time Tracker settings reset."
 L["RunCommandMessage_ResetAll"] = "Chromie Time Tracker position and settings reset."
+L["HideDeveloperCreditOnTooltips"] = "Hide developer info on tooltips."
+L["UseDiferentCoordinatesForIconAndTextBox"] = "Allow to move alternate icon and timeline textbox to diferent places."

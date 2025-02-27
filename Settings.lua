@@ -12,7 +12,7 @@ settingsFrame:SetCallback("OnClose",function(widget)  end)
 settingsFrame:SetTitle(L["AddonName"] .. " - " .. L["Settings"])
 settingsFrame:SetStatusText(L["DevelopmentTeamCredit"])
 settingsFrame:SetWidth(620)
-settingsFrame:SetHeight(400)
+settingsFrame:SetHeight(500)
 settingsFrame:SetLayout("Flow")
 
 local dropdown = AceGUI:Create("Dropdown")
@@ -73,6 +73,18 @@ chkLockMiddleClickOption:SetCallback("OnValueChanged", function(widget, event, t
 chkLockMiddleClickOption:SetWidth(700)
 settingsFrame:AddChild(chkLockMiddleClickOption)
 
+local chkHideDeveloperCreditOnTooltips = AceGUI:Create("CheckBox")
+chkHideDeveloperCreditOnTooltips:SetLabel(L["HideDeveloperCreditOnTooltips"])
+chkHideDeveloperCreditOnTooltips:SetCallback("OnValueChanged", function(widget, event, text)  end)
+chkHideDeveloperCreditOnTooltips:SetWidth(700)
+settingsFrame:AddChild(chkHideDeveloperCreditOnTooltips)
+
+local chkUseDiferentCoordinatesForIconAndTextBox = AceGUI:Create("CheckBox")
+chkUseDiferentCoordinatesForIconAndTextBox:SetLabel(L["UseDiferentCoordinatesForIconAndTextBox"])
+chkUseDiferentCoordinatesForIconAndTextBox:SetCallback("OnValueChanged", function(widget, event, text)  end)
+chkUseDiferentCoordinatesForIconAndTextBox:SetWidth(700)
+settingsFrame:AddChild(chkUseDiferentCoordinatesForIconAndTextBox)
+
 local btnSave = AceGUI:Create("Button")
 btnSave:SetText(L["buttonSave"])
 btnSave:SetWidth(200)
@@ -88,6 +100,8 @@ function saveData()
     ChromieTimeTrackerDB.AlternateModeShowIconOnly = chkAlternateModeShowIconOnly:GetValue();
     ChromieTimeTrackerDB.DefaultMiddleClickOption = ddlDefaultMiddleClickOption.value;
     ChromieTimeTrackerDB.LockMiddleClickOption = chkLockMiddleClickOption:GetValue();
+    ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = chkHideDeveloperCreditOnTooltips:GetValue();
+    ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = chkUseDiferentCoordinatesForIconAndTextBox:GetValue();
     CTT_updateChromieTime();
     CTT_showMainFrame()
 end
@@ -99,6 +113,8 @@ function loadSettings()
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
+    chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
+    chkUseDiferentCoordinatesForIconAndTextBox:SetValue(ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox)
 end
 
 function ChromieTimeTracker:ToggleSettingsFrame()

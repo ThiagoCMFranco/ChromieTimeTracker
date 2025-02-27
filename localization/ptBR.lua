@@ -58,3 +58,5 @@ L["SlashCommands"] = "|cFFFFC90ELista de comandos de chat:\n|cFFFFC90E/ChromieTi
 L["RunCommandMessage_ResetPosition"] = "Posicionamendo de janelas redefinido."
 L["RunCommandMessage_ResetSettings"] = "Configurações do addon redefinidas."
 L["RunCommandMessage_ResetAll"] = "Posicionamento de janelas e configurações do addon redefinidas."
+L["HideDeveloperCreditOnTooltips"] = "Ocultar créditos ao desenvolvedor nas caixas de informação."
+L["UseDiferentCoordinatesForIconAndTextBox"] = "Movimentação de ícone alternativo e caixa de texto desvinculados." 
