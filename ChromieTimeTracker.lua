@@ -69,7 +69,58 @@ Summaries[4] = L["MiddleClickOption_Covenant"] --Covenant
 Summaries[5] = L["MiddleClickOption_DragonIsles"] --Dragon Isles
 Summaries[6] = L["MiddleClickOption_KhazAlgar"] --Khaz Algar
 
+local playerClass, englishClass = UnitClass("player")
+englishFaction, localizedFaction = UnitFactionGroup("player")
+
+local PlayerInfo = {}
+PlayerInfo["Name"] = ""
+PlayerInfo["Class"] = englishClass
+PlayerInfo["Faction"] = englishFaction
+
 CurrentGarrisonID = 0
+
+local C_ClassTextures =
+{
+  --["DRUID"] = "Interface\\Icons\\Classicon_druid",
+  --["SHAMAN"] = "Interface\\Icons\\Classicon_shaman",
+  --["DEATHKNIGHT"] = "Interface\\Icons\\Classicon_deathknight",
+  --["PALADIN"] = "Interface\\Icons\\Classicon_paladin",
+  --["WARRIOR"] = "Interface\\Icons\\Classicon_warrior",
+  --["HUNTER"] = "Interface\\Icons\\Classicon_hunter",
+  --["ROGUE"] = "Interface\\Icons\\Classicon_rogue",
+  --["PRIEST"] = "Interface\\Icons\\Classicon_priest",
+  --["MAGE"] = "Interface\\Icons\\Classicon_mage",
+  --["WARLOCK"] = "Interface\\Icons\\Classicon_warlock",
+  --["MONK"] = "Interface\\Icons\\Classicon_monk",
+  --["DEMONHUNTER"] = "Interface\\Icons\\Classicon_demonhunter",
+  --["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
+
+  ["DRUID"] = "Interface\\Icons\\crest_druid",
+  ["SHAMAN"] = "Interface\\Icons\\crest_shaman",
+  ["DEATHKNIGHT"] = "Interface\\Icons\\crest_deathknight",
+  ["PALADIN"] = "Interface\\Icons\\crest_paladin",
+  ["WARRIOR"] = "Interface\\Icons\\crest_warrior",
+  ["HUNTER"] = "Interface\\Icons\\crest_hunter",
+  ["ROGUE"] = "Interface\\Icons\\crest_rogue",
+  ["PRIEST"] = "Interface\\Icons\\crest_priest",
+  ["MAGE"] = "Interface\\Icons\\crest_mage",
+  ["WARLOCK"] = "Interface\\Icons\\crest_warlock",
+  ["MONK"] = "Interface\\Icons\\crest_monk",
+  ["DEMONHUNTER"] = "Interface\\Icons\\crest_demonhunter",
+  ["EVOKER"] = "Interface\\Icons\\crest_evoker",
+}
+
+local C_GarrisonTextures =
+{
+  ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
+  ["Horde"] = "Interface\\Icons\\achievement_garrison_tier01_horde",
+}
+
+local C_WarCampaignTextures =
+{
+  ["Alliance"] = "Interface\\Icons\\inv_alliancewareffort",
+  ["Horde"] = "Interface\\Icons\\inv_hordewareffort",
+}
 
 -- Instanciação da função principal do Addon
 ChromieTimeTracker = ChromieTimeTracker or {}
@@ -98,34 +149,130 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
         ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
 
+        --Set initial value for Avanced Mode settings
+        ChromieTimeTrackerDB.AdvShowGarrison = true;
+        ChromieTimeTrackerDB.AdvShowClassHall = true;
+        ChromieTimeTrackerDB.AdvShowWarEffort = true;
+        ChromieTimeTrackerDB.AdvShowCovenant = true;
+        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
+        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+
         ChromieTimeTrackerDB.AlreadyUsed = true    
     end
 end
+
+
 
 CTT_SetupFirstAccess()
 
 -- Criação dos frames.
 --Principal
-local mainFrame = CreateFrame("Frame", "ChromieTimeTrackerMainFrame", UIParent, "TooltipBorderedFrameTemplate")
-local iconFrame = CreateFrame("Frame", "ChromieTimeTrackerMainIconFrame", UIParent, "TooltipBorderedFrameTemplate")
+local addonRootFrame = CreateFrame("Frame", "ChromieTimeTrackerRootFrame", UIParent, "")
+local mainFrame = CreateFrame("Frame", "ChromieTimeTrackerMainFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local iconFrame = CreateFrame("Frame", "ChromieTimeTrackerMainIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local garrisonIconFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local classHallIconFrame = CreateFrame("Frame", "ChromieTimeTrackerClassHallIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local missionsIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMissionsIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local covenantIconFrame = CreateFrame("Frame", "ChromieTimeTrackerCovenantIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+
+--Root
+
+local function GeneratorFunction(owner, rootDescription)
+	rootDescription:CreateTitle(L["ContextMenuTitle"]);
+	rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
+    	CTT_MouseMiddleButtonClick_2(2)
+	end);
+    if PlayerInfo["Class"]~= "EVOKER" then
+        rootDescription:CreateButton(L["MiddleClickOption_Legion"], function(data)
+            CTT_MouseMiddleButtonClick_2(3)
+        end);
+    else
+        --Since Evoker was launched after Legion there is no class hall for them.
+    end
+    rootDescription:CreateButton(L["MiddleClickOption_Missions"], function(data)
+    	CTT_MouseMiddleButtonClick_2(9)
+	end);
+    rootDescription:CreateButton(L["MiddleClickOption_Covenant"], function(data)
+    	CTT_MouseMiddleButtonClick_2(111)
+	end);
+    rootDescription:CreateButton(L["MiddleClickOption_DragonIsles"], function(data)
+    	CTT_MouseMiddleButtonClick_2("DF")
+	end);
+    rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
+    	CTT_MouseMiddleButtonClick_2("TWW")
+	end);
+    --rootDescription:CreateDivider()
+end;
+
+
+--contextMenu
+
+function CTT_setupRootFrame()
+
+addonRootFrame:ClearAllPoints()
+addonRootFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+addonRootFrame:SetSize(280, 195)
+addonRootFrame:SetFrameLevel(0)
+addonRootFrame:Show()
+
+addonRootFrame:EnableMouse(true)
+addonRootFrame:SetMovable(true)
+addonRootFrame:RegisterForDrag("LeftButton")
+addonRootFrame:SetScript("OnDragStart", function(self)
+    if(not ChromieTimeTrackerDB.LockDragDrop)then
+        self:StartMoving()
+    end
+	
+end)
+addonRootFrame:SetScript("OnDragStop", function(self)
+	self:StopMovingOrSizing()
+
+    ChromieTimeTrackerDB.Point = {addonRootFrame:GetPoint()}
+    
+    ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.Point[1]
+    ChromieTimeTrackerDB.RelativePoint = ChromieTimeTrackerDB.Point[3]
+    ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.Point[4]
+    ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.Point[5]
+end)
+
+addonRootFrame:SetScript("OnShow", function()
+    PlaySound(808)
+end)
+
+addonRootFrame:SetScript("OnHide", function()
+        PlaySound(808)
+end)
+
+end
+
+CTT_setupRootFrame()
+
 
 function CTT_setupMainFrame()
 
 mainFrame:ClearAllPoints()
-mainFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+mainFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
 
 mainFrame:EnableMouse(true)
 mainFrame:SetMovable(true)
 mainFrame:RegisterForDrag("LeftButton")
 mainFrame:SetScript("OnDragStart", function(self)
     if(not ChromieTimeTrackerDB.LockDragDrop)then
-        mainFrame:StartMoving()
+        addonRootFrame:StartMoving()
     end
     
 end)
 mainFrame:SetScript("OnMouseDown", function(self, btn)
     if btn == 'MiddleButton' then 
+        if IsShiftKeyDown() then
+            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
+        else
+        
         CTT_MouseMiddleButtonClick()
+
+        end
     elseif btn == "RightButton" then
         PlaySound(808)
         ChromieTimeTracker:ToggleSettingsFrame()
@@ -134,31 +281,27 @@ end)
 
 
 mainFrame:SetScript("OnDragStop", function(self)
-	mainFrame:StopMovingOrSizing()
+	addonRootFrame:StopMovingOrSizing()
     
-    ChromieTimeTrackerDB.Point = {mainFrame:GetPoint()}
+    ChromieTimeTrackerDB.Point = {addonRootFrame:GetPoint()}
     
     ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.Point[1]
     ChromieTimeTrackerDB.RelativePoint = ChromieTimeTrackerDB.Point[3]
     ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.Point[4]
     ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.Point[5]
 
-    if (not ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox) then
-        ChromieTimeTrackerDB.BasePointIcon = ChromieTimeTrackerDB.BasePoint
-        ChromieTimeTrackerDB.RelativePointIcon =ChromieTimeTrackerDB.RelativePoint
-        ChromieTimeTrackerDB.OffsetXIcon = ChromieTimeTrackerDB.OffsetX
-        ChromieTimeTrackerDB.OffsetYIcon = ChromieTimeTrackerDB.OffsetY
-    end
 end)
 
 mainFrame:SetScript("OnShow", function()
-    PlaySound(808)
+--    PlaySound(808)
     CTT_updateChromieTime()
 end)
 
 mainFrame:SetScript("OnHide", function()
-        PlaySound(808)
+--        PlaySound(808)
 end)
+
+mainFrame:SetFrameLevel(1)
 
 mainFrame.playerTimeline = mainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
@@ -192,22 +335,68 @@ function CTT_updateChromieTime()
 
     if ChromieTimeTrackerDB.Mode == 1 then
         mainFrame:SetSize(180, 24)
+        mainFrame:Show()
+        addonRootFrame:SetSize(180, 24)
         iconFrame:Hide()
+        garrisonIconFrame:Hide()
+        classHallIconFrame:Hide()
+        missionsIconFrame:Hide()
+        covenantIconFrame:Hide()
+        dragonIslesIconFrame:Hide()
+        khazAlgarIconFrame:Hide()
     elseif ChromieTimeTrackerDB.Mode == 2 then
         mainFrame:SetSize(280, 35)
+        mainFrame:Show()
+        addonRootFrame:SetSize(280, 35)
         iconFrame:Hide()
+        garrisonIconFrame:Hide()
+        classHallIconFrame:Hide()
+        missionsIconFrame:Hide()
+        covenantIconFrame:Hide()
+        dragonIslesIconFrame:Hide()
+        khazAlgarIconFrame:Hide()
     elseif ChromieTimeTrackerDB.Mode == 3 then
         if ChromieTimeTrackerDB.AlternateModeShowIconOnly then
-            iconFrame:SetSize(32,32)
-            iconFrame:Show()
-            mainFrame:Hide()
+        iconFrame:SetSize(32,32)
+        iconFrame:Show()
+        addonRootFrame:Show()
+        mainFrame:Hide()
+        addonRootFrame:SetSize(32, 32)
+        garrisonIconFrame:Hide()
+        classHallIconFrame:Hide()
+        missionsIconFrame:Hide()
+        covenantIconFrame:Hide()
+        dragonIslesIconFrame:Hide()
+        khazAlgarIconFrame:Hide()
         else 
-            mainFrame:SetSize(280, 35)
-            iconFrame:Hide()
+        mainFrame:SetSize(280, 35)
+        addonRootFrame:SetSize(280, 35)
+        iconFrame:Hide()
+        mainFrame:Show()
+        garrisonIconFrame:Hide()
+        classHallIconFrame:Hide()
+        missionsIconFrame:Hide()
+        covenantIconFrame:Hide()
+        dragonIslesIconFrame:Hide()
+        khazAlgarIconFrame:Hide()
         end
+    elseif ChromieTimeTrackerDB.Mode == 4 then
+        mainFrame:SetSize(280, 35)
+        mainFrame:Show()
+        addonRootFrame:SetSize(280, 67)
+        iconFrame:Hide()
+        --garrisonIconFrame:Show()
+        --classHallIconFrame:Show()
+        --missionsIconFrame:Show()
+        --covenantIconFrame:Show()
+        --dragonIslesIconFrame:Show()
+        --khazAlgarIconFrame:Show()
+        CTT_LoadAvancedModeIcons()
     else
         mainFrame:SetSize(280, 35)
+        addonRootFrame:SetSize(280, 35)
         iconFrame:Hide()
+        mainFrame:Show()
     end
 
     if ChromieTimeTrackerDB.Mode == 1 then
@@ -219,7 +408,11 @@ function CTT_updateChromieTime()
             iconFrame.icon:SetAllPoints()
             iconFrame.icon:SetTexture("Interface\\Icons\\Inv_dragonwhelp3_bronze", false)
         else 
-            mainFrame.playerTimeline:SetText(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption])
+            if(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == "" or Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == nil) then
+                mainFrame.playerTimeline:SetText(L["ConfigurationMissing"])
+            else
+                mainFrame.playerTimeline:SetText(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption])
+            end
         end
     else
         mainFrame.playerTimeline:SetText(L["Timeline"] .. currentExpansionName ..".")
@@ -231,9 +424,11 @@ function CTT_updateChromieTime()
 
     mainFrame:ClearAllPoints()
     iconFrame:ClearAllPoints()
+    addonRootFrame:ClearAllPoints()
 
-    mainFrame:SetPoint(ChromieTimeTrackerDB.BasePoint or "CENTER", UIParent, ChromieTimeTrackerDB.RelativePoint or "CENTER", ChromieTimeTrackerDB.OffsetX or 0, ChromieTimeTrackerDB.OffsetY or 0)    
-    iconFrame:SetPoint(ChromieTimeTrackerDB.BasePointIcon or "CENTER", UIParent, ChromieTimeTrackerDB.RelativePointIcon or "CENTER", ChromieTimeTrackerDB.OffsetXIcon or 0, ChromieTimeTrackerDB.OffsetYIcon or 0)    
+    mainFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
+    iconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
+    addonRootFrame:SetPoint(ChromieTimeTrackerDB.BasePoint or "CENTER", UIParent, ChromieTimeTrackerDB.RelativePoint or "CENTER", ChromieTimeTrackerDB.OffsetX or 0, ChromieTimeTrackerDB.OffsetY or 0)    
     
 end
 
@@ -242,14 +437,16 @@ end
 function CTT_setupIconFrame()
 
 iconFrame:ClearAllPoints()
-iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+iconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
+--iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 
+iconFrame:SetFrameLevel(2)
 iconFrame:EnableMouse(true)
 iconFrame:SetMovable(true)
 iconFrame:RegisterForDrag("LeftButton")
 iconFrame:SetScript("OnDragStart", function(self)
     if(not ChromieTimeTrackerDB.LockDragDrop)then
-        iconFrame:StartMoving()
+        addonRootFrame:StartMoving()
 
         GameTooltip:Hide()
     end
@@ -257,7 +454,11 @@ iconFrame:SetScript("OnDragStart", function(self)
 end)
 iconFrame:SetScript("OnMouseDown", function(self, btn)
     if btn == 'MiddleButton' then 
-        CTT_MouseMiddleButtonClick()
+        if IsShiftKeyDown() then
+            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
+        else
+            CTT_MouseMiddleButtonClick()
+        end
     elseif btn == "RightButton" then
         PlaySound(808)
         ChromieTimeTracker:ToggleSettingsFrame()
@@ -265,29 +466,22 @@ iconFrame:SetScript("OnMouseDown", function(self, btn)
 end)
 
 iconFrame:SetScript("OnDragStop", function(self)
-	iconFrame:StopMovingOrSizing()
+	addonRootFrame:StopMovingOrSizing()
     
     GameTooltip:Show()
 
-    ChromieTimeTrackerDB.PointIcon = {iconFrame:GetPoint()}
+    ChromieTimeTrackerDB.PointIcon = {addonRootFrame:GetPoint()}
     
-    ChromieTimeTrackerDB.BasePointIcon = ChromieTimeTrackerDB.PointIcon[1]
-    ChromieTimeTrackerDB.RelativePointIcon = ChromieTimeTrackerDB.PointIcon[3]
-    ChromieTimeTrackerDB.OffsetXIcon = ChromieTimeTrackerDB.PointIcon[4]
-    ChromieTimeTrackerDB.OffsetYIcon = ChromieTimeTrackerDB.PointIcon[5]
-
-    if(not ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox) then
-        ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.BasePointIcon
-        ChromieTimeTrackerDB.RelativePoint =ChromieTimeTrackerDB.RelativePointIcon
-        ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.OffsetXIcon
-        ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.OffsetYIcon
-    end
+    ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.PointIcon[1]
+    ChromieTimeTrackerDB.RelativePoint = ChromieTimeTrackerDB.PointIcon[3]
+    ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.PointIcon[4]
+    ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.PointIcon[5]
 
 end)
 
 iconFrame:SetScript("OnEnter", function(self)
 
-    local _ttpPoint = {iconFrame:GetPoint()}
+    local _ttpPoint = {addonRootFrame:GetPoint()}
 
     if(_ttpPoint[1] == "TOPLEFT") then
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
@@ -326,15 +520,216 @@ end
 
 CTT_setupIconFrame()
 
-function ChromieTimeTracker:ToggleMainFrame()
-    if not mainFrame:IsShown() then
-        mainFrame:Show()
+function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _offsetY, _iconName, _TooltipText)
+
+    _garrisonIconFrame:ClearAllPoints()
+    _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX, _offsetY)
+    --iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    
+    _garrisonIconFrame:SetFrameLevel(2)
+    _garrisonIconFrame:EnableMouse(true)
+    _garrisonIconFrame:SetMovable(true)
+    _garrisonIconFrame:RegisterForDrag("LeftButton")
+    _garrisonIconFrame:SetScript("OnDragStart", function(self)
+        if(not ChromieTimeTrackerDB.LockDragDrop)then
+            addonRootFrame:StartMoving()
+    
+            GameTooltip:Hide()
+        end
+        
+    end)
+    _garrisonIconFrame:SetScript("OnMouseDown", function(self, btn)
+        if btn == 'LeftButton' then 
+            CTT_MouseMiddleButtonClick_2(_garrisonID)
+        elseif btn == "RightButton" then
+            PlaySound(808)
+            ChromieTimeTracker:ToggleSettingsFrame()
+        end
+    end)
+    
+    _garrisonIconFrame:SetScript("OnDragStop", function(self)
+        addonRootFrame:StopMovingOrSizing()
+        
+        GameTooltip:Show()
+    
+        ChromieTimeTrackerDB.PointIcon = {addonRootFrame:GetPoint()}
+        
+        ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.PointIcon[1]
+        ChromieTimeTrackerDB.RelativePoint = ChromieTimeTrackerDB.PointIcon[3]
+        ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.PointIcon[4]
+        ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.PointIcon[5]
+    
+    end)
+    
+    _garrisonIconFrame:SetScript("OnEnter", function(self)
+    
+        local _ttpPoint = {addonRootFrame:GetPoint()}
+    
+        if(_ttpPoint[1] == "TOPLEFT") then
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+        elseif(_ttpPoint[1] == "TOPRIGHT") then
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
+        elseif(_ttpPoint[1] == "BOTTOMLEFT") then
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        elseif(_ttpPoint[1] == "BOTTOMRIGHT") then
+            GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        else
+            GameTooltip:SetOwner(self, "ANCHOR_LEFT") --ANCHOR_CURSOR
+        end
+    
+            CTT_ShowIconTooltip(GameTooltip, _TooltipText)
+            GameTooltip:Show()
+            _garrisonIconFrame:SetSize(34,34)
+            _garrisonIconFrame:ClearAllPoints()
+            _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX-1, _offsetY+1)
+    end)
+    
+    _garrisonIconFrame:SetScript("OnLeave", function(self)
+        GameTooltip:Hide()
+        _garrisonIconFrame:SetSize(32,32)
+        _garrisonIconFrame:ClearAllPoints()
+        _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX, _offsetY)
+    end)
+        
+    _garrisonIconFrame.playerTimeline = _garrisonIconFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    _garrisonIconFrame.playerTimeline:SetPoint("CENTER", iconFrame, "CENTER", 0, 0)
+
+    _garrisonIconFrame.playerTimeline:SetText("")
+    _garrisonIconFrame.icon = _garrisonIconFrame:CreateTexture()
+    _garrisonIconFrame.icon:SetAllPoints()
+    _garrisonIconFrame.icon:SetTexture(_iconName, false)
+    
+    _garrisonIconFrame:SetSize(32,32)
+
+    _garrisonIconFrame:Show()
+
+    end
+
+    function getClassTexture(_playerClass)    
+        return C_ClassTextures[_playerClass]  
+    end
+
+    function getFactionTexture(_playerFaction, _context)
+
+        if (_context == "G") then
+            return C_GarrisonTextures[_playerFaction]
+        else
+            return C_WarCampaignTextures[_playerFaction]
+        end
+
+    end
+
+function CTT_LoadAvancedModeIcons()
+
+    local iconsCount = 0
+
+    if ChromieTimeTrackerDB.AdvShowGarrison then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowClassHall then
+        if PlayerInfo["Class"]~= "EVOKER" then
+            iconsCount = iconsCount + 1;
+        else
+            --Since Evoker was launched after Legion there is no class hall for them.
+        end        
+    end
+    if ChromieTimeTrackerDB.AdvShowWarEffort then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowCovenant then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowDragonIsles then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowKhazAlgar then
+        iconsCount = iconsCount + 1;
+    end
+
+    local alignments = {}
+    alignments[1] = "LEFT"
+    alignments[2] = "CENTER"
+    alignments[3] = "RIGHT"
+
+
+
+    local alignment = alignments[ChromieTimeTrackerDB.AdvButtonsAlignment] or "CENTER"
+    local left = 0
+    local iconSize = 32
+    local iconSpace = 1
+    local placeholderSize = 280
+    local mid = (placeholderSize/2)    
+    local step = (iconSize + (2*iconSpace))
+    if(alignment == "CENTER") then
+        left = (placeholderSize/2 - (iconSize + (2*iconSpace))*iconsCount/2) 
+    end
+    if(alignment == "RIGHT") then
+        left = (placeholderSize - (iconSize + (2*iconSpace))*iconsCount) 
+    end
+
+    local position = 0;
+    
+    if ChromieTimeTrackerDB.AdvShowGarrison then
+        CTT_setupGarrisonIconFrame(garrisonIconFrame,2,(left + (step * position)),-35,getFactionTexture(PlayerInfo["Faction"],"G"), L["MiddleClickOption_Warlords"])
+        position = position + 1;
     else
-        mainFrame:Hide()
+        garrisonIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowClassHall then
+        if PlayerInfo["Class"]~= "EVOKER" then
+            CTT_setupGarrisonIconFrame(classHallIconFrame,3,(left + (step * position)),-35,getClassTexture(PlayerInfo["Class"]),  L["MiddleClickOption_Legion"])
+            position = position + 1;
+        else
+            --Since Evoker was launched after Legion there is no class hall for them.
+            classHallIconFrame:Hide();    
+        end
+    else
+        classHallIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowWarEffort then
+        CTT_setupGarrisonIconFrame(missionsIconFrame,9,(left + (step * position)),-35,getFactionTexture(PlayerInfo["Faction"],""),  L["MiddleClickOption_Missions"])
+        position = position + 1;
+    else
+        missionsIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowCovenant then
+        CTT_setupGarrisonIconFrame(covenantIconFrame,111,(left + (step * position)),-35,"Interface\\Icons\\inv_misc_covenant_renown",  L["MiddleClickOption_Covenant"])
+        position = position + 1;
+    else
+        covenantIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowDragonIsles then
+        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",(left + (step * position)),-35,"Interface\\Icons\\ability_dragonriding_diving01",  L["MiddleClickOption_DragonIsles"])
+        position = position + 1;
+    else
+        dragonIslesIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowKhazAlgar then
+        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",(left + (step * position)),-35,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest",  L["MiddleClickOption_KhazAlgar"]) --ability_earthen_hyperproductive
+        position = position + 1;
+    else
+        khazAlgarIconFrame:Hide();
+    end
+
+end
+
+    --CTT_setupGarrisonIconFrame(garrisonIconFrame,2,39,-35,getFactionTexture(englishFaction,"G"), "Guarnição") --achievement_garrison_tier01_horde
+    --CTT_setupGarrisonIconFrame(classHallIconFrame,3,73,-35,getClassTexture(englishClass), "Salão de Classe")
+    --CTT_setupGarrisonIconFrame(missionsIconFrame,9,107,-35,getFactionTexture(englishFaction,""), "Missões de Seguidor") --inv_hordewareffort
+    --CTT_setupGarrisonIconFrame(covenantIconFrame,111,141,-35,"Interface\\Icons\\inv_misc_covenant_renown", "Santuário do Pacto")
+    --CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",175,-35,"Interface\\Icons\\ability_dragonriding_diving01", "As Ilhas do Dragão")
+    --CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",209,-35,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest", "Khaz Algar") --ability_earthen_hyperproductive
+
+function ChromieTimeTracker:ToggleMainFrame()
+    if not addonRootFrame:IsShown() then
+        addonRootFrame:Show()
+    else
+        addonRootFrame:Hide()
     end
 end
 
-print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
+
+
 CTT_updateChromieTime()
 
 
@@ -348,18 +743,23 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
 	icon = "Interface\\AddOns\\ChromieTimeTracker\\Chromie.png",
 	OnClick = function(self, btn)
         if btn == "LeftButton" then
-            if mainFrame:IsShown() then
-                mainFrame:Hide()
+            if addonRootFrame:IsShown() then
+                addonRootFrame:Hide()
             else
-                mainFrame:Show()
+                addonRootFrame:Show()
             end
         elseif btn == "RightButton" then
             PlaySound(808)
             ChromieTimeTracker:ToggleSettingsFrame()
         elseif btn == "MiddleButton" then
 
+            if IsShiftKeyDown() then
+                local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
+            else
+
             CTT_MouseMiddleButtonClick()
             
+            end
         end
 	end,
 
@@ -385,9 +785,16 @@ eventListenerFrame:RegisterEvent("QUEST_LOG_UPDATE")
 eventListenerFrame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_LOGIN" then
         CTT_updateChromieTime()
+        --if (ChromieTimeTrackerDB.Mode == 4) then
+        --    CTT_LoadAvancedModeIcons()
+        --end
+        print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
+        --if (ChromieTimeTrackerDB.Mode == 4) then
+        --    CTT_LoadAvancedModeIcons()
+        --end
     end
 end)
 
@@ -406,7 +813,7 @@ end
 --Funções Principais
 
 function CTT_showMainFrame()
-    mainFrame:Show()
+    addonRootFrame:Show()
 end
 
 function CTT_flashMessage(_message, _duration, _fontScale)
@@ -443,6 +850,62 @@ function CTT_flashMessage(_message, _duration, _fontScale)
                         end)
 end
 
+function CTT_MouseMiddleButtonClick_2(_garrisonID)
+ --A FAZER: VALIDAR EXIBIÇÃO DE CADA EXPANSÃO E APRESENTAR QUANDO DISPONÍVEL.
+ if _garrisonID == 111 then
+    if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
+        ShowGarrisonLandingPage(_garrisonID)
+    else
+        requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
+        CTT_flashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
+    end
+elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
+ if not not (C_Garrison.GetGarrisonInfo(_garrisonID)) then
+    ShowGarrisonLandingPage(_garrisonID)
+ else
+    local funcionalidade = ""
+    if (_garrisonID == 2) then
+        funcionalidade = L["UndiscoveredContent_Warlords"]
+        requisito = L["UndiscoveredContentUnlockRequirement_Warlords"]
+        CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+    elseif (_garrisonID == 3) then
+        funcionalidade = L["UndiscoveredContent_Legion"]
+        requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
+        CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+    elseif (_garrisonID == 9) then
+        funcionalidade = L["UndiscoveredContent_Missions"]
+        requisito = L["UndiscoveredContentUnlockRequirement_Missions"]
+        CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+    else
+        funcionalidade = ""
+        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
+    end
+end
+else
+    if _garrisonID == "DF" then
+        local funcionalidade = ""
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+            CTT_OpenExpansionLandingPage(_garrisonID);
+        else
+            funcionalidade = L["UndiscoveredContent_DragonIsles"]
+            requisito = L["UndiscoveredContentUnlockRequirement_DragonIsles"]
+            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+        end
+    elseif _garrisonID == "TWW" then
+        local funcionalidade = ""
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+            CTT_OpenExpansionLandingPage(_garrisonID);
+        else
+            funcionalidade = L["UndiscoveredContent_KhazAlgar"]
+            requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
+            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+        end
+    else
+        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
+    end
+end
+end
+
 function CTT_MouseMiddleButtonClick()
 
             if ChromieTimeTrackerDB.LockMiddleClickOption or currentExpansionName == L["currentExpansionLabel"] then
@@ -464,9 +927,14 @@ function CTT_MouseMiddleButtonClick()
                             requisito = L["UndiscoveredContentUnlockRequirement_Warlords"]
                             CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
                         elseif (selected == 3) then
-                            funcionalidade = L["UndiscoveredContent_Legion"]
-                            requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
-                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+                            if PlayerInfo["Class"]~= "EVOKER" then
+                                funcionalidade = L["UndiscoveredContent_Legion"]
+                                requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
+                                CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+                            else
+                                --Since Evoker was launched after Legion there is no class hall for them.
+                                CTT_flashMessage(L["EvokerHasNoClassHall"], 5, 1.5)
+                            end
                         elseif (selected == 9) then
                             funcionalidade = L["UndiscoveredContent_Missions"]
                             requisito = L["UndiscoveredContentUnlockRequirement_Missions"]
@@ -534,6 +1002,10 @@ function CTT_MouseMiddleButtonClick()
             end
 end
 
+function CTT_ShowIconTooltip(tooltip, text)
+    tooltip:AddLine("|cFFFFFFFF" .. text .. "|r", nil, nil, nil, nil)
+end
+
 function CTT_ShowToolTip(tooltip, mode)
    local LClickAction = ""
    local MClickAction = ""
@@ -563,9 +1035,9 @@ function CTT_ShowToolTip(tooltip, mode)
         end
 
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end
         
 else
@@ -588,15 +1060,15 @@ else
         end
 
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end
     else
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end      
     end
 end
@@ -631,7 +1103,6 @@ function CTT_setupSlashCommands()
     SLASH_ChromieTimeTracker2 = "/ctt"
     SlashCmdList["ChromieTimeTracker"] = function(arg)
         if(arg == "config") then
-            PlaySound(808)
             ChromieTimeTracker:ToggleSettingsFrame()
             
         elseif(arg == "DF" or arg == "TWW") then
@@ -640,28 +1111,26 @@ function CTT_setupSlashCommands()
             print(L["SlashCommands"])
         elseif(arg == "resetPosition") then
             mainFrame:ClearAllPoints()
-            mainFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+            mainFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
     
-            ChromieTimeTrackerDB.Point = {mainFrame:GetPoint()}
+            iconFrame:ClearAllPoints()
+            iconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
+    
+            ChromieTimeTrackerDB.PointIcon = {iconFrame:GetPoint()}
+
+            addonRootFrame:ClearAllPoints()
+            addonRootFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+
+            ChromieTimeTrackerDB.Point = {addonRootFrame:GetPoint()}
         
             ChromieTimeTrackerDB.BasePoint = ChromieTimeTrackerDB.Point[1]
             ChromieTimeTrackerDB.RelativePoint = ChromieTimeTrackerDB.Point[3]
             ChromieTimeTrackerDB.OffsetX = ChromieTimeTrackerDB.Point[4]
             ChromieTimeTrackerDB.OffsetY = ChromieTimeTrackerDB.Point[5]
     
-            iconFrame:ClearAllPoints()
-            iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    
-            ChromieTimeTrackerDB.PointIcon = {iconFrame:GetPoint()}
-        
-            ChromieTimeTrackerDB.BasePointIcon = ChromieTimeTrackerDB.PointIcon[1]
-            ChromieTimeTrackerDB.RelativePointIcon = ChromieTimeTrackerDB.PointIcon[3]
-            ChromieTimeTrackerDB.OffsetXIcon = ChromieTimeTrackerDB.PointIcon[4]
-            ChromieTimeTrackerDB.OffsetYIcon = ChromieTimeTrackerDB.PointIcon[5]
-    
             CTT_updateChromieTime();
     
-            mainFrame:Show()
+            addonRootFrame:Show()
 
             print(L["RunCommandMessage_ResetPosition"])
     
@@ -675,19 +1144,21 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
             ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
             CTT_updateChromieTime();
+            CTT_LoadAvancedModeIcons();
 
             print(L["RunCommandMessage_ResetSettings"])
 
         elseif(arg == "resetAll") then
             CTT_SetupFirstAccess("resetAll")
             CTT_updateChromieTime()
+            CTT_LoadAvancedModeIcons()
 
             print(L["RunCommandMessage_ResetAll"])
         else
-            if mainFrame:IsShown() then
-                mainFrame:Hide()
+            if addonRootFrame:IsShown() then
+                addonRootFrame:Hide()
             else
-                mainFrame:Show()
+                addonRootFrame:Show()
             end
         end
     end
@@ -695,4 +1166,4 @@ function CTT_setupSlashCommands()
     
     CTT_setupSlashCommands()
 
-
+    --print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")

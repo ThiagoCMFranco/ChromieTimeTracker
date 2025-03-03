@@ -132,6 +132,15 @@ local methods = {
 		self:SetFontObject(self.fontObject)
 	end,
 
+	["SetFontSize"] = function(self, height)
+		if not self.fontObject then
+			self.fontObject = CreateFont("AceGUI30LabelFont" .. AceGUI:GetNextWidgetNum(Type))
+		end
+		local font, size, flags = self.fontObject:GetFont()
+		self.fontObject:SetFont(font, height, flags)
+		self:SetFontObject(self.fontObject)
+	end,
+
 	["SetFontObject"] = function(self, font)
 		self.label:SetFontObject(font or GameFontHighlightSmall)
 		UpdateImageAnchor(self)

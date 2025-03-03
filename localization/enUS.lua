@@ -1,4 +1,4 @@
-
+--Translator Thiago Franco
 --if GetLocale() ~= "enUS" then return end
 local _, mct = ...
 mct.L = {}
@@ -26,6 +26,8 @@ L["StandardMode"] = "Standard Mode"
 L["StandardModeDescription"] = "Show the timeline in a medium box with label."
 L["AlternateMode"] = "Alternate Mode"
 L["AlternateModeDescription"] = "Recommended using after not being able to time travel anymore (level 70+). Replace the timeline text with the related summary window name."
+L["AdvancedMode"] = "Modo Avançado"
+L["AdvancedModeDescription"] = "Exibe a linha do tempo e diversas funcionalidades adicionais."
 L["HideWhenNotTimeTraveling"] = "Hide timeline window when not using Chromie Time Travel."
 L["LockDragDrop"] = "Lock window."
 L["AlternateMode_ShowIconOnly"] = "Show only an icon when using Alternate Mode."
@@ -59,4 +61,8 @@ L["RunCommandMessage_ResetPosition"] = "Chromie Time Tracker  window and icon lo
 L["RunCommandMessage_ResetSettings"] = "Chromie Time Tracker settings reset."
 L["RunCommandMessage_ResetAll"] = "Chromie Time Tracker position and settings reset."
 L["HideDeveloperCreditOnTooltips"] = "Hide developer info on tooltips."
-L["UseDiferentCoordinatesForIconAndTextBox"] = "Allow to move alternate icon and timeline textbox to diferent places."
+L["lblCreditColabList"] = "Developer:\nThiago Franco (Topolino)\n\nLocalization:\nBrazilian Portuguese (ptBR) - Thiago Franco (Topolino)\nEnglish (enUS) - Thiago Franco (Topolino)\nRussian (ruRU) - ZamestoTV (Hubbotu)"
+L["About_Title"] = "Easily track your current Timewalking Campaign (Chromie Time)."
+L["About_Version"] = "2.0.0"
+L["About_Line1"] = "--------"
+L["About_Line2"] = "--------"

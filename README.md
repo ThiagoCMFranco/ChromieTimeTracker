@@ -12,7 +12,7 @@ Swap between stardard and compact layout and place it bellow your chat window, n
 
 Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
 
-Currently Supported Languages: Brazilian Portuguese (ptBR) and English (enUS).  
+Currently Supported Languages: Brazilian Portuguese (ptBR), English (enUS) and Russian (ruRU).  
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
@@ -27,11 +27,13 @@ Use the following slash commands to control the addon if you don't want to keep 
 Minimap icon actions:  
 Left Click: toggle addon visibility.  
 Middle Click: open expansion summary window.  
+Shift + Middle Click: open context menu.
 Right Click: toggle addon configuration window.  
 
 Addon Timeline Window:  
 Left Click: Drag the addon anywhere.  
 Middle Click: open expansion summary window.  
+Shift + Middle Click: open context menu.
 Right Click: toggle addon configuration window.  
 
 ## Troubleshooting
