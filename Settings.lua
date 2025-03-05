@@ -81,6 +81,8 @@ local chkAdvShowWarEffort = AceGUI:Create("CheckBox")
 local chkAdvShowCovenant = AceGUI:Create("CheckBox")
 local chkAdvShowDragonIsles = AceGUI:Create("CheckBox")
 local chkAdvShowKhazAlgar = AceGUI:Create("CheckBox")
+local chkAdvShowUnlockedOnly = AceGUI:Create("CheckBox")
+local heading5 = AceGUI:Create("Heading")
 
 ddlButtonAlignment:SetList(buttonAlignments)
 ddlButtonAlignment:SetLabel(L["ddlButtonAlignment"])
@@ -173,6 +175,21 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowKhazAlgar:SetWidth(700)
     treeW:AddChild(chkAdvShowKhazAlgar)
 
+    heading5:SetRelativeWidth(1)
+    treeW:AddChild(heading5)
+
+    chkAdvShowUnlockedOnly:SetLabel("Exibir somente ícones de áreas desbloqueadas")
+    chkAdvShowUnlockedOnly:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.AdvShowUnlockedOnly = chkAdvShowUnlockedOnly:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkAdvShowUnlockedOnly:SetWidth(700)
+    treeW:AddChild(chkAdvShowUnlockedOnly)
+
     ddlButtonAlignment:SetValue(ChromieTimeTrackerDB.AdvButtonsAlignment)
     chkAdvShowGarrison:SetValue(ChromieTimeTrackerDB.AdvShowGarrison)
     chkAdvShowClassHall:SetValue(ChromieTimeTrackerDB.AdvShowClassHall)
@@ -180,6 +197,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowCovenant:SetValue(ChromieTimeTrackerDB.AdvShowCovenant)
     chkAdvShowDragonIsles:SetValue(ChromieTimeTrackerDB.AdvShowDragonIsles)
     chkAdvShowKhazAlgar:SetValue(ChromieTimeTrackerDB.AdvShowKhazAlgar)
+    chkAdvShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.AdvShowUnlockedOnly)
 end
 
 function CTT_LoadSettings()
@@ -332,9 +350,9 @@ treeW:AddChild(chkHideDeveloperCreditOnTooltips)
 --treeW:AddChild(btnSave)
 
 StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET"] = {
-    text = "As janelas do addon serão movidas para o centro da tela. Você tem certeza?",
-    button1 = "Sim",
-    button2 = "Não",
+    text = L["Dialog_ResetPosition_Message"],
+    button1 = L["Dialog_Yes"],
+    button2 = L["Dialog_No"],
     OnAccept = function()
         ChromieTimeTrackerDB.BasePoint = "CENTER"
         ChromieTimeTrackerDB.RelativePoint = "CENTER"
@@ -365,9 +383,9 @@ treeW:AddChild(btnResetPosition)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
 
 StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
-    text = "O addon será retornado para a configuração padrão. Você tem certeza?",
-    button1 = "Sim",
-    button2 = "Não",
+    text = L["Dialog_ResetSettings_Message"],
+    button1 = L["Dialog_Yes"],
+    button2 = L["Dialog_No"],
     OnAccept = function()
         ChromieTimeTrackerDB.Mode = 2;
         ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
@@ -376,13 +394,14 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
-        ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
+        --ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
         ChromieTimeTrackerDB.AdvShowGarrison = true;
         ChromieTimeTrackerDB.AdvShowClassHall = true;
         ChromieTimeTrackerDB.AdvShowWarEffort = true;
         ChromieTimeTrackerDB.AdvShowCovenant = true;
         ChromieTimeTrackerDB.AdvShowDragonIsles = true;
         ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
         ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
         CTT_updateChromieTime()
         CTT_showMainFrame()
@@ -415,17 +434,17 @@ end
 tree = { 
     { 
         value = "S",
-        text = "Sobre",
+        text = L["Settings_Menu_About"],
         icon = "Interface\\AddOns\\ChromieTimeTracker\\Chromie.png",
     },
     { 
       value = "G",
-      text = "Geral",
+      text = L["Settings_Menu_General"],
       icon = "Interface\\Icons\\inv_misc_gear_01",
       children = {
         {
         value = "Adv",
-        text = "Modo Avançado",
+        text = L["Settings_Menu_General_Advanced"],
         --icon = "Interface\\Icons\\inv_misc_gear_01",
         }
       },
@@ -437,7 +456,7 @@ tree = {
     --},
     { 
       value = "C", 
-      text = "Créditos",
+      text = L["Settings_Menu_Credit"],
       icon = "Interface\\Icons\\inv_misc_coin_02",
     },
   }
