@@ -71,6 +71,7 @@ L["About_Line1"] = "Continue utilizando o addon, mesmo quando não puder mais en
 L["About_Line2"] = "Acesso aos resumos e relatórios das seguintes áreas:\n- Khaz Algar de The War Within.\n- As Ilhas do Dragão de Dragonflight.\n- Santuário do Pacto de Shadowlands.\n- Missões de Seguidores de Battle for Azeroth.\n- Salão de Classe de Legion.\n- Guarnição de Warlords of Draenor."
 L["About_Line3"] = ""
 L["lblSelectAdvancedModeOptions"] = "Escolha quais botões exibir no modo avançado:"
+L["lblSelectContextMenuOptions"] = "Escolha quais botões exibir no menu de contexto:"
 L["ContextMenuTitle"] = "Abrir Relatório"
 L["ddlButtonAlignment"] = "Alinhamento dos botões"
 L["alignLeft"] = "Esquerda"

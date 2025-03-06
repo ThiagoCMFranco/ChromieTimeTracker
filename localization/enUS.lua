@@ -71,6 +71,7 @@ L["About_Line1"] = "Continue using the addon, even when you can no longer enter 
 L["About_Line2"] = "Access to summaries and reports for the following areas:\n- Khaz Algar from The War Within.\n- The Dragon Isles from Dragonflight.\n- Covenant Sanctum from Shadowlands.\n- Follower Missions from Battle for Azeroth.\n- Class Hall from Legion.\n- Garrison from Warlords of Draenor."
 L["About_Line3"] = ""
 L["lblSelectAdvancedModeOptions"] = "Choose which buttons are visible on advanced mode:"
+L["lblSelectContextMenuOptions"] = "Choose which buttons are visible in the context menu:"
 L["ContextMenuTitle"] = "Open Report"
 L["ddlButtonAlignment"] = "Button Alignment"
 L["alignLeft"] = "Left"

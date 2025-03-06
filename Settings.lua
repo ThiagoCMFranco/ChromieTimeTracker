@@ -215,7 +215,7 @@ local chkContextMenuShowKhazAlgar = AceGUI:Create("CheckBox")
 local chkContextMenuShowUnlockedOnly = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
 
-lblSelectContextMenuOptions:SetText("\n" .. "Escolha quais botões exibir no menu de contexto:")
+lblSelectContextMenuOptions:SetText("\n" .. L["lblSelectContextMenuOptions"])
 CTT_setACE3WidgetFontSide(lblSelectContextMenuOptions, 12)
 lblSelectContextMenuOptions:SetWidth(580)
 treeW:AddChild(lblSelectContextMenuOptions)

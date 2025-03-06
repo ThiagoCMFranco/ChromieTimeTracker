@@ -122,6 +122,8 @@ local C_WarCampaignTextures =
   ["Horde"] = "Interface\\Icons\\inv_hordewareffort",
 }
 
+local isUnlocked = {}
+
 -- Instanciação da função principal do Addon
 ChromieTimeTracker = ChromieTimeTracker or {}
 
@@ -180,34 +182,108 @@ local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIcon
 --contextMenu
 
 local function GeneratorFunction(owner, rootDescription)
-	rootDescription:CreateTitle(L["ContextMenuTitle"]);
-	rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
-    	CTT_CheckExpansionContentAccess(2)
-	end);
-    if PlayerInfo["Class"]~= "EVOKER" then
-        rootDescription:CreateButton(L["MiddleClickOption_Legion"], function(data)
-            CTT_CheckExpansionContentAccess(3)
-        end);
-    else
-        --Since Evoker was launched after Legion there is no class hall for them.
+
+    isUnlocked = {true, true, true, true, true, true}
+
+    local hideSeparator = true
+
+    if(ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly) then
+        
+        if not not (C_Garrison.GetGarrisonInfo(2)) then
+            isUnlocked[1] = true
+        else
+            isUnlocked[1] = false
+        end
+    
+        if not not (C_Garrison.GetGarrisonInfo(3)) then
+            isUnlocked[2] = true
+        else
+            isUnlocked[2] = false
+        end
+    
+        if not not (C_Garrison.GetGarrisonInfo(9)) then
+            isUnlocked[3] = true
+        else
+            isUnlocked[3] = false
+        end
+    
+        if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
+            isUnlocked[4] = true
+        else
+            isUnlocked[4] = false
+        end
+    
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+            isUnlocked[5] = true
+        else
+            isUnlocked[5] = false
+        end
+    
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+            isUnlocked[6] = true
+        else
+            isUnlocked[6] = false
+        end
     end
-    rootDescription:CreateButton(L["MiddleClickOption_Missions"], function(data)
-    	CTT_CheckExpansionContentAccess(9)
-	end);
-    rootDescription:CreateButton(L["MiddleClickOption_Covenant"], function(data)
-    	CTT_CheckExpansionContentAccess(111)
-	end);
-    rootDescription:CreateButton(L["MiddleClickOption_DragonIsles"], function(data)
-    	CTT_CheckExpansionContentAccess("DF")
-	end);
-    rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
-    	CTT_CheckExpansionContentAccess("TWW")
-	end);
-    rootDescription:CreateDivider()
+    
+    if ChromieTimeTrackerDB.ContextMenuShowGarrison and (isUnlocked[1]) then
+        rootDescription:CreateTitle(L["ContextMenuTitle"]);
+        rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
+            CTT_CheckExpansionContentAccess(2)
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowClassHall and (isUnlocked[2]) then
+        if PlayerInfo["Class"]~= "EVOKER" then
+            rootDescription:CreateButton(L["MiddleClickOption_Legion"], function(data)
+                CTT_CheckExpansionContentAccess(3)
+            end);
+            hideSeparator = false
+        else
+            --Since Evoker was launched after Legion there is no class hall for them.
+        end
+
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowWarEffort and (isUnlocked[3]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_Missions"], function(data)
+            CTT_CheckExpansionContentAccess(9)
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowCovenant and (isUnlocked[4]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_Covenant"], function(data)
+            CTT_CheckExpansionContentAccess(111)
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowDragonIsles and (isUnlocked[5]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_DragonIsles"], function(data)
+            CTT_CheckExpansionContentAccess("DF")
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and (isUnlocked[5]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
+            CTT_CheckExpansionContentAccess("TWW")
+        end);
+        hideSeparator = false
+    end
+
+
+    if not hideSeparator then
+        rootDescription:CreateDivider()
+    end
+
     rootDescription:CreateButton(L["Settings"], function(data)
     	PlaySound(808)
             ChromieTimeTracker:ToggleSettingsFrame()
 	end);
+
+
 end;
 
 --Root
@@ -621,7 +697,7 @@ function CTT_LoadAvancedModeIcons()
 
     local iconsCount = 0
 
-    local isUnlocked = {true, true, true, true, true, true}
+    isUnlocked = {true, true, true, true, true, true}
 
     if(ChromieTimeTrackerDB.AdvShowUnlockedOnly) then
         
