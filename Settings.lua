@@ -178,7 +178,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     heading5:SetRelativeWidth(1)
     treeW:AddChild(heading5)
 
-    chkAdvShowUnlockedOnly:SetLabel("Exibir somente ícones de áreas desbloqueadas")
+    chkAdvShowUnlockedOnly:SetLabel(L["chkAdvShowUnlockedOnly"])
     chkAdvShowUnlockedOnly:SetCallback("OnValueChanged", function(widget, event, text) 
     ChromieTimeTrackerDB.AdvShowUnlockedOnly = chkAdvShowUnlockedOnly:GetValue()
         CTT_updateChromieTime()
@@ -199,6 +199,123 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowKhazAlgar:SetValue(ChromieTimeTrackerDB.AdvShowKhazAlgar)
     chkAdvShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.AdvShowUnlockedOnly)
 end
+
+---
+function CTT_LoadContextMenuSettings()
+    treeW:ReleaseChildren()
+
+--ContextMenu Options
+local lblSelectContextMenuOptions = AceGUI:Create("Label")
+local chkContextMenuShowGarrison = AceGUI:Create("CheckBox")
+local chkContextMenuShowClassHall = AceGUI:Create("CheckBox")
+local chkContextMenuShowWarEffort = AceGUI:Create("CheckBox")
+local chkContextMenuShowCovenant = AceGUI:Create("CheckBox")
+local chkContextMenuShowDragonIsles = AceGUI:Create("CheckBox")
+local chkContextMenuShowKhazAlgar = AceGUI:Create("CheckBox")
+local chkContextMenuShowUnlockedOnly = AceGUI:Create("CheckBox")
+local heading5 = AceGUI:Create("Heading")
+
+lblSelectContextMenuOptions:SetText("\n" .. "Escolha quais botões exibir no menu de contexto:")
+CTT_setACE3WidgetFontSide(lblSelectContextMenuOptions, 12)
+lblSelectContextMenuOptions:SetWidth(580)
+treeW:AddChild(lblSelectContextMenuOptions)
+    
+    chkContextMenuShowGarrison:SetLabel(L["MiddleClickOption_Warlords"])
+    chkContextMenuShowGarrison:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowGarrison = chkContextMenuShowGarrison:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowGarrison:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowGarrison)
+
+    chkContextMenuShowClassHall:SetLabel(L["MiddleClickOption_Legion"])
+    chkContextMenuShowClassHall:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowClassHall = chkContextMenuShowClassHall:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowClassHall:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowClassHall)
+
+    chkContextMenuShowWarEffort:SetLabel(L["MiddleClickOption_Missions"])
+    chkContextMenuShowWarEffort:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowWarEffort = chkContextMenuShowWarEffort:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowWarEffort:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowWarEffort)
+
+    chkContextMenuShowCovenant:SetLabel(L["MiddleClickOption_Covenant"])
+    chkContextMenuShowCovenant:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowCovenant = chkContextMenuShowCovenant:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowCovenant:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowCovenant)
+
+    chkContextMenuShowDragonIsles:SetLabel(L["MiddleClickOption_DragonIsles"])
+    chkContextMenuShowDragonIsles:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowDragonIsles = chkContextMenuShowDragonIsles:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowDragonIsles:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowDragonIsles)
+
+    chkContextMenuShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
+    chkContextMenuShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = chkContextMenuShowKhazAlgar:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowKhazAlgar:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowKhazAlgar)
+
+    heading5:SetRelativeWidth(1)
+    treeW:AddChild(heading5)
+
+    chkContextMenuShowUnlockedOnly:SetLabel(L["chkAdvShowUnlockedOnly"])
+    chkContextMenuShowUnlockedOnly:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = chkContextMenuShowUnlockedOnly:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowUnlockedOnly:SetWidth(700)
+    treeW:AddChild(chkContextMenuShowUnlockedOnly)
+
+    chkContextMenuShowGarrison:SetValue(ChromieTimeTrackerDB.ContextMenuShowGarrison)
+    chkContextMenuShowClassHall:SetValue(ChromieTimeTrackerDB.ContextMenuShowClassHall)
+    chkContextMenuShowWarEffort:SetValue(ChromieTimeTrackerDB.ContextMenuShowWarEffort)
+    chkContextMenuShowCovenant:SetValue(ChromieTimeTrackerDB.ContextMenuShowCovenant)
+    chkContextMenuShowDragonIsles:SetValue(ChromieTimeTrackerDB.ContextMenuShowDragonIsles)
+    chkContextMenuShowKhazAlgar:SetValue(ChromieTimeTrackerDB.ContextMenuShowKhazAlgar)
+    chkContextMenuShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly)
+end
+---
 
 function CTT_LoadSettings()
 
@@ -443,10 +560,15 @@ tree = {
       icon = "Interface\\Icons\\inv_misc_gear_01",
       children = {
         {
+            value = "Ctx",
+            text = "Menu de Contexto",
+            --icon = "Interface\\Icons\\inv_misc_gear_01",
+        },
+        {
         value = "Adv",
         text = L["Settings_Menu_General_Advanced"],
         --icon = "Interface\\Icons\\inv_misc_gear_01",
-        }
+        },
       },
     },
     --{ 
@@ -477,6 +599,8 @@ tree = {
         CTT_LoadAbout()
     elseif string.find(group, "Adv") then
         CTT_LoadAdvancedModeSettings()
+    elseif string.find(group, "Ctx") then
+        CTT_LoadContextMenuSettings()
     else
         print(group)
     end

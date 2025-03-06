@@ -203,7 +203,11 @@ local function GeneratorFunction(owner, rootDescription)
     rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
     	CTT_CheckExpansionContentAccess("TWW")
 	end);
-    --rootDescription:CreateDivider()
+    rootDescription:CreateDivider()
+    rootDescription:CreateButton(L["Settings"], function(data)
+    	PlaySound(808)
+            ChromieTimeTracker:ToggleSettingsFrame()
+	end);
 end;
 
 --Root
@@ -273,8 +277,9 @@ mainFrame:SetScript("OnMouseDown", function(self, btn)
 
         end
     elseif btn == "RightButton" then
-        PlaySound(808)
-        ChromieTimeTracker:ToggleSettingsFrame()
+        --PlaySound(808)
+        --ChromieTimeTracker:ToggleSettingsFrame()
+        local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
     end
 end)
 
@@ -384,12 +389,6 @@ function CTT_updateChromieTime()
         mainFrame:Show()
         addonRootFrame:SetSize(280, 67)
         iconFrame:Hide()
-        --garrisonIconFrame:Show()
-        --classHallIconFrame:Show()
-        --missionsIconFrame:Show()
-        --covenantIconFrame:Show()
-        --dragonIslesIconFrame:Show()
-        --khazAlgarIconFrame:Show()
         CTT_LoadAvancedModeIcons()
     else
         mainFrame:SetSize(280, 35)
@@ -437,7 +436,6 @@ function CTT_setupIconFrame()
 
 iconFrame:ClearAllPoints()
 iconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
---iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 
 iconFrame:SetFrameLevel(2)
 iconFrame:EnableMouse(true)
@@ -459,8 +457,9 @@ iconFrame:SetScript("OnMouseDown", function(self, btn)
             CTT_MouseMiddleButtonClick()
         end
     elseif btn == "RightButton" then
-        PlaySound(808)
-        ChromieTimeTracker:ToggleSettingsFrame()
+        --PlaySound(808)
+        --ChromieTimeTracker:ToggleSettingsFrame()
+        local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
     end
 end)
 
@@ -523,7 +522,6 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _
 
     _garrisonIconFrame:ClearAllPoints()
     _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX, _offsetY)
-    --iconFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     
     _garrisonIconFrame:SetFrameLevel(2)
     _garrisonIconFrame:EnableMouse(true)
@@ -541,8 +539,9 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _
         if btn == 'LeftButton' then 
             CTT_CheckExpansionContentAccess(_garrisonID)
         elseif btn == "RightButton" then
-            PlaySound(808)
-            ChromieTimeTracker:ToggleSettingsFrame()
+            --PlaySound(808)
+            --ChromieTimeTracker:ToggleSettingsFrame()
+            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
         end
     end)
     
@@ -753,13 +752,6 @@ function CTT_LoadAvancedModeIcons()
 
 end
 
-    --CTT_setupGarrisonIconFrame(garrisonIconFrame,2,39,-35,getFactionTexture(englishFaction,"G"), "Guarnição") --achievement_garrison_tier01_horde
-    --CTT_setupGarrisonIconFrame(classHallIconFrame,3,73,-35,getClassTexture(englishClass), "Salão de Classe")
-    --CTT_setupGarrisonIconFrame(missionsIconFrame,9,107,-35,getFactionTexture(englishFaction,""), "Missões de Seguidor") --inv_hordewareffort
-    --CTT_setupGarrisonIconFrame(covenantIconFrame,111,141,-35,"Interface\\Icons\\inv_misc_covenant_renown", "Santuário do Pacto")
-    --CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",175,-35,"Interface\\Icons\\ability_dragonriding_diving01", "As Ilhas do Dragão")
-    --CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",209,-35,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest", "Khaz Algar") --ability_earthen_hyperproductive
-
 function ChromieTimeTracker:ToggleMainFrame()
     if not addonRootFrame:IsShown() then
         addonRootFrame:Show()
@@ -789,8 +781,9 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
                 addonRootFrame:Show()
             end
         elseif btn == "RightButton" then
-            PlaySound(808)
-            ChromieTimeTracker:ToggleSettingsFrame()
+            --PlaySound(808)
+            --ChromieTimeTracker:ToggleSettingsFrame()
+            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
         elseif btn == "MiddleButton" then
 
             if IsShiftKeyDown() then
@@ -825,16 +818,10 @@ eventListenerFrame:RegisterEvent("QUEST_LOG_UPDATE")
 eventListenerFrame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_LOGIN" then
         CTT_updateChromieTime()
-        --if (ChromieTimeTrackerDB.Mode == 4) then
-        --    CTT_LoadAvancedModeIcons()
-        --end
         print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
-        --if (ChromieTimeTrackerDB.Mode == 4) then
-        --    CTT_LoadAvancedModeIcons()
-        --end
     end
 end)
 
@@ -963,129 +950,6 @@ function CTT_MouseMiddleButtonClick()
     end
     CTT_CheckExpansionContentAccess(selected)
 
---            if ChromieTimeTrackerDB.LockMiddleClickOption or currentExpansionName == L["currentExpansionLabel"] then
---                local selected = ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]]
---                if selected == 111 then
---                    if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
---                        ShowGarrisonLandingPage(selected)
---                    else
---                        requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
---                        CTT_flashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
---                    end
---                elseif selected == 2 or selected == 3 or selected == 9 then
---                    if not not (C_Garrison.GetGarrisonInfo(selected or 0)) then
---                        ShowGarrisonLandingPage(selected)
---                    else
---                        local funcionalidade = ""
---                        if (selected == 2) then
---                            funcionalidade = L["UndiscoveredContent_Warlords"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_Warlords"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        elseif (selected == 3) then
---                            if PlayerInfo["Class"]~= "EVOKER" then
---                                funcionalidade = L["UndiscoveredContent_Legion"]
---                                requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
---                                CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                            else
---                                --Since Evoker was launched after Legion there is no class hall for them.
---                                CTT_flashMessage(L["EvokerHasNoClassHall"], 5, 1.5)
---                            end
---                        elseif (selected == 9) then
---                            funcionalidade = L["UndiscoveredContent_Missions"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_Missions"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        else
---                            funcionalidade = ""
---                            CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
---                        end
---                        
---                    end
---                else
---
---                    if selected == "DF" then
---                        local funcionalidade = ""
---                        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
---                            CTT_OpenExpansionLandingPage(selected);
---                        else
---                            funcionalidade = L["UndiscoveredContent_DragonIsles"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_DragonIsles"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        end
---                    elseif selected == "TWW" then
---                        local funcionalidade = ""
---                        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
---                            CTT_OpenExpansionLandingPage(selected);
---                        else
---                            funcionalidade = L["UndiscoveredContent_KhazAlgar"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        end
---                    else
---                        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
---                    end
---                end
---            else
---                if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
---                    local selected = ExpansionGarrisonID[CurrentGarrisonID]
---                    if selected == 111 then
---                        if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
---                            ShowGarrisonLandingPage(selected)
---                        else
---                            requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
---                        end
---                    elseif selected == 2 or selected == 3 or selected == 9 then
---                        if not not (C_Garrison.GetGarrisonInfo(selected or 0)) then
---                        ShowGarrisonLandingPage(ExpansionGarrisonID[CurrentGarrisonID])
---                    else
---                        if (selected == 2) then
---                            funcionalidade = L["UndiscoveredContent_Warlords"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_Warlords"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        elseif (selected == 3) then
---                            if PlayerInfo["Class"]~= "EVOKER" then
---                                funcionalidade = L["UndiscoveredContent_Legion"]
---                                requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
---                                CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                            else
---                                --Since Evoker was launched after Legion there is no class hall for them.
---                                CTT_flashMessage(L["EvokerHasNoClassHall"], 5, 1.5)
---                            end
---                        elseif (selected == 9) then
---                            funcionalidade = L["UndiscoveredContent_Missions"]
---                            requisito = L["UndiscoveredContentUnlockRequirement_Missions"]
---                            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                        else
---                            funcionalidade = ""
---                            CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
---                        end
---                    end
---                    elseif selected == "DF" or selected == "TWW" then
---                        local funcionalidade = ""
---                        if selected == "DF" then
---                            if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
---                                CTT_OpenExpansionLandingPage(selected);
---                            else
---                                funcionalidade = L["UndiscoveredContent_DragonIsles"]
---                                requisito = L["UndiscoveredContentUnlockRequirement_DragonIsles"]
---                                CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                            end
---                        elseif selected == "TWW" then
---                            if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
---                                CTT_OpenExpansionLandingPage(selected);
---                            else
---                                funcionalidade = L["UndiscoveredContent_KhazAlgar"]
---                                requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
---                                CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
---                            end
---                        else
---                            CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
---                        end
---                    else
---                        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
---                    end
---                end
---            end
 end
 
 function CTT_ShowIconTooltip(tooltip, text)
@@ -1259,5 +1123,3 @@ function CTT_setupSlashCommands()
     end
     
     CTT_setupSlashCommands()
-
-    --print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
