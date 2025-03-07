@@ -141,7 +141,7 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.OffsetXIcon = 0
         ChromieTimeTrackerDB.OffsetYIcon = 0
 
-        --Set initial value for all settings
+        --Set initial values for all settings
         ChromieTimeTrackerDB.Mode = 2;
         ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
         ChromieTimeTrackerDB.LockDragDrop = false;
@@ -151,13 +151,22 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
         ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
 
-        --Set initial value for Avanced Mode settings
+        --Set initial values for Avanced Mode settings
         ChromieTimeTrackerDB.AdvShowGarrison = true;
         ChromieTimeTrackerDB.AdvShowClassHall = true;
         ChromieTimeTrackerDB.AdvShowWarEffort = true;
         ChromieTimeTrackerDB.AdvShowCovenant = true;
         ChromieTimeTrackerDB.AdvShowDragonIsles = true;
         ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+
+        --Set initial values for Context Menu settings
+        ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
+        ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
+        ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
+        ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
+        ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
+        ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+        ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
         ChromieTimeTrackerDB.AlreadyUsed = true    
     end
@@ -265,7 +274,7 @@ local function GeneratorFunction(owner, rootDescription)
         end);
         hideSeparator = false
     end
-    if ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and (isUnlocked[5]) then
+    if ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and (isUnlocked[6]) then
 
         rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
             CTT_CheckExpansionContentAccess("TWW")
@@ -465,6 +474,11 @@ function CTT_updateChromieTime()
         mainFrame:Show()
         addonRootFrame:SetSize(280, 67)
         iconFrame:Hide()
+        if ChromieTimeTrackerDB.AdvHideTimelineBox then
+            mainFrame:Hide()
+        else
+            mainFrame:Show()
+        end
         CTT_LoadAvancedModeIcons()
     else
         mainFrame:SetSize(280, 35)
@@ -766,9 +780,13 @@ function CTT_LoadAvancedModeIcons()
     alignments[2] = "CENTER"
     alignments[3] = "RIGHT"
 
-
+    local positions = {}
+    positions[1] = "ABOVE"
+    positions[2] = "BELOW"
 
     local alignment = alignments[ChromieTimeTrackerDB.AdvButtonsAlignment] or "CENTER"
+    local position = positions[ChromieTimeTrackerDB.AdvButtonsPosition] or "BELOW"
+    local top = -35
     local left = 0
     local iconSize = 32
     local iconSpace = 1
@@ -782,17 +800,24 @@ function CTT_LoadAvancedModeIcons()
         left = (placeholderSize - (iconSize + (2*iconSpace))*iconsCount) 
     end
 
+    if(position == "BELOW") then
+        top = -35
+    end
+    if(position == "ABOVE") then
+        top = 32
+    end
+
     local position = 0;
     
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
-        CTT_setupGarrisonIconFrame(garrisonIconFrame,2,(left + (step * position)),-35,getFactionTexture(PlayerInfo["Faction"],"G"), L["MiddleClickOption_Warlords"])
+        CTT_setupGarrisonIconFrame(garrisonIconFrame,2,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],"G"), L["MiddleClickOption_Warlords"])
         position = position + 1;
     else
         garrisonIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowClassHall and (isUnlocked[2]) then
         if PlayerInfo["Class"]~= "EVOKER" then
-            CTT_setupGarrisonIconFrame(classHallIconFrame,3,(left + (step * position)),-35,getClassTexture(PlayerInfo["Class"]),  L["MiddleClickOption_Legion"])
+            CTT_setupGarrisonIconFrame(classHallIconFrame,3,(left + (step * position)),top,getClassTexture(PlayerInfo["Class"]),  L["MiddleClickOption_Legion"])
             position = position + 1;
         else
             --Since Evoker was launched after Legion there is no class hall for them.
@@ -802,25 +827,25 @@ function CTT_LoadAvancedModeIcons()
         classHallIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowWarEffort and (isUnlocked[3]) then
-        CTT_setupGarrisonIconFrame(missionsIconFrame,9,(left + (step * position)),-35,getFactionTexture(PlayerInfo["Faction"],""),  L["MiddleClickOption_Missions"])
+        CTT_setupGarrisonIconFrame(missionsIconFrame,9,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],""),  L["MiddleClickOption_Missions"])
         position = position + 1;
     else
         missionsIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
-        CTT_setupGarrisonIconFrame(covenantIconFrame,111,(left + (step * position)),-35,"Interface\\Icons\\inv_misc_covenant_renown",  L["MiddleClickOption_Covenant"])
+        CTT_setupGarrisonIconFrame(covenantIconFrame,111,(left + (step * position)),top,"Interface\\Icons\\inv_misc_covenant_renown",  L["MiddleClickOption_Covenant"])
         position = position + 1;
     else
         covenantIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",(left + (step * position)),-35,"Interface\\Icons\\ability_dragonriding_diving01",  L["MiddleClickOption_DragonIsles"])
+        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",(left + (step * position)),top,"Interface\\Icons\\ability_dragonriding_diving01",  L["MiddleClickOption_DragonIsles"])
         position = position + 1;
     else
         dragonIslesIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",(left + (step * position)),-35,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest",  L["MiddleClickOption_KhazAlgar"]) --ability_earthen_hyperproductive
+        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",(left + (step * position)),top,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest",  L["MiddleClickOption_KhazAlgar"]) --ability_earthen_hyperproductive
         position = position + 1;
     else
         khazAlgarIconFrame:Hide();
@@ -1061,9 +1086,9 @@ function CTT_ShowToolTip(tooltip, mode)
         end
 
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end
         
 else
@@ -1086,15 +1111,15 @@ else
         end
 
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end
     else
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["ShiftMClickAction"] .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
         end      
     end
 end
@@ -1168,7 +1193,7 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
             ChromieTimeTrackerDB.LockMiddleClickOption = false;
             ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
-            --ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
+
             ChromieTimeTrackerDB.AdvShowGarrison = true;
             ChromieTimeTrackerDB.AdvShowClassHall = true;
             ChromieTimeTrackerDB.AdvShowWarEffort = true;
@@ -1177,6 +1202,15 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
             ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
             ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
+
+            ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
+            ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
+            ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
+            ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
+            ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
+            ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+            ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
+            
             CTT_updateChromieTime();
             CTT_LoadAvancedModeIcons();
 
@@ -1199,3 +1233,4 @@ function CTT_setupSlashCommands()
     end
     
     CTT_setupSlashCommands()
+    

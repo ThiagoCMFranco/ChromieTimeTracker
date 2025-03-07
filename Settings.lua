@@ -5,6 +5,7 @@ local C_LanguageContributors = {}
 
 local modes = {L["CompactMode"], L["StandardMode"], L["AlternateMode"], L["AdvancedMode"]}
 local buttonAlignments = {L["alignLeft"],L["alignCenter"],L["alignRight"]}
+local buttonPositions = {L["positionAbove"], L["positionBelow"]}
 local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOption_Legion"],L["MiddleClickOption_Missions"],L["MiddleClickOption_Covenant"],L["MiddleClickOption_DragonIsles"],L["MiddleClickOption_KhazAlgar"]}
 
 local AceGUI = LibStub("AceGUI-3.0")
@@ -58,7 +59,7 @@ function CTT_LoadAbout()
     treeW:AddChild(LabelAbout_Title)
 
     local LabelAbout = AceGUI:Create("Label")
-    LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n" .. L["About_Line3"])
+    LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n")
     --LabelAbout:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelAbout, 13)
     LabelAbout:SetWidth(560)
@@ -67,12 +68,20 @@ function CTT_LoadAbout()
     local headingAbout1 = AceGUI:Create("Heading")
     headingAbout1:SetRelativeWidth(1)
     treeW:AddChild(headingAbout1)
+
+    local LabelAboutLocalizationDisclaimer = AceGUI:Create("Label")
+    LabelAboutLocalizationDisclaimer:SetText(L["About_Line3"])
+    --LabelAbout:SetFont(font, 13, style)
+    CTT_setACE3WidgetFontSide(LabelAboutLocalizationDisclaimer, 13)
+    LabelAboutLocalizationDisclaimer:SetWidth(560)
+    treeW:AddChild(LabelAboutLocalizationDisclaimer)
 end
 
 function CTT_LoadAdvancedModeSettings()
     treeW:ReleaseChildren()
 
 --Advanced Mode Options
+local ddlButtonPosition = AceGUI:Create("Dropdown")
 local ddlButtonAlignment = AceGUI:Create("Dropdown")
 local lblSelectAdvancedModeOptions = AceGUI:Create("Label")
 local chkAdvShowGarrison = AceGUI:Create("CheckBox")
@@ -82,7 +91,22 @@ local chkAdvShowCovenant = AceGUI:Create("CheckBox")
 local chkAdvShowDragonIsles = AceGUI:Create("CheckBox")
 local chkAdvShowKhazAlgar = AceGUI:Create("CheckBox")
 local chkAdvShowUnlockedOnly = AceGUI:Create("CheckBox")
+local chkAdvHideTimelineBox = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
+
+ddlButtonPosition:SetList(buttonPositions)
+ddlButtonPosition:SetLabel(L["ddlButtonPosition"])
+ddlButtonPosition:SetWidth(200)
+ddlButtonPosition:SetCallback("OnValueChanged", function(widget, event, text)
+    textStore = text
+    ChromieTimeTrackerDB.AdvButtonsPosition = ddlButtonPosition.value
+    CTT_updateChromieTime()
+    CTT_showMainFrame()
+    if (ChromieTimeTrackerDB.Mode == 4) then
+        CTT_LoadAvancedModeIcons()
+    end
+end)
+treeW:AddChild(ddlButtonPosition)
 
 ddlButtonAlignment:SetList(buttonAlignments)
 ddlButtonAlignment:SetLabel(L["ddlButtonAlignment"])
@@ -190,6 +214,19 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowUnlockedOnly:SetWidth(700)
     treeW:AddChild(chkAdvShowUnlockedOnly)
 
+    chkAdvHideTimelineBox:SetLabel(L["chkAdvHideTimelineBox"])
+    chkAdvHideTimelineBox:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.AdvHideTimelineBox = chkAdvHideTimelineBox:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkAdvHideTimelineBox:SetWidth(700)
+    treeW:AddChild(chkAdvHideTimelineBox)
+
+    ddlButtonPosition:SetValue(ChromieTimeTrackerDB.AdvButtonsPosition)
     ddlButtonAlignment:SetValue(ChromieTimeTrackerDB.AdvButtonsAlignment)
     chkAdvShowGarrison:SetValue(ChromieTimeTrackerDB.AdvShowGarrison)
     chkAdvShowClassHall:SetValue(ChromieTimeTrackerDB.AdvShowClassHall)
@@ -198,6 +235,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowDragonIsles:SetValue(ChromieTimeTrackerDB.AdvShowDragonIsles)
     chkAdvShowKhazAlgar:SetValue(ChromieTimeTrackerDB.AdvShowKhazAlgar)
     chkAdvShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.AdvShowUnlockedOnly)
+    chkAdvHideTimelineBox:SetValue(ChromieTimeTrackerDB.AdvHideTimelineBox)
 end
 
 ---
@@ -448,23 +486,6 @@ chkHideDeveloperCreditOnTooltips:SetCallback("OnValueChanged", function(widget, 
 chkHideDeveloperCreditOnTooltips:SetWidth(700)
 treeW:AddChild(chkHideDeveloperCreditOnTooltips)
 
---
---btnSave:SetText(L["buttonSave"])
---btnSave:SetWidth(100)
---btnSave:SetCallback("OnClick", function() 
---    
---    ChromieTimeTrackerDB.Mode = dropdown.value;
---    ChromieTimeTrackerDB.HideWhenNotTimeTraveling = CheckBox:GetValue();
---    ChromieTimeTrackerDB.LockDragDrop = chkLockDragDrop:GetValue();
---    ChromieTimeTrackerDB.AlternateModeShowIconOnly = chkAlternateModeShowIconOnly:GetValue();
---    ChromieTimeTrackerDB.DefaultMiddleClickOption = ddlDefaultMiddleClickOption.value;
---    ChromieTimeTrackerDB.LockMiddleClickOption = chkLockMiddleClickOption:GetValue();
---    ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = chkHideDeveloperCreditOnTooltips:GetValue();
---    CTT_updateChromieTime();
---    CTT_showMainFrame()
---    
---    ; end)
---treeW:AddChild(btnSave)
 
 StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET"] = {
     text = L["Dialog_ResetPosition_Message"],
@@ -511,7 +532,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
-        --ChromieTimeTrackerDB.UseDiferentCoordinatesForIconAndTextBox = false;
+        
         ChromieTimeTrackerDB.AdvShowGarrison = true;
         ChromieTimeTrackerDB.AdvShowClassHall = true;
         ChromieTimeTrackerDB.AdvShowWarEffort = true;
@@ -520,6 +541,15 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
         ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
         ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
+
+        ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
+        ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
+        ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
+        ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
+        ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
+        ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+        ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
+
         CTT_updateChromieTime()
         CTT_showMainFrame()
         treeW:SelectByValue("S")
@@ -571,11 +601,6 @@ tree = {
         },
       },
     },
-    --{ 
-    --    value = "Controls",
-    --    text = "Controles",
-    --    icon = "Interface\\Icons\\inv_misc_gear_01",
-    --},
     { 
       value = "C", 
       text = L["Settings_Menu_Credit"],
@@ -611,18 +636,6 @@ settingsFrame:Hide()
 treeW:SelectByValue("S")
 
 CTT_LoadAbout()
-
-function saveData()
-    --ChromieTimeTrackerDB.Mode = dropdown.value;
-    --ChromieTimeTrackerDB.HideWhenNotTimeTraveling = CheckBox:GetValue();
-    --ChromieTimeTrackerDB.LockDragDrop = chkLockDragDrop:GetValue();
-    --ChromieTimeTrackerDB.AlternateModeShowIconOnly = chkAlternateModeShowIconOnly:GetValue();
-    --ChromieTimeTrackerDB.DefaultMiddleClickOption = ddlDefaultMiddleClickOption.value;
-    --ChromieTimeTrackerDB.LockMiddleClickOption = chkLockMiddleClickOption:GetValue();
-    --ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = chkHideDeveloperCreditOnTooltips:GetValue();    
-    --CTT_updateChromieTime();
-    --CTT_showMainFrame()
-end
 
 function loadSettings()
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
