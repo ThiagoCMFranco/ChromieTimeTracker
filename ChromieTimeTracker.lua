@@ -183,10 +183,10 @@ local mainFrame = CreateFrame("Frame", "ChromieTimeTrackerMainFrame", ChromieTim
 local iconFrame = CreateFrame("Frame", "ChromieTimeTrackerMainIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
 local garrisonIconFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
 local classHallIconFrame = CreateFrame("Frame", "ChromieTimeTrackerClassHallIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
-local missionsIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMissionsIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local missionsIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMissionsIconFrame", ChromieTimeTrackerRootFrame, "")
 local covenantIconFrame = CreateFrame("Frame", "ChromieTimeTrackerCovenantIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
-local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
-local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "")
+local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "")
 
 --contextMenu
 
@@ -608,7 +608,7 @@ end
 
 CTT_setupIconFrame()
 
-function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _offsetY, _iconName, _TooltipText)
+function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _offsetY, _iconName, _iconType, _TooltipText)
 
     _garrisonIconFrame:ClearAllPoints()
     _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX, _offsetY)
@@ -685,7 +685,11 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _garrisonID, _offsetX, _
     _garrisonIconFrame.playerTimeline:SetText("")
     _garrisonIconFrame.icon = _garrisonIconFrame:CreateTexture()
     _garrisonIconFrame.icon:SetAllPoints()
+    if _iconType == "Texture" then
     _garrisonIconFrame.icon:SetTexture(_iconName, false)
+    else --"Atlas"
+    _garrisonIconFrame.icon:SetAtlas(_iconName, false)
+    end
     
     _garrisonIconFrame:SetSize(32,32)
 
@@ -810,14 +814,14 @@ function CTT_LoadAvancedModeIcons()
     local position = 0;
     
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
-        CTT_setupGarrisonIconFrame(garrisonIconFrame,2,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],"G"), L["MiddleClickOption_Warlords"])
+        CTT_setupGarrisonIconFrame(garrisonIconFrame,2,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],"G"), "Texture", L["MiddleClickOption_Warlords"])
         position = position + 1;
     else
         garrisonIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowClassHall and (isUnlocked[2]) then
         if PlayerInfo["Class"]~= "EVOKER" then
-            CTT_setupGarrisonIconFrame(classHallIconFrame,3,(left + (step * position)),top,getClassTexture(PlayerInfo["Class"]),  L["MiddleClickOption_Legion"])
+            CTT_setupGarrisonIconFrame(classHallIconFrame,3,(left + (step * position)),top,getClassTexture(PlayerInfo["Class"]), "Texture",  L["MiddleClickOption_Legion"])
             position = position + 1;
         else
             --Since Evoker was launched after Legion there is no class hall for them.
@@ -827,25 +831,25 @@ function CTT_LoadAvancedModeIcons()
         classHallIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowWarEffort and (isUnlocked[3]) then
-        CTT_setupGarrisonIconFrame(missionsIconFrame,9,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],""),  L["MiddleClickOption_Missions"])
+        CTT_setupGarrisonIconFrame(missionsIconFrame,9,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],""), "Texture",  L["MiddleClickOption_Missions"])
         position = position + 1;
     else
         missionsIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
-        CTT_setupGarrisonIconFrame(covenantIconFrame,111,(left + (step * position)),top,"Interface\\Icons\\inv_misc_covenant_renown",  L["MiddleClickOption_Covenant"])
+        CTT_setupGarrisonIconFrame(covenantIconFrame,111,(left + (step * position)),top,"Interface\\Icons\\inv_misc_covenant_renown", "Texture",  L["MiddleClickOption_Covenant"])
         position = position + 1;
     else
         covenantIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",(left + (step * position)),top,"Interface\\Icons\\ability_dragonriding_diving01",  L["MiddleClickOption_DragonIsles"])
+        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,"DF",(left + (step * position)),top,"dragonflight-landingbutton-up", "Atlas",  L["MiddleClickOption_DragonIsles"])
         position = position + 1;
     else
         dragonIslesIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",(left + (step * position)),top,"Interface\\Icons\\inv_10_gearupgrade_drakesaspectenhancedcrest",  L["MiddleClickOption_KhazAlgar"]) --ability_earthen_hyperproductive
+        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,"TWW",(left + (step * position)),top,"warwithin-landingbutton-up", "Atlas",  L["MiddleClickOption_KhazAlgar"])
         position = position + 1;
     else
         khazAlgarIconFrame:Hide();
