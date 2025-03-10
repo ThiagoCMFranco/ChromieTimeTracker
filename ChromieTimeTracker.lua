@@ -192,6 +192,39 @@ local covenantIconFrame = CreateFrame("Frame", "ChromieTimeTrackerCovenantIconFr
 local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "")
 local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "")
 
+function getCovenantData()
+    local l_Covenant = "Not_Selected"
+    local l_CovenantID = C_Covenants.GetActiveCovenantID()
+    local _CovenantData = {}
+    local _ActiveCovenantName = "-"
+    if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
+        if l_CovenantID == 1 then
+            l_Covenant = "Kyrian"
+            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
+            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
+        end
+        if l_CovenantID == 2 then
+            l_Covenant = "Venthyr"
+            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
+            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
+        end
+        if l_CovenantID == 3 then
+            l_Covenant = "NightFae"
+            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
+            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
+        end
+        if l_CovenantID == 4 then
+            l_Covenant = "Necrolord"
+            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
+            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
+        end
+    end
+    local L_CovenantData = {
+        l_Covenant, l_CovenantID, _ActiveCovenantName, _CovenantData
+    }
+    return L_CovenantData
+end
+
 --contextMenu
 
 local function GeneratorFunction(owner, rootDescription)
@@ -242,14 +275,25 @@ local function GeneratorFunction(owner, rootDescription)
     if ChromieTimeTrackerDB.ContextMenuShowGarrison and (isUnlocked[1]) then
         rootDescription:CreateTitle(L["ContextMenuTitle"]);
         rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
-            CTT_CheckExpansionContentAccess(2)
+            
+            if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 2 == GarrisonLandingPage.garrTypeID) then
+                HideUIPanel(GarrisonLandingPage);
+            else
+                HideUIPanel(GarrisonLandingPage);
+                CTT_CheckExpansionContentAccess(2)
+            end
         end);
         hideSeparator = false
     end
     if ChromieTimeTrackerDB.ContextMenuShowClassHall and (isUnlocked[2]) then
         if PlayerInfo["Class"]~= "EVOKER" then
             rootDescription:CreateButton(L["MiddleClickOption_Legion"], function(data)
-                CTT_CheckExpansionContentAccess(3)
+                if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 3 == GarrisonLandingPage.garrTypeID) then
+                    HideUIPanel(GarrisonLandingPage);
+                else
+                    HideUIPanel(GarrisonLandingPage);
+                    CTT_CheckExpansionContentAccess(3)
+                end
             end);
             hideSeparator = false
         else
@@ -260,14 +304,27 @@ local function GeneratorFunction(owner, rootDescription)
     if ChromieTimeTrackerDB.ContextMenuShowWarEffort and (isUnlocked[3]) then
 
         rootDescription:CreateButton(L["MiddleClickOption_Missions"], function(data)
-            CTT_CheckExpansionContentAccess(9)
+            if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 9 == GarrisonLandingPage.garrTypeID) then
+                HideUIPanel(GarrisonLandingPage);
+            else
+                HideUIPanel(GarrisonLandingPage);
+                CTT_CheckExpansionContentAccess(9)
+            end
         end);
         hideSeparator = false
     end
     if ChromieTimeTrackerDB.ContextMenuShowCovenant and (isUnlocked[4]) then
 
-        rootDescription:CreateButton(L["MiddleClickOption_Covenant"], function(data)
-            CTT_CheckExpansionContentAccess(111)
+        local _CovData = {}
+        _CovData = getCovenantData()
+        
+        rootDescription:CreateButton(string.format(L["MiddleClickOption_Covenant"], _CovData[3]), function(data)
+            if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 111 == GarrisonLandingPage.garrTypeID) then
+                HideUIPanel(GarrisonLandingPage);
+            else
+                HideUIPanel(GarrisonLandingPage);
+                CTT_CheckExpansionContentAccess(111)
+            end
         end);
         hideSeparator = false
     end
@@ -631,7 +688,12 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
     end)
     _garrisonIconFrame:SetScript("OnMouseDown", function(self, btn)
         if btn == 'LeftButton' then 
-            CTT_CheckExpansionContentAccess(_garrisonID)
+            if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and _garrisonID == GarrisonLandingPage.garrTypeID) then
+                HideUIPanel(GarrisonLandingPage);
+            else
+                HideUIPanel(GarrisonLandingPage);
+                CTT_CheckExpansionContentAccess(_garrisonID)
+            end
         elseif btn == "RightButton" then
             --PlaySound(808)
             --ChromieTimeTracker:ToggleSettingsFrame()
@@ -866,28 +928,11 @@ function CTT_LoadAvancedModeIcons()
     local _CovenantData = {}
     local _ActiveCovenantName = "-"
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
-        if l_CovenantID == 1 then
-            l_Covenant = "Kyrian"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 2 then
-            l_Covenant = "Venthyr"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 3 then
-            l_Covenant = "NightFae"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 4 then
-            l_Covenant = "Necrolord"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
 
-        CTT_setupGarrisonIconFrame(covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[l_Covenant], "Atlas", string.format(L["MiddleClickOption_Covenant"], _ActiveCovenantName))
+        local _ConvData = {}
+        _ConvData = getCovenantData()
+
+        CTT_setupGarrisonIconFrame(covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[_ConvData[1]], "Atlas", string.format(L["MiddleClickOption_Covenant"], _ConvData[3]))
         position = position + 1;
     else
         covenantIconFrame:Hide();
@@ -1103,7 +1148,12 @@ function CTT_MouseMiddleButtonClick()
             selected = ExpansionGarrisonID[CurrentGarrisonID]
         end
     end
-    CTT_CheckExpansionContentAccess(selected)
+    if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and selected == GarrisonLandingPage.garrTypeID) then
+        HideUIPanel(GarrisonLandingPage);
+    else
+        HideUIPanel(GarrisonLandingPage);
+        CTT_CheckExpansionContentAccess(selected)
+    end
 
 end
 

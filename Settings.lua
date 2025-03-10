@@ -30,7 +30,7 @@ local C_LanguageContributors = {}
 local modes = {L["CompactMode"], L["StandardMode"], L["AlternateMode"], L["AdvancedMode"]}
 local buttonAlignments = {L["alignLeft"],L["alignCenter"],L["alignRight"]}
 local buttonPositions = {L["positionAbove"], L["positionBelow"]}
-local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOption_Legion"],L["MiddleClickOption_Missions"],L["MiddleClickOption_Covenant"],L["MiddleClickOption_DragonIsles"],L["MiddleClickOption_KhazAlgar"]}
+local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOption_Legion"],L["MiddleClickOption_Missions"],string.format(L["MiddleClickOption_Covenant"], "-"),L["MiddleClickOption_DragonIsles"],L["MiddleClickOption_KhazAlgar"]}
 
 local AceGUI = LibStub("AceGUI-3.0")
 
@@ -187,7 +187,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowWarEffort:SetWidth(700)
     treeW:AddChild(chkAdvShowWarEffort)
 
-    chkAdvShowCovenant:SetLabel(L["MiddleClickOption_Covenant"])
+    chkAdvShowCovenant:SetLabel(string.format(L["MiddleClickOption_Covenant"], "-"))
     chkAdvShowCovenant:SetCallback("OnValueChanged", function(widget, event, text) 
     ChromieTimeTrackerDB.AdvShowCovenant = chkAdvShowCovenant:GetValue()
         CTT_updateChromieTime()
@@ -318,7 +318,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
     chkContextMenuShowWarEffort:SetWidth(700)
     treeW:AddChild(chkContextMenuShowWarEffort)
 
-    chkContextMenuShowCovenant:SetLabel(L["MiddleClickOption_Covenant"])
+    chkContextMenuShowCovenant:SetLabel(string.format(L["MiddleClickOption_Covenant"], "-"))
     chkContextMenuShowCovenant:SetCallback("OnValueChanged", function(widget, event, text) 
     ChromieTimeTrackerDB.ContextMenuShowCovenant = chkContextMenuShowCovenant:GetValue()
         CTT_updateChromieTime()
@@ -612,18 +612,16 @@ tree = {
       value = "G",
       text = L["Settings_Menu_General"],
       icon = "Interface\\Icons\\inv_misc_gear_01",
-      children = {
-        {
-            value = "Ctx",
-            text = "Menu de Contexto",
-            --icon = "Interface\\Icons\\inv_misc_gear_01",
-        },
-        {
-        value = "Adv",
-        text = L["Settings_Menu_General_Advanced"],
-        --icon = "Interface\\Icons\\inv_misc_gear_01",
-        },
-      },
+    },
+    {
+        value = "Ctx",
+        text = "Menu de Contexto",
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+    },
+    {
+    value = "Adv",
+    text = L["Settings_Menu_General_Advanced"],
+    icon = "Interface\\Icons\\inv_misc_gear_01",
     },
     { 
       value = "C", 
@@ -646,9 +644,9 @@ tree = {
         CTT_LoadCredits()
     elseif group == "S" then
         CTT_LoadAbout()
-    elseif string.find(group, "Adv") then
+    elseif group == "Adv" then--elseif string.find(group, "Adv") then
         CTT_LoadAdvancedModeSettings()
-    elseif string.find(group, "Ctx") then
+    elseif group == "Ctx" then--elseif string.find(group, "Ctx") then
         CTT_LoadContextMenuSettings()
     else
         print(group)
