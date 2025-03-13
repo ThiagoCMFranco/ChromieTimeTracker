@@ -101,6 +101,22 @@ function CTT_LoadAbout()
     treeW:AddChild(LabelAboutLocalizationDisclaimer)
 end
 
+function CTT_LoadAlternateModeSettings()
+    treeW:ReleaseChildren()
+
+    local chkAlternateModeShowIconOnly = AceGUI:Create("CheckBox")
+    chkAlternateModeShowIconOnly:SetLabel(L["AlternateMode_ShowIconOnly"])
+    chkAlternateModeShowIconOnly:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.AlternateModeShowIconOnly = chkAlternateModeShowIconOnly:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+    end)
+    chkAlternateModeShowIconOnly:SetWidth(700)
+    treeW:AddChild(chkAlternateModeShowIconOnly)
+
+    chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
+end
+
 function CTT_LoadAdvancedModeSettings()
     treeW:ReleaseChildren()
 
@@ -390,7 +406,6 @@ local LabelStandardMode = AceGUI:Create("Label")
 local LabelAlternateMode = AceGUI:Create("Label")
 local LabelAdvancedMode = AceGUI:Create("Label")
 local CheckBox = AceGUI:Create("CheckBox")
-local chkAlternateModeShowIconOnly = AceGUI:Create("CheckBox")
 local chkLockDragDrop = AceGUI:Create("CheckBox")
 local ddlDefaultMiddleClickOption = AceGUI:Create("Dropdown")
 local LabelMiddleClick = AceGUI:Create("Label")
@@ -448,16 +463,6 @@ CheckBox:SetCallback("OnValueChanged", function(widget, event, text)
 end)
 CheckBox:SetWidth(700)
 treeW:AddChild(CheckBox)
-
-
-chkAlternateModeShowIconOnly:SetLabel(L["AlternateMode_ShowIconOnly"])
-chkAlternateModeShowIconOnly:SetCallback("OnValueChanged", function(widget, event, text) 
-    ChromieTimeTrackerDB.AlternateModeShowIconOnly = chkAlternateModeShowIconOnly:GetValue()
-    CTT_updateChromieTime()
-    CTT_showMainFrame()
-end)
-chkAlternateModeShowIconOnly:SetWidth(700)
-treeW:AddChild(chkAlternateModeShowIconOnly)
 
 
 chkLockDragDrop:SetLabel(L["LockDragDrop"])
@@ -539,7 +544,7 @@ treeW:AddChild(btnResetPosition)
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
+    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
@@ -595,7 +600,7 @@ treeW:AddChild(btnResetSettings)
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
+    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
@@ -620,9 +625,14 @@ tree = {
     },
     {
     value = "Adv",
-    text = L["Settings_Menu_General_Advanced"],
+    text = L["Settings_Menu_Advanced"],
     icon = "Interface\\Icons\\inv_misc_gear_01",
     },
+    {
+        value = "Alt",
+        text = L["Settings_Menu_Alternate"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+        },
     { 
       value = "C", 
       text = L["Settings_Menu_Credit"],
@@ -646,6 +656,8 @@ tree = {
         CTT_LoadAbout()
     elseif group == "Adv" then--elseif string.find(group, "Adv") then
         CTT_LoadAdvancedModeSettings()
+    elseif group == "Alt" then--elseif string.find(group, "Alt") then
+        CTT_LoadAlternateModeSettings()
     elseif group == "Ctx" then--elseif string.find(group, "Ctx") then
         CTT_LoadContextMenuSettings()
     else
@@ -663,7 +675,7 @@ function loadSettings()
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
+    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
