@@ -63,46 +63,80 @@ local treeW = AceGUI:Create("TreeGroup")
 function CTT_LoadCredits()
 
     treeW:ReleaseChildren()
+
+    scrollContainerCredits = AceGUI:Create("SimpleGroup")
+    scrollContainerCredits:SetFullWidth(true)
+    scrollContainerCredits:SetFullHeight(true)
+    scrollContainerCredits:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerCredits)
+    
+    scrollFrameCredits = AceGUI:Create("ScrollFrame")
+    scrollFrameCredits:SetLayout("Flow")
+    scrollContainerCredits:AddChild(scrollFrameCredits)
+
     local LabelCredits = AceGUI:Create("Label")
     LabelCredits:SetText(L["lblCreditColabList"])
     --LabelCredits:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelCredits, 13)
     LabelCredits:SetWidth(580)
-    treeW:AddChild(LabelCredits)
+    scrollFrameCredits:AddChild(LabelCredits)
 
 end
 
 function CTT_LoadAbout()
     treeW:ReleaseChildren()
 
+    scrollContainerAbout = AceGUI:Create("SimpleGroup")
+    scrollContainerAbout:SetFullWidth(true)
+    scrollContainerAbout:SetFullHeight(true)
+    scrollContainerAbout:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerAbout)
+    
+    scrollFrameAbout = AceGUI:Create("ScrollFrame")
+    scrollFrameAbout:SetLayout("Flow")
+    scrollContainerAbout:AddChild(scrollFrameAbout)
+
     local LabelAbout_Title = AceGUI:Create("Label")
     LabelAbout_Title:SetText("|cFFFFC90E" .. L["AddonName"] .. "|r")
     --LabelAbout_Title:SetFont(font, 20, style)
     CTT_setACE3WidgetFontSide(LabelAbout_Title, 20)
     LabelAbout_Title:SetWidth(580)
-    treeW:AddChild(LabelAbout_Title)
+    scrollFrameAbout:AddChild(LabelAbout_Title)
 
     local LabelAbout = AceGUI:Create("Label")
     LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n")
     --LabelAbout:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelAbout, 13)
     LabelAbout:SetWidth(560)
-    treeW:AddChild(LabelAbout)
+    scrollFrameAbout:AddChild(LabelAbout)
     
     local headingAbout1 = AceGUI:Create("Heading")
     headingAbout1:SetRelativeWidth(1)
-    treeW:AddChild(headingAbout1)
+    scrollFrameAbout:AddChild(headingAbout1)
 
     local LabelAboutLocalizationDisclaimer = AceGUI:Create("Label")
     LabelAboutLocalizationDisclaimer:SetText(L["About_Line3"])
     --LabelAbout:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelAboutLocalizationDisclaimer, 13)
     LabelAboutLocalizationDisclaimer:SetWidth(560)
-    treeW:AddChild(LabelAboutLocalizationDisclaimer)
+    scrollFrameAbout:AddChild(LabelAboutLocalizationDisclaimer)
 end
 
 function CTT_LoadAlternateModeSettings()
     treeW:ReleaseChildren()
+
+    scrollContainerAlternateMode = AceGUI:Create("SimpleGroup")
+    scrollContainerAlternateMode:SetFullWidth(true)
+    scrollContainerAlternateMode:SetFullHeight(true)
+    scrollContainerAlternateMode:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerAlternateMode)
+    
+    scrollFrameAlternateMode = AceGUI:Create("ScrollFrame")
+    scrollFrameAlternateMode:SetLayout("Flow")
+    scrollContainerAlternateMode:AddChild(scrollFrameAlternateMode)
 
     local chkAlternateModeShowIconOnly = AceGUI:Create("CheckBox")
     chkAlternateModeShowIconOnly:SetLabel(L["AlternateMode_ShowIconOnly"])
@@ -112,13 +146,24 @@ function CTT_LoadAlternateModeSettings()
         CTT_showMainFrame()
     end)
     chkAlternateModeShowIconOnly:SetWidth(700)
-    treeW:AddChild(chkAlternateModeShowIconOnly)
+    scrollFrameAlternateMode:AddChild(chkAlternateModeShowIconOnly)
 
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
 end
 
 function CTT_LoadAdvancedModeSettings()
     treeW:ReleaseChildren()
+
+    scrollContainerAdvancedMode = AceGUI:Create("SimpleGroup")
+    scrollContainerAdvancedMode:SetFullWidth(true)
+    scrollContainerAdvancedMode:SetFullHeight(true)
+    scrollContainerAdvancedMode:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerAdvancedMode)
+    
+    scrollFrameAdvancedMode = AceGUI:Create("ScrollFrame")
+    scrollFrameAdvancedMode:SetLayout("Flow")
+    scrollContainerAdvancedMode:AddChild(scrollFrameAdvancedMode)
 
 --Advanced Mode Options
 local ddlButtonPosition = AceGUI:Create("Dropdown")
@@ -146,7 +191,7 @@ ddlButtonPosition:SetCallback("OnValueChanged", function(widget, event, text)
         CTT_LoadAvancedModeIcons()
     end
 end)
-treeW:AddChild(ddlButtonPosition)
+scrollFrameAdvancedMode:AddChild(ddlButtonPosition)
 
 ddlButtonAlignment:SetList(buttonAlignments)
 ddlButtonAlignment:SetLabel(L["ddlButtonAlignment"])
@@ -160,12 +205,12 @@ ddlButtonAlignment:SetCallback("OnValueChanged", function(widget, event, text)
         CTT_LoadAvancedModeIcons()
     end
 end)
-treeW:AddChild(ddlButtonAlignment)
+scrollFrameAdvancedMode:AddChild(ddlButtonAlignment)
 
 lblSelectAdvancedModeOptions:SetText("\n" .. L["lblSelectAdvancedModeOptions"])
 CTT_setACE3WidgetFontSide(lblSelectAdvancedModeOptions, 12)
 lblSelectAdvancedModeOptions:SetWidth(580)
-treeW:AddChild(lblSelectAdvancedModeOptions)
+scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
     
     chkAdvShowGarrison:SetLabel(L["MiddleClickOption_Warlords"])
     chkAdvShowGarrison:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -177,7 +222,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowGarrison:SetWidth(700)
-    treeW:AddChild(chkAdvShowGarrison)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowGarrison)
 
     chkAdvShowClassHall:SetLabel(L["MiddleClickOption_Legion"])
     chkAdvShowClassHall:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -189,7 +234,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowClassHall:SetWidth(700)
-    treeW:AddChild(chkAdvShowClassHall)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowClassHall)
 
     chkAdvShowWarEffort:SetLabel(L["MiddleClickOption_Missions"])
     chkAdvShowWarEffort:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -201,7 +246,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowWarEffort:SetWidth(700)
-    treeW:AddChild(chkAdvShowWarEffort)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowWarEffort)
 
     chkAdvShowCovenant:SetLabel(string.format(L["MiddleClickOption_Covenant"], "-"))
     chkAdvShowCovenant:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -213,7 +258,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowCovenant:SetWidth(700)
-    treeW:AddChild(chkAdvShowCovenant)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowCovenant)
 
     chkAdvShowDragonIsles:SetLabel(L["MiddleClickOption_DragonIsles"])
     chkAdvShowDragonIsles:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -225,7 +270,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowDragonIsles:SetWidth(700)
-    treeW:AddChild(chkAdvShowDragonIsles)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowDragonIsles)
 
     chkAdvShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkAdvShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -237,10 +282,10 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowKhazAlgar:SetWidth(700)
-    treeW:AddChild(chkAdvShowKhazAlgar)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowKhazAlgar)
 
     heading5:SetRelativeWidth(1)
-    treeW:AddChild(heading5)
+    scrollFrameAdvancedMode:AddChild(heading5)
 
     chkAdvShowUnlockedOnly:SetLabel(L["chkAdvShowUnlockedOnly"])
     chkAdvShowUnlockedOnly:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -252,7 +297,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowUnlockedOnly:SetWidth(700)
-    treeW:AddChild(chkAdvShowUnlockedOnly)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowUnlockedOnly)
 
     chkAdvHideTimelineBox:SetLabel(L["chkAdvHideTimelineBox"])
     chkAdvHideTimelineBox:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -264,7 +309,7 @@ treeW:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvHideTimelineBox:SetWidth(700)
-    treeW:AddChild(chkAdvHideTimelineBox)
+    scrollFrameAdvancedMode:AddChild(chkAdvHideTimelineBox)
 
     ddlButtonPosition:SetValue(ChromieTimeTrackerDB.AdvButtonsPosition)
     ddlButtonAlignment:SetValue(ChromieTimeTrackerDB.AdvButtonsAlignment)
@@ -282,6 +327,17 @@ end
 function CTT_LoadContextMenuSettings()
     treeW:ReleaseChildren()
 
+    scrollContainerContextManu = AceGUI:Create("SimpleGroup")
+    scrollContainerContextManu:SetFullWidth(true)
+    scrollContainerContextManu:SetFullHeight(true)
+    scrollContainerContextManu:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerContextManu)
+    
+    scrollFrameContewxtMenu = AceGUI:Create("ScrollFrame")
+    scrollFrameContewxtMenu:SetLayout("Flow")
+    scrollContainerContextManu:AddChild(scrollFrameContewxtMenu)
+
 --ContextMenu Options
 local lblSelectContextMenuOptions = AceGUI:Create("Label")
 local chkContextMenuShowGarrison = AceGUI:Create("CheckBox")
@@ -296,7 +352,7 @@ local heading5 = AceGUI:Create("Heading")
 lblSelectContextMenuOptions:SetText("\n" .. L["lblSelectContextMenuOptions"])
 CTT_setACE3WidgetFontSide(lblSelectContextMenuOptions, 12)
 lblSelectContextMenuOptions:SetWidth(580)
-treeW:AddChild(lblSelectContextMenuOptions)
+scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     
     chkContextMenuShowGarrison:SetLabel(L["MiddleClickOption_Warlords"])
     chkContextMenuShowGarrison:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -308,7 +364,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowGarrison:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowGarrison)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowGarrison)
 
     chkContextMenuShowClassHall:SetLabel(L["MiddleClickOption_Legion"])
     chkContextMenuShowClassHall:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -320,7 +376,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowClassHall:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowClassHall)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowClassHall)
 
     chkContextMenuShowWarEffort:SetLabel(L["MiddleClickOption_Missions"])
     chkContextMenuShowWarEffort:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -332,7 +388,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowWarEffort:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowWarEffort)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowWarEffort)
 
     chkContextMenuShowCovenant:SetLabel(string.format(L["MiddleClickOption_Covenant"], "-"))
     chkContextMenuShowCovenant:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -344,7 +400,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowCovenant:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowCovenant)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowCovenant)
 
     chkContextMenuShowDragonIsles:SetLabel(L["MiddleClickOption_DragonIsles"])
     chkContextMenuShowDragonIsles:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -356,7 +412,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowDragonIsles:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowDragonIsles)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowDragonIsles)
 
     chkContextMenuShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkContextMenuShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -368,10 +424,10 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowKhazAlgar:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowKhazAlgar)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowKhazAlgar)
 
     heading5:SetRelativeWidth(1)
-    treeW:AddChild(heading5)
+    scrollFrameContewxtMenu:AddChild(heading5)
 
     chkContextMenuShowUnlockedOnly:SetLabel(L["chkAdvShowUnlockedOnly"])
     chkContextMenuShowUnlockedOnly:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -383,7 +439,7 @@ treeW:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowUnlockedOnly:SetWidth(700)
-    treeW:AddChild(chkContextMenuShowUnlockedOnly)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowUnlockedOnly)
 
     chkContextMenuShowGarrison:SetValue(ChromieTimeTrackerDB.ContextMenuShowGarrison)
     chkContextMenuShowClassHall:SetValue(ChromieTimeTrackerDB.ContextMenuShowClassHall)
@@ -398,6 +454,17 @@ end
 function CTT_LoadSettings()
 
 treeW:ReleaseChildren()
+
+scrollContainerMainSettings = AceGUI:Create("SimpleGroup")
+scrollContainerMainSettings:SetFullWidth(true)
+scrollContainerMainSettings:SetFullHeight(true)
+scrollContainerMainSettings:SetLayout("Fill")
+
+treeW:AddChild(scrollContainerMainSettings)
+
+scrollFrameMainSettings = AceGUI:Create("ScrollFrame")
+scrollFrameMainSettings:SetLayout("Flow")
+scrollContainerMainSettings:AddChild(scrollFrameMainSettings)
 
 --Geral
 local dropdown = AceGUI:Create("Dropdown")
@@ -431,28 +498,28 @@ dropdown:SetCallback("OnValueChanged", function(widget, event, text)
         CTT_LoadAvancedModeIcons()
     end
 end)
-treeW:AddChild(dropdown)
+scrollFrameMainSettings:AddChild(dropdown)
 
 LabelCompactMode:SetText("\n|cFFD6AE12" .. L["CompactMode"] .. ":|r " .. L["CompactModeDescription"])
 LabelCompactMode:SetWidth(700)
-treeW:AddChild(LabelCompactMode)
+scrollFrameMainSettings:AddChild(LabelCompactMode)
 
 LabelStandardMode:SetText("|cFFD6AE12" .. L["StandardMode"] .. ":|r " .. L["StandardModeDescription"])
 LabelStandardMode:SetWidth(700)
-treeW:AddChild(LabelStandardMode)
+scrollFrameMainSettings:AddChild(LabelStandardMode)
 
 
 LabelAlternateMode:SetText("|cFFD6AE12" .. L["AlternateMode"] .. ":|r " .. L["AlternateModeDescription"])
 LabelAlternateMode:SetWidth(590)
-treeW:AddChild(LabelAlternateMode)
+scrollFrameMainSettings:AddChild(LabelAlternateMode)
 
 LabelAdvancedMode:SetText("|cFFD6AE12" .. L["AdvancedMode"] .. ":|r " .. L["AdvancedModeDescription"])
 LabelAdvancedMode:SetWidth(590)
-treeW:AddChild(LabelAdvancedMode)
+scrollFrameMainSettings:AddChild(LabelAdvancedMode)
 
 
 heading1:SetRelativeWidth(1)
-treeW:AddChild(heading1)
+scrollFrameMainSettings:AddChild(heading1)
 
 
 CheckBox:SetLabel(L["HideWhenNotTimeTraveling"])
@@ -462,7 +529,7 @@ CheckBox:SetCallback("OnValueChanged", function(widget, event, text)
     CTT_showMainFrame()
 end)
 CheckBox:SetWidth(700)
-treeW:AddChild(CheckBox)
+scrollFrameMainSettings:AddChild(CheckBox)
 
 
 chkLockDragDrop:SetLabel(L["LockDragDrop"])
@@ -472,10 +539,10 @@ chkLockDragDrop:SetCallback("OnValueChanged", function(widget, event, text)
     CTT_showMainFrame()
 end)
 chkLockDragDrop:SetWidth(700)
-treeW:AddChild(chkLockDragDrop)
+scrollFrameMainSettings:AddChild(chkLockDragDrop)
 
 heading2:SetRelativeWidth(1)
-treeW:AddChild(heading2)
+scrollFrameMainSettings:AddChild(heading2)
 
 ddlDefaultMiddleClickOption:SetList(MiddleClickOptions)
 ddlDefaultMiddleClickOption:SetLabel(L["lblDefaultMiddleClickOption"])
@@ -486,12 +553,12 @@ ddlDefaultMiddleClickOption:SetCallback("OnValueChanged", function(widget, event
     CTT_updateChromieTime()
     CTT_showMainFrame()
 end)
-treeW:AddChild(ddlDefaultMiddleClickOption)
+scrollFrameMainSettings:AddChild(ddlDefaultMiddleClickOption)
 
 
 LabelMiddleClick:SetText(L["MiddleClickOptionDescription"])
 LabelMiddleClick:SetWidth(700)
-treeW:AddChild(LabelMiddleClick)
+scrollFrameMainSettings:AddChild(LabelMiddleClick)
 
 
 chkLockMiddleClickOption:SetLabel(L["LockMiddleClickOption"])
@@ -501,10 +568,10 @@ chkLockMiddleClickOption:SetCallback("OnValueChanged", function(widget, event, t
     CTT_showMainFrame()
 end)
 chkLockMiddleClickOption:SetWidth(700)
-treeW:AddChild(chkLockMiddleClickOption)
+scrollFrameMainSettings:AddChild(chkLockMiddleClickOption)
 
 heading3:SetRelativeWidth(1)
-treeW:AddChild(heading3)
+scrollFrameMainSettings:AddChild(heading3)
 
 chkHideDeveloperCreditOnTooltips:SetLabel(L["HideDeveloperCreditOnTooltips"])
 chkHideDeveloperCreditOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -513,7 +580,7 @@ chkHideDeveloperCreditOnTooltips:SetCallback("OnValueChanged", function(widget, 
     CTT_showMainFrame()
  end)
 chkHideDeveloperCreditOnTooltips:SetWidth(700)
-treeW:AddChild(chkHideDeveloperCreditOnTooltips)
+scrollFrameMainSettings:AddChild(chkHideDeveloperCreditOnTooltips)
 
 
 StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET"] = {
@@ -539,7 +606,7 @@ btnResetPosition:SetWidth(200)
 btnResetPosition:SetCallback("OnClick", function() 
     StaticPopup_Show ("POPUP_DIALOG_CONFIRM_RESET")
 end)
-treeW:AddChild(btnResetPosition)
+scrollFrameMainSettings:AddChild(btnResetPosition)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
@@ -595,7 +662,7 @@ btnResetSettings:SetWidth(200)
 btnResetSettings:SetCallback("OnClick", function() 
     StaticPopup_Show ("POPUP_DIALOG_CONFIRM_RESET_SETTINGS")
 end)
-treeW:AddChild(btnResetSettings)
+scrollFrameMainSettings:AddChild(btnResetSettings)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
