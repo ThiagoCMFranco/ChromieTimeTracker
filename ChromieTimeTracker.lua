@@ -126,6 +126,17 @@ local L_ButtonFrames =
     ["TWW"] = "ChromieTimeTrackerKhazAlgarIconFrame",
 }
 
+local L_CurrencyId =
+{
+    ["Garrison_Resources"] = 824, 
+    ["Garrison_Oil"] = 1101,
+    ["Order_Resources"] = 1220,
+    ["War_Resources"] = 1560,
+    ["Reservoir_Anima"] = 1813,
+}
+
+local isGarrisonUIFirstLoad = true
+
 local isUnlocked = {}
 
 -- Instanciação da função principal do Addon
@@ -1077,10 +1088,89 @@ function CTT_flashMessage(_message, _duration, _fontScale)
                         end)
 end
 
+function CreateInlineIcon(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset)
+	sizeX = sizeX or 16;
+	sizeY = sizeY or sizeX;
+	xOffset = xOffset or 0;
+	yOffset = yOffset or 0;
+
+	if (type(atlasNameOrTexID) == "number") then
+		-- REF.: CreateTextureMarkup(file, fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+		return CreateTextureMarkup(atlasNameOrTexID, 0, 0, sizeX, sizeY, 0, 0, 0, 0, xOffset, yOffset);  --> keep original color
+		-- return string.format("|T%d:%d:%d:%d:%d|t", atlasNameOrTexID, size, size, xOffset, yOffset);
+	end
+	-- if ( type(atlasNameOrTexID) == "string" or tonumber(atlasNameOrTexID) ~= nil ) then
+	if (type(atlasNameOrTexID) == "string") then
+		-- REF.: CreateAtlasMarkup(atlasName, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
+		return CreateAtlasMarkup(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset);  --> keep original color
+	end
+
+	return ''
+end
+
+function getCurrencyById(_currencyId, _showCurrencyName) 
+    local warband = ""
+    local _currency = {}
+    _currency = C_CurrencyInfo.GetCurrencyInfo(_currencyId)
+    if(_currency.isAccountWide) then
+        warband = CreateInlineIcon("warbands-icon")
+    end
+
+    local iconString = CreateInlineIcon(_currency.iconFileID)
+    if(_showCurrencyName) then
+        return _currency.name .. ": |cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
+    else
+        return "|cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
+    end
+end
+
+function updateGarrisonReportDisplayedCurrency(_garrisonID)
+    if _garrisonID == 2 then
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "    " .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true))
+    end
+    if _garrisonID == 3 then
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Order_Resources"], true))
+    end
+    if _garrisonID == 9 then
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["War_Resources"], true))
+    end
+    if _garrisonID == 111 then
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Reservoir_Anima"], true))
+    end
+end
+
+function drawGarrisonReportCurrencyWidget(_garrisonID)
+    if(isGarrisonUIFirstLoad) then
+        isGarrisonUIFirstLoad = false
+
+            garrisonUIResourcesFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "") -- TooltipBorderedFrameTemplate
+
+            garrisonUIResourcesFrame:ClearAllPoints()
+            garrisonUIResourcesFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "TOPLEFT", 40, -12)
+            garrisonUIResourcesFrame:SetSize(320, 28)
+            garrisonUIResourcesFrame:SetFrameLevel(5)
+
+            garrisonUIResourcesFrame.garrisonCurrency = garrisonUIResourcesFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            garrisonUIResourcesFrame.garrisonCurrency:SetPoint("LEFT", garrisonUIResourcesFrame, "LEFT", 0, 0)
+            garrisonUIResourcesFrame.garrisonCurrency:SetText("[Currency]")
+
+            --Disabling native Garrison Fleet tab OnEnter and Onleave events resulting in nil reference error - Begin
+            GarrisonLandingPageTab_OnEnter = function(...) end
+            GarrisonLandingPageTab_OnLeave = function(...) end
+            GarrisonShipFollowerListButton_OnClick = function(...) end
+            --Disabling native garrison fleet tab OnEnter and Onleave events resulting in nil reference error - End
+            
+            garrisonUIResourcesFrame:Show()
+    end
+    updateGarrisonReportDisplayedCurrency(_garrisonID)
+end
+
+
 function CTT_CheckExpansionContentAccess(_garrisonID)
  if _garrisonID == 111 then
     if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
         ShowGarrisonLandingPage(_garrisonID)
+        drawGarrisonReportCurrencyWidget(_garrisonID)
     else
         requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
         CTT_flashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
@@ -1088,6 +1178,7 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
 elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
  if not not (C_Garrison.GetGarrisonInfo(_garrisonID)) then
     ShowGarrisonLandingPage(_garrisonID)
+    drawGarrisonReportCurrencyWidget(_garrisonID)
  else
     local funcionalidade = ""
     if (_garrisonID == 2) then
