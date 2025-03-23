@@ -1125,6 +1125,11 @@ function getCurrencyById(_currencyId, _showCurrencyName)
 end
 
 function updateGarrisonReportDisplayedCurrency(_garrisonID)
+    if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
+        garrisonUIResourcesFrame:Show()
+    else
+        garrisonUIResourcesFrame:Hide()
+    end
     if _garrisonID == 2 then
         garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "    " .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true))
     end

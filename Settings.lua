@@ -151,6 +151,36 @@ function CTT_LoadAlternateModeSettings()
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
 end
 
+function CTT_LoadCurrencyMenuSettings()
+    treeW:ReleaseChildren()
+
+    scrollContainerCurrencySettings = AceGUI:Create("SimpleGroup")
+    scrollContainerCurrencySettings:SetFullWidth(true)
+    scrollContainerCurrencySettings:SetFullHeight(true)
+    scrollContainerCurrencySettings:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerCurrencySettings)
+    
+    scrollFrameCurrencySettings = AceGUI:Create("ScrollFrame")
+    scrollFrameCurrencySettings:SetLayout("Flow")
+    scrollContainerCurrencySettings:AddChild(scrollFrameCurrencySettings)
+
+    local chkShowCurrencyOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
+    chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
+        if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
+            garrisonUIResourcesFrame:Show()
+        else
+            garrisonUIResourcesFrame:Hide()
+        end
+    end)
+    chkShowCurrencyOnReportWindow:SetWidth(700)
+    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnReportWindow)
+
+    chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
+end
+
 function CTT_LoadAdvancedModeSettings()
     treeW:ReleaseChildren()
 
@@ -681,9 +711,9 @@ tree = {
         icon = "Interface\\AddOns\\ChromieTimeTracker\\Chromie.png",
     },
     { 
-      value = "G",
-      text = L["Settings_Menu_General"],
-      icon = "Interface\\Icons\\inv_misc_gear_01",
+        value = "G",
+        text = L["Settings_Menu_General"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
     },
     {
         value = "Ctx",
@@ -691,19 +721,24 @@ tree = {
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
     {
-    value = "Adv",
-    text = L["Settings_Menu_Advanced"],
-    icon = "Interface\\Icons\\inv_misc_gear_01",
+        value = "Adv",
+        text = L["Settings_Menu_Advanced"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
     },
     {
         value = "Alt",
         text = L["Settings_Menu_Alternate"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
-        },
+    },
+    {
+        value = "Cur",
+        text = L["Settings_Menu_Currency"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+    },
     { 
-      value = "C", 
-      text = L["Settings_Menu_Credit"],
-      icon = "Interface\\Icons\\inv_misc_coin_02",
+        value = "C", 
+        text = L["Settings_Menu_Credit"],
+        icon = "Interface\\Icons\\inv_misc_coin_02",
     },
   }
 
@@ -715,18 +750,22 @@ tree = {
 
   treeW:SetCallback("OnGroupSelected", function(container, _, group, ...)
     
+    --elseif string.find(group, "Ctx") then
+
     if group == "G" then
         CTT_LoadSettings()
     elseif group == "C" then
         CTT_LoadCredits()
     elseif group == "S" then
         CTT_LoadAbout()
-    elseif group == "Adv" then--elseif string.find(group, "Adv") then
+    elseif group == "Adv" then
         CTT_LoadAdvancedModeSettings()
-    elseif group == "Alt" then--elseif string.find(group, "Alt") then
+    elseif group == "Alt" then
         CTT_LoadAlternateModeSettings()
-    elseif group == "Ctx" then--elseif string.find(group, "Ctx") then
+    elseif group == "Ctx" then
         CTT_LoadContextMenuSettings()
+    elseif group == "Cur" then
+        CTT_LoadCurrencyMenuSettings()
     else
         print(group)
     end
