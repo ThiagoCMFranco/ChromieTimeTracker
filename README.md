@@ -1,5 +1,7 @@
 # ChromieTimeTracker
 
+This is a World of Warcraft addon.
+
 Easily track your current Timewalking Campaign (Chromie Time).  
 
 Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.  
@@ -10,13 +12,12 @@ Swap between stardard and compact layout and place it bellow your chat window, n
 
 Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
 
-Currently Supported Languages: Brazilian Portuguese (ptBR) and English (enUS).  
+Currently Supported Languages: Brazilian Portuguese (ptBR), English (enUS) and Russian (ruRU).  
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
 /ChromieTimeTracker: toggle addon visibility.  
 /ctt: toggle addon visibility.  
-/ctt config: toggle addon configuration window.  
 /ctt config: toggle addon configuration window.  
 /ctt commands: show the availiable command list on chat.  
 /ctt resetPosition: reset the addon position to screen center if accidentaly dragged offscreen.  
@@ -26,17 +27,19 @@ Use the following slash commands to control the addon if you don't want to keep 
 Minimap icon actions:  
 Left Click: toggle addon visibility.  
 Middle Click: open expansion summary window.  
+Shift + Middle Click: open context menu.
 Right Click: toggle addon configuration window.  
 
 Addon Timeline Window:  
 Left Click: Drag the addon anywhere.  
 Middle Click: open expansion summary window.  
+Shift + Middle Click: open context menu.
 Right Click: toggle addon configuration window.  
 
 ## Troubleshooting
 Most problems can be solved by reseting the addon variables:  
 1. Close your game.  
-2. Go to your game folder under "\_retail_\WTF\Account\[YOUR_ACCOUNT_ID]\[CHARACTER_REALM_NAME]\[CHARACTER_NAME]\SavedVariables"  
+2. Go to your game folder under "\_retail_\WTF\Account\\[YOUR_ACCOUNT_ID]\\[CHARACTER_REALM_NAME]\\[CHARACTER_NAME]\SavedVariables"  
 3. Delete te files named ChromieTimeTracker.lua and ChromieTimeTracker.lua.bak.  
 4. Open tha game.  
 
