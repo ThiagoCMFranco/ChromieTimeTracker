@@ -183,7 +183,11 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
-        ChromieTimeTrackerDB.AlreadyUsed = true    
+        --Set initial values for Currency settings
+        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
+
+        ChromieTimeTrackerDB.AlreadyUsed = true
     end
 end
 
@@ -1257,6 +1261,22 @@ function CTT_ShowIconTooltip(tooltip, text)
     tooltip:AddLine("|cFFFFFFFF" .. text .. "|r", nil, nil, nil, nil)
 end
 
+function CTT_SetupTooltip(_tooltip, _LClickAction, _MClickAction, _TimelineCurrency)
+    if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+        if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineCurrency .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+        else
+            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+        end
+    else
+        if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineCurrency .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        else
+            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        end
+    end
+end
+
 function CTT_ShowToolTip(tooltip, mode)
    local LClickAction = ""
    local MClickAction = ""
@@ -1266,17 +1286,31 @@ function CTT_ShowToolTip(tooltip, mode)
         LClickAction = L["LClickAction"]
     end
 
+    local TimelineCurrency = ""
+    if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
+        if ExpansionGarrisonID[CurrentGarrisonID] == 2 then
+            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true)
+        elseif ExpansionGarrisonID[CurrentGarrisonID] == 3 then
+            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Order_Resources"], true)
+        elseif ExpansionGarrisonID[CurrentGarrisonID] == 9 then
+            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["War_Resources"], true)
+        elseif ExpansionGarrisonID[CurrentGarrisonID] == 111 then
+            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Reservoir_Anima"], true)
+        end
+    else
+        --Adicionar funcionalidade de exibir recursos específicos quando não estiver em nenhuma linha temporal.
+    end
 
     if ChromieTimeTrackerDB.LockMiddleClickOption or currentExpansionName == L["currentExpansionLabel"] then
         
         if ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 2 then
-            MClickAction = L["MClickAction_Warlords"]
+            MClickAction = L["MClickAction_Warlords"]      
         elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 3 then
-            MClickAction = L["MClickAction_Legion"]
+            MClickAction = L["MClickAction_Legion"]            
         elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 9 then
-            MClickAction = L["MClickAction_Missions"]
+            MClickAction = L["MClickAction_Missions"]            
         elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 111 then
-            MClickAction = L["MClickAction_Covenant"]
+            MClickAction = L["MClickAction_Covenant"]            
         elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "DF" then
             MClickAction = L["MClickAction_DragonIsles"]
         elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
@@ -1285,11 +1319,13 @@ function CTT_ShowToolTip(tooltip, mode)
             MClickAction = L["MClickAction"]
         end
 
-        if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
-        else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        end
+        CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
+
+        --if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
+        --else
+        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        --end
         
 else
     if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
@@ -1310,12 +1346,17 @@ else
             MClickAction = L["MClickAction"]
         end
 
-        if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
-        else
-            tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        end
+        CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
+
+        --if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
+        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
+        --else
+        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
+        --end
     else
+
+        --CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
+
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
             tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
@@ -1410,6 +1451,9 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
             ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
             ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
+
+            ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
+            ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
             
             CTT_updateChromieTime();
             CTT_LoadAvancedModeIcons();

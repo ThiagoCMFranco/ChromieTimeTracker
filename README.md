@@ -6,13 +6,17 @@ Easily track your current Timewalking Campaign (Chromie Time).
 
 Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.  
 
-A small yet usefull addon to fulill a simple need, remember which Timewalk Campaign timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
+A small yet usefull addon to fulfill a simple need, remember which Timewalk Campaign timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
 
-Swap between stardard and compact layout and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like.  
+Swap between stardard, alternate and compact layout and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like. Use the advanced mode for a full featured addon with many options.  
 
 Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
 
-Currently Supported Languages: Brazilian Portuguese (ptBR), English (enUS) and Russian (ruRU).  
+Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to access reports, sumaries and even remember you Covenant Sanctum choice.
+
+Currently Supported Languages:   
+Full Support: Brazilian Portuguese (ptBR) and English (enUS).  
+Partial Support: Russian (ruRU).  
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
@@ -27,14 +31,12 @@ Use the following slash commands to control the addon if you don't want to keep 
 Minimap icon actions:  
 Left Click: toggle addon visibility.  
 Middle Click: open expansion summary window.  
-Shift + Middle Click: open context menu.
-Right Click: toggle addon configuration window.  
+Right Click: open context menu.  
 
 Addon Timeline Window:  
 Left Click: Drag the addon anywhere.  
 Middle Click: open expansion summary window.  
-Shift + Middle Click: open context menu.
-Right Click: toggle addon configuration window.  
+Right Click: open context menu.  
 
 ## Troubleshooting
 Most problems can be solved by reseting the addon variables:  

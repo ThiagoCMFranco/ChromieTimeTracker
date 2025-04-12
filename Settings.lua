@@ -169,16 +169,27 @@ function CTT_LoadCurrencyMenuSettings()
     chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
     chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
         ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
-        if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
-            garrisonUIResourcesFrame:Show()
-        else
-            garrisonUIResourcesFrame:Hide()
+        if(garrisonUIResourcesFrame) then
+            if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
+                garrisonUIResourcesFrame:Show()
+            else
+                garrisonUIResourcesFrame:Hide()
+            end
         end
     end)
     chkShowCurrencyOnReportWindow:SetWidth(700)
     scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnReportWindow)
 
+    local chkShowCurrencyOnTooltips = AceGUI:Create("CheckBox")
+    chkShowCurrencyOnTooltips:SetLabel(L["chkShowCurrencyOnTooltips"])
+    chkShowCurrencyOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
+    end)
+    chkShowCurrencyOnTooltips:SetWidth(700)
+    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnTooltips)
+
     chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
+    chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
 end
 
 function CTT_LoadAdvancedModeSettings()
@@ -676,6 +687,9 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
+        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
+
         CTT_updateChromieTime()
         CTT_showMainFrame()
         treeW:SelectByValue("S")
@@ -717,7 +731,7 @@ tree = {
     },
     {
         value = "Ctx",
-        text = "Menu de Contexto",
+        text = L["Settings_Menu_Context_Menu"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
     {
