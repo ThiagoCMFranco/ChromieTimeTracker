@@ -4,7 +4,7 @@
 ## Notes: Easily track your current Timewalking Campaign (Chromie Time).
 ## Notes-ptBR: Identifique facilmente sua linha de campanha de caminhada temporal (Cromie Time).
 ## Author: Thiago Franco (Topolino)
-## Version: 2.0.0
+## Version: 2.1.0
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables:
@@ -21,6 +21,7 @@ Libs\LibDBIcon-1.0\lib.xml
 # Localization
 localization\enUS.lua
 localization\ptBR.lua
+localization\ruRU.lua
 
 # Main Files
 ChromieTimeTracker.lua
