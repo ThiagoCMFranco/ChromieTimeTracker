@@ -116,6 +116,44 @@ local C_CovenantChoicesTextures =
     ["Not_Selected"] = "covenantsanctum-renown-icon-available-nightfae",
 }
 
+local C_ClassTabTextures =
+{
+  ["DRUID"] = "Interface\\Icons\\Classicon_druid",
+  ["SHAMAN"] = "Interface\\Icons\\Classicon_shaman",
+  ["DEATHKNIGHT"] = "Interface\\Icons\\Classicon_deathknight",
+  ["PALADIN"] = "Interface\\Icons\\Classicon_paladin",
+  ["WARRIOR"] = "Interface\\Icons\\Classicon_warrior",
+  ["HUNTER"] = "Interface\\Icons\\Classicon_hunter",
+  ["ROGUE"] = "Interface\\Icons\\Classicon_rogue",
+  ["PRIEST"] = "Interface\\Icons\\Classicon_priest",
+  ["MAGE"] = "Interface\\Icons\\Classicon_mage",
+  ["WARLOCK"] = "Interface\\Icons\\Classicon_warlock",
+  ["MONK"] = "Interface\\Icons\\Classicon_monk",
+  ["DEMONHUNTER"] = "Interface\\Icons\\Classicon_demonhunter",
+  ["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
+}
+
+local C_GarrisonTabTextures =
+{
+  ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
+  ["Horde"] = "Interface\\Icons\\achievement_garrison_tier01_horde",
+}
+
+local C_WarCampaignTabTextures =
+{
+  ["Alliance"] = "Interface\\Icons\\ui_allianceicon",
+  ["Horde"] = "Interface\\Icons\\ui_hordeicon",
+}
+
+local C_CovenantChoicesTabTextures =
+{
+    ["Necrolord"] = "Interface\\Icons\\ui_sigil_necrolord",
+    ["NightFae"] = "Interface\\Icons\\ui_sigil_nightfae",
+    ["Venthyr"] = "Interface\\Icons\\ui_sigil_vanthyr",
+    ["Kyrian"] = "Interface\\Icons\\ui_sigil_kyrian",
+    ["Not_Selected"] = "Interface\\Icons\\inv_misc_covenant_renown",
+}
+
 local L_ButtonFrames =
 {
     [2] = "ChromieTimeTrackerGarrisonIconFrame",
@@ -186,6 +224,10 @@ function CTT_SetupFirstAccess(arg)
         --Set initial values for Currency settings
         ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
         ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
+
+        --Set initial values for Enhancement settings
+        ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
 
         ChromieTimeTrackerDB.AlreadyUsed = true
     end
@@ -294,7 +336,6 @@ local function GeneratorFunction(owner, rootDescription)
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 2 == GarrisonLandingPage.garrTypeID) then
                 HideUIPanel(GarrisonLandingPage);
             else
-                HideUIPanel(GarrisonLandingPage);
                 CTT_CheckExpansionContentAccess(2)
             end
         end);
@@ -306,7 +347,6 @@ local function GeneratorFunction(owner, rootDescription)
                 if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 3 == GarrisonLandingPage.garrTypeID) then
                     HideUIPanel(GarrisonLandingPage);
                 else
-                    HideUIPanel(GarrisonLandingPage);
                     CTT_CheckExpansionContentAccess(3)
                 end
             end);
@@ -322,7 +362,6 @@ local function GeneratorFunction(owner, rootDescription)
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 9 == GarrisonLandingPage.garrTypeID) then
                 HideUIPanel(GarrisonLandingPage);
             else
-                HideUIPanel(GarrisonLandingPage);
                 CTT_CheckExpansionContentAccess(9)
             end
         end);
@@ -337,7 +376,6 @@ local function GeneratorFunction(owner, rootDescription)
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 111 == GarrisonLandingPage.garrTypeID) then
                 HideUIPanel(GarrisonLandingPage);
             else
-                HideUIPanel(GarrisonLandingPage);
                 CTT_CheckExpansionContentAccess(111)
             end
         end);
@@ -706,7 +744,6 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and _garrisonID == GarrisonLandingPage.garrTypeID) then
                 HideUIPanel(GarrisonLandingPage);
             else
-                HideUIPanel(GarrisonLandingPage);
                 CTT_CheckExpansionContentAccess(_garrisonID)
             end
         elseif btn == "RightButton" then
@@ -944,10 +981,10 @@ function CTT_LoadAvancedModeIcons()
     local _ActiveCovenantName = "-"
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
 
-        local _ConvData = {}
-        _ConvData = getCovenantData()
+        local _CovData = {}
+        _CovData = getCovenantData()
 
-        CTT_setupGarrisonIconFrame(covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[_ConvData[1]], "Atlas", string.format(L["MiddleClickOption_Covenant"], _ConvData[3]))
+        CTT_setupGarrisonIconFrame(covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[_CovData[1]], "Atlas", string.format(L["MiddleClickOption_Covenant"], _CovData[3]))
         position = position + 1;
     else
         covenantIconFrame:Hide();
@@ -1148,6 +1185,37 @@ function updateGarrisonReportDisplayedCurrency(_garrisonID)
     end
 end
 
+local function GenericFunction(_function, ...)
+	return _function(...)
+end
+
+local function RegisterCallback_OnInitializedFrame(_frame, _function)
+	_frame:RegisterCallback("OnInitializedFrame", GenericFunction, _function)
+	if _frame:IsVisible() then
+		_frame:ForEachFrame(_function)
+	end
+end
+
+local function CTT_ShowReportMissionExpirationTime(b, item)
+    if ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow then
+        if b and item and item.offerTimeRemaining and item.offerEndTime then
+            local _color = "|cffa0a0a0"
+            if (item.offerEndTime - GetTime()) /60 < 360 then
+                _color = "|cFFFF7F27"
+            end
+            if (item.offerEndTime - GetTime()) /60 < 120 then
+                _color = "|cffff3333"
+            end
+
+            if item.offerEndTime - 8640000 <= GetTime() then
+                b.MissionType:SetFormattedText("%s |cffa0a0a0(%s %s%s|r)|r",
+                    item.durationSeconds >= GARRISON_LONG_MISSION_TIME and (GARRISON_LONG_MISSION_TIME_FORMAT):format(item.duration) or item.duration,
+                    L["Expires_in"], _color, item.offerTimeRemaining)
+            end
+        end
+    end
+end
+
 function drawGarrisonReportCurrencyWidget(_garrisonID)
     if(isGarrisonUIFirstLoad) then
         isGarrisonUIFirstLoad = false
@@ -1170,14 +1238,19 @@ function drawGarrisonReportCurrencyWidget(_garrisonID)
             --Disabling native garrison fleet tab OnEnter and Onleave events resulting in nil reference error - End
             
             garrisonUIResourcesFrame:Show()
+
+            RegisterCallback_OnInitializedFrame(GarrisonLandingPageReportList.ScrollBox, CTT_ShowReportMissionExpirationTime)
+
     end
     updateGarrisonReportDisplayedCurrency(_garrisonID)
 end
 
 
 function CTT_CheckExpansionContentAccess(_garrisonID)
+    
  if _garrisonID == 111 then
     if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
+        HideUIPanel(GarrisonLandingPage);
         ShowGarrisonLandingPage(_garrisonID)
         drawGarrisonReportCurrencyWidget(_garrisonID)
     else
@@ -1186,6 +1259,7 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
     end
 elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
  if not not (C_Garrison.GetGarrisonInfo(_garrisonID)) then
+    HideUIPanel(GarrisonLandingPage);
     ShowGarrisonLandingPage(_garrisonID)
     drawGarrisonReportCurrencyWidget(_garrisonID)
  else
@@ -1251,7 +1325,6 @@ function CTT_MouseMiddleButtonClick()
     if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and selected == GarrisonLandingPage.garrTypeID) then
         HideUIPanel(GarrisonLandingPage);
     else
-        HideUIPanel(GarrisonLandingPage);
         CTT_CheckExpansionContentAccess(selected)
     end
 
@@ -1388,6 +1461,94 @@ function CTT_OpenExpansionLandingPage(_expansion)
 
 end
 
+--Add garrison buttons to GarrisonLandingPage - Início
+
+garrisonTabs = {}
+garrisonTabsHover = {}
+local function SelectGarrison(self)
+    CTT_CheckExpansionContentAccess(self.pageID)
+end
+
+local E = CreateFrame('Frame')
+E:RegisterEvent('ADDON_LOADED')
+E:SetScript('OnEvent', function(self, event, addon)
+    if(addon == 'Blizzard_GarrisonUI') then
+
+        local l_Covenant = "Not_Selected"
+        local _CovData = {}
+        _CovData = getCovenantData()
+        
+        for _, _garrisonTab in next, {
+            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},--[[Interface\Icons\inv_garrison_resource]]
+            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},--[[Interface\Icons\inv_orderhall_orderresources]]
+            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},--[[Interface\Icons\inv__faction_warresources]]
+			{111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},--[[Interface\Icons\spell_animabastion_orb]]
+        } do
+            garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonLandingPage, 'UIButtonTemplate')
+            garrisonTabFrame:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
+            garrisonTabFrame:SetSize(30,30)
+            garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
+            garrisonTabFrame:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrame:Show()
+            garrisonTabFrame.tabIndex = #garrisonTabs + 1
+            garrisonTabFrame.pageID = _garrisonTab[1]
+            garrisonTabFrame.tooltip = _garrisonTab[2]
+
+            garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, GarrisonLandingPage, '')
+            garrisonTabFrameHover:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
+            garrisonTabFrameHover:SetSize(30,30)
+            garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
+            garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrameHover:SetFrameLevel(10)
+            --garrisonTabFrameHover:Hide()
+            garrisonTabFrameHover.pageID = _garrisonTab[1]
+            garrisonTabFrameHover.tooltip = _garrisonTab[2]
+            
+            table.insert(garrisonTabs, garrisonTabFrame)
+            table.insert(garrisonTabsHover, garrisonTabFrameHover)
+        end     
+        
+        for _, _garTab in pairs(garrisonTabs) do
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTab:SetScript("OnEnter", function(self)
+                    garrisonTabsHover[_garTab.tabIndex]:Show()
+                end)
+                _garTab:Show();
+            else
+                _garTab:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(garrisonTabsHover) do
+
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTabHover:SetScript("OnEnter", function(self)
+                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                    CTT_ShowIconTooltip(GameTooltip, _garTabHover.tooltip)
+                    GameTooltip:Show()
+                end)
+
+                _garTabHover:SetScript("OnLeave", function(self)
+                    GameTooltip:Hide()
+                    _garTabHover:Hide()
+                end)
+                _garTabHover:Show();
+            else
+                _garTabHover:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(garrisonTabsHover) do
+            _garTabHover:Hide()
+        end
+
+        self:UnregisterEvent(event)
+    
+end
+end)
+
+--Add garrison buttons to GarrisonLandingPage - Fim
+
 function CTT_setupSlashCommands()
     -- Criação dos slash comands.
     
@@ -1454,6 +1615,9 @@ function CTT_setupSlashCommands()
 
             ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
             ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
+
+            ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
+            ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
             
             CTT_updateChromieTime();
             CTT_LoadAvancedModeIcons();
@@ -1477,3 +1641,4 @@ function CTT_setupSlashCommands()
     end
     
     CTT_setupSlashCommands()
+    

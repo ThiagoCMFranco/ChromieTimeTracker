@@ -192,6 +192,53 @@ function CTT_LoadCurrencyMenuSettings()
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
 end
 
+function CTT_LoadReportEnhancementSettings()
+    treeW:ReleaseChildren()
+
+    scrollContainerReportEnhancementSettings = AceGUI:Create("SimpleGroup")
+    scrollContainerReportEnhancementSettings:SetFullWidth(true)
+    scrollContainerReportEnhancementSettings:SetFullHeight(true)
+    scrollContainerReportEnhancementSettings:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerReportEnhancementSettings)
+    
+    scrollFrameReportEnhancementSettings = AceGUI:Create("ScrollFrame")
+    scrollFrameReportEnhancementSettings:SetLayout("Flow")
+    scrollContainerReportEnhancementSettings:AddChild(scrollFrameReportEnhancementSettings)
+
+    local chkShowReportTabsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowReportTabsOnReportWindow:SetLabel(L["chkShowReportTabsOnReportWindow"])
+    chkShowReportTabsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = chkShowReportTabsOnReportWindow:GetValue()
+        if(garrisonTabs) then
+            for _, _garTab in pairs(garrisonTabs) do
+                if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                    _garTab:Show();
+                else
+                    _garTab:Hide();
+                end
+            end
+        end
+    end)
+    chkShowReportTabsOnReportWindow:SetWidth(700)
+
+    local chkShowMissionExpirationTimeOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowMissionExpirationTimeOnReportWindow:SetLabel(L["chkShowMissionExpirationTimeOnReportWindow"])
+    chkShowMissionExpirationTimeOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = chkShowMissionExpirationTimeOnReportWindow:GetValue()
+        if GarrisonLandingPageReportList ~= nil then
+            GarrisonLandingPageReportList.ScrollBox.ReinitializeFrames(GarrisonLandingPageReportList.ScrollBox)
+        end
+    end)
+    chkShowMissionExpirationTimeOnReportWindow:SetWidth(700)
+
+    scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
+
+    chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
+    chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
+end
+
 function CTT_LoadAdvancedModeSettings()
     treeW:ReleaseChildren()
 
@@ -690,6 +737,9 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
         ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
 
+        ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
+
         CTT_updateChromieTime()
         CTT_showMainFrame()
         treeW:SelectByValue("S")
@@ -749,6 +799,11 @@ tree = {
         text = L["Settings_Menu_Currency"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
+    {
+        value = "Enh",
+        text = L["Settings_Menu_Enhancements"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+    },
     { 
         value = "C", 
         text = L["Settings_Menu_Credit"],
@@ -780,6 +835,8 @@ tree = {
         CTT_LoadContextMenuSettings()
     elseif group == "Cur" then
         CTT_LoadCurrencyMenuSettings()
+    elseif group == "Enh" then
+        CTT_LoadReportEnhancementSettings()
     else
         print(group)
     end
