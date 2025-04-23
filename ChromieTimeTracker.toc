@@ -1,10 +1,10 @@
-## Interface: 110007, 110100
+## Interface: 110007, 110100, 110105
 ## Title: Chromie Time Tracker
 ## Title-ptBR: Rastreador de Linha Temporal da Crona
 ## Notes: Easily track your current Timewalking Campaign (Chromie Time).
 ## Notes-ptBR: Identifique facilmente sua linha de campanha de caminhada temporal (Cromie Time).
 ## Author: Thiago Franco (Topolino)
-## Version: 2.1.0
+## Version: 2.1.1
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables:
