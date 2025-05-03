@@ -8,15 +8,24 @@ Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.
 
 A small yet usefull addon to fulfill a simple need, remember which Timewalk Campaign timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
 
-Swap between stardard, alternate and compact layout and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like. Use the advanced mode for a full featured addon with many options.  
+Swap between diferent layout modes and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like.  
 
 Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
 
-Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to access reports, sumaries and even remember you Covenant Sanctum choice.
+Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to track resources, access reports and sumaries, remember you Covenant Sanctum choice and many more quality of life features.
 
 Currently Supported Languages:   
 Full Support: Brazilian Portuguese (ptBR) and English (enUS).  
 Partial Support: Russian (ruRU).  
+
+## Main Features
+Track your current Timewalking Campaign.
+Check your Garrison, Class Hall, War Campaign and Covenant Sanctum Reports.
+Check your Dragonflight and The War Within sumaries.
+
+## Quality of Life Features
+Check your current Covenant Sanctum choice.
+Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
@@ -61,5 +70,5 @@ You can check the addon changelog and development roadmap on our GitHub project 
 Find our community at https://discord.gg/M7wQQFRjaq  
 
 Help us with a donation using the methods availiable on our Discord Channel on Help Us Chat.  
-Donations outside Brazil: PayPal.  
-Donations from Brazil: Pix or PagBank.  
+Donations: PagSeguro/PagBank (https://pag.ae/7_BDYY22Q) or PayPal.
+Only for Donations from Brazil: Pix.

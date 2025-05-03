@@ -151,46 +151,46 @@ function CTT_LoadAlternateModeSettings()
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
 end
 
-function CTT_LoadCurrencyMenuSettings()
-    treeW:ReleaseChildren()
-
-    scrollContainerCurrencySettings = AceGUI:Create("SimpleGroup")
-    scrollContainerCurrencySettings:SetFullWidth(true)
-    scrollContainerCurrencySettings:SetFullHeight(true)
-    scrollContainerCurrencySettings:SetLayout("Fill")
-    
-    treeW:AddChild(scrollContainerCurrencySettings)
-    
-    scrollFrameCurrencySettings = AceGUI:Create("ScrollFrame")
-    scrollFrameCurrencySettings:SetLayout("Flow")
-    scrollContainerCurrencySettings:AddChild(scrollFrameCurrencySettings)
-
-    local chkShowCurrencyOnReportWindow = AceGUI:Create("CheckBox")
-    chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
-    chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
-        if(garrisonUIResourcesFrame) then
-            if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
-                garrisonUIResourcesFrame:Show()
-            else
-                garrisonUIResourcesFrame:Hide()
-            end
-        end
-    end)
-    chkShowCurrencyOnReportWindow:SetWidth(700)
-    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnReportWindow)
-
-    local chkShowCurrencyOnTooltips = AceGUI:Create("CheckBox")
-    chkShowCurrencyOnTooltips:SetLabel(L["chkShowCurrencyOnTooltips"])
-    chkShowCurrencyOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
-    end)
-    chkShowCurrencyOnTooltips:SetWidth(700)
-    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnTooltips)
-
-    chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
-    chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
-end
+--function CTT_LoadCurrencyMenuSettings()
+--    treeW:ReleaseChildren()
+--
+--    scrollContainerCurrencySettings = AceGUI:Create("SimpleGroup")
+--    scrollContainerCurrencySettings:SetFullWidth(true)
+--    scrollContainerCurrencySettings:SetFullHeight(true)
+--    scrollContainerCurrencySettings:SetLayout("Fill")
+--    
+--    treeW:AddChild(scrollContainerCurrencySettings)
+--    
+--    scrollFrameCurrencySettings = AceGUI:Create("ScrollFrame")
+--    scrollFrameCurrencySettings:SetLayout("Flow")
+--    scrollContainerCurrencySettings:AddChild(scrollFrameCurrencySettings)
+--
+--    local chkShowCurrencyOnReportWindow = AceGUI:Create("CheckBox")
+--    chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
+--    chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+--        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
+--        if(garrisonUIResourcesFrame) then
+--            if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
+--                garrisonUIResourcesFrame:Show()
+--            else
+--                garrisonUIResourcesFrame:Hide()
+--            end
+--        end
+--    end)
+--    chkShowCurrencyOnReportWindow:SetWidth(700)
+--    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnReportWindow)
+--
+--    local chkShowCurrencyOnTooltips = AceGUI:Create("CheckBox")
+--    chkShowCurrencyOnTooltips:SetLabel(L["chkShowCurrencyOnTooltips"])
+--    chkShowCurrencyOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
+--        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
+--    end)
+--    chkShowCurrencyOnTooltips:SetWidth(700)
+--    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnTooltips)
+--
+--    chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
+--    chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
+--end
 
 function CTT_LoadReportEnhancementSettings()
     treeW:ReleaseChildren()
@@ -232,11 +232,35 @@ function CTT_LoadReportEnhancementSettings()
     end)
     chkShowMissionExpirationTimeOnReportWindow:SetWidth(700)
 
+    local chkShowCurrencyOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
+    chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
+        if(garrisonUIResourcesFrame) then
+            if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
+                garrisonUIResourcesFrame:Show()
+            else
+                garrisonUIResourcesFrame:Hide()
+            end
+        end
+    end)
+    chkShowCurrencyOnReportWindow:SetWidth(700)
+
+    local chkShowCurrencyOnTooltips = AceGUI:Create("CheckBox")
+    chkShowCurrencyOnTooltips:SetLabel(L["chkShowCurrencyOnTooltips"])
+    chkShowCurrencyOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
+    end)
+    chkShowCurrencyOnTooltips:SetWidth(700)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnTooltips)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
+    chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
+    chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
 end
 
 function CTT_LoadAdvancedModeSettings()
@@ -794,11 +818,11 @@ tree = {
         text = L["Settings_Menu_Alternate"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
-    {
-        value = "Cur",
-        text = L["Settings_Menu_Currency"],
-        icon = "Interface\\Icons\\inv_misc_gear_01",
-    },
+    --{
+    --    value = "Cur",
+    --    text = L["Settings_Menu_Currency"],
+    --    icon = "Interface\\Icons\\inv_misc_gear_01",
+    --},
     {
         value = "Enh",
         text = L["Settings_Menu_Enhancements"],
