@@ -3,8 +3,19 @@
 ## Title-ptBR: Rastreador de Linha Temporal da Crona
 ## Notes: Easily track your current Timewalking Campaign (Chromie Time).
 ## Notes-ptBR: Identifique facilmente sua linha de campanha de caminhada temporal (Cromie Time).
+## Category-enUS: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 2.1.1
+## Version: 2.2.0
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables:
