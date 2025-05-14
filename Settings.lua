@@ -35,12 +35,12 @@ local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOptio
 local AceGUI = LibStub("AceGUI-3.0")
 
 -- Create a container frame
-settingsFrame = AceGUI:Create("Frame")
+local settingsFrame = AceGUI:Create("Frame")
 settingsFrame:SetCallback("OnClose",function(widget)  end)
 settingsFrame:SetTitle(L["AddonName"] .. " - " .. L["Settings"])
 settingsFrame:SetStatusText(L["DevelopmentTeamCredit"])
-settingsFrame:SetWidth(800)
-settingsFrame:SetHeight(510)
+settingsFrame:SetWidth(880)
+settingsFrame:SetHeight(540)
 settingsFrame:SetLayout("Flow")
 
 
@@ -102,14 +102,14 @@ function CTT_LoadAbout()
     LabelAbout_Title:SetText("|cFFFFC90E" .. L["AddonName"] .. "|r")
     --LabelAbout_Title:SetFont(font, 20, style)
     CTT_setACE3WidgetFontSide(LabelAbout_Title, 20)
-    LabelAbout_Title:SetWidth(580)
+    LabelAbout_Title:SetWidth(640)
     scrollFrameAbout:AddChild(LabelAbout_Title)
 
     local LabelAbout = AceGUI:Create("Label")
-    LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n")
+    LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n" .. L["About_Line3"] .. "\n\n")
     --LabelAbout:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelAbout, 13)
-    LabelAbout:SetWidth(560)
+    LabelAbout:SetWidth(620)
     scrollFrameAbout:AddChild(LabelAbout)
     
     local headingAbout1 = AceGUI:Create("Heading")
@@ -117,10 +117,10 @@ function CTT_LoadAbout()
     scrollFrameAbout:AddChild(headingAbout1)
 
     local LabelAboutLocalizationDisclaimer = AceGUI:Create("Label")
-    LabelAboutLocalizationDisclaimer:SetText(L["About_Line3"])
+    LabelAboutLocalizationDisclaimer:SetText(L["About_Line4"])
     --LabelAbout:SetFont(font, 13, style)
     CTT_setACE3WidgetFontSide(LabelAboutLocalizationDisclaimer, 13)
-    LabelAboutLocalizationDisclaimer:SetWidth(560)
+    LabelAboutLocalizationDisclaimer:SetWidth(620)
     scrollFrameAbout:AddChild(LabelAboutLocalizationDisclaimer)
 end
 
@@ -151,46 +151,6 @@ function CTT_LoadAlternateModeSettings()
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
 end
 
---function CTT_LoadCurrencyMenuSettings()
---    treeW:ReleaseChildren()
---
---    scrollContainerCurrencySettings = AceGUI:Create("SimpleGroup")
---    scrollContainerCurrencySettings:SetFullWidth(true)
---    scrollContainerCurrencySettings:SetFullHeight(true)
---    scrollContainerCurrencySettings:SetLayout("Fill")
---    
---    treeW:AddChild(scrollContainerCurrencySettings)
---    
---    scrollFrameCurrencySettings = AceGUI:Create("ScrollFrame")
---    scrollFrameCurrencySettings:SetLayout("Flow")
---    scrollContainerCurrencySettings:AddChild(scrollFrameCurrencySettings)
---
---    local chkShowCurrencyOnReportWindow = AceGUI:Create("CheckBox")
---    chkShowCurrencyOnReportWindow:SetLabel(L["chkShowCurrencyOnReportWindow"])
---    chkShowCurrencyOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
---        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = chkShowCurrencyOnReportWindow:GetValue()
---        if(garrisonUIResourcesFrame) then
---            if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
---                garrisonUIResourcesFrame:Show()
---            else
---                garrisonUIResourcesFrame:Hide()
---            end
---        end
---    end)
---    chkShowCurrencyOnReportWindow:SetWidth(700)
---    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnReportWindow)
---
---    local chkShowCurrencyOnTooltips = AceGUI:Create("CheckBox")
---    chkShowCurrencyOnTooltips:SetLabel(L["chkShowCurrencyOnTooltips"])
---    chkShowCurrencyOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
---        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
---    end)
---    chkShowCurrencyOnTooltips:SetWidth(700)
---    scrollFrameCurrencySettings:AddChild(chkShowCurrencyOnTooltips)
---
---    chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
---    chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
---end
 
 function CTT_LoadReportEnhancementSettings()
     treeW:ReleaseChildren()
@@ -785,7 +745,6 @@ scrollFrameMainSettings:AddChild(btnResetSettings)
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
@@ -818,11 +777,6 @@ tree = {
         text = L["Settings_Menu_Alternate"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
-    --{
-    --    value = "Cur",
-    --    text = L["Settings_Menu_Currency"],
-    --    icon = "Interface\\Icons\\inv_misc_gear_01",
-    --},
     {
         value = "Enh",
         text = L["Settings_Menu_Enhancements"],
@@ -876,7 +830,6 @@ function loadSettings()
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
@@ -884,7 +837,6 @@ end
 
 function ChromieTimeTracker:ToggleSettingsFrame()
     if not settingsFrame:IsShown() then
-        --loadSettings()
         settingsFrame:Show()
     else
         settingsFrame:Hide()
