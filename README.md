@@ -19,13 +19,16 @@ Full Support: Brazilian Portuguese (ptBR) and English (enUS).
 Partial Support: Russian (ruRU).  
 
 ## Main Features
-Track your current Timewalking Campaign.
-Check your Garrison, Class Hall, War Campaign and Covenant Sanctum Reports.
+Track your current Timewalking Campaign.  
+Check your Garrison, Class Hall, War Campaign and Covenant Sanctum Reports.  
 Check your Dragonflight and The War Within sumaries.
 
 ## Quality of Life Features
-Check your current Covenant Sanctum choice.
-Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).
+Check your current Covenant Sanctum choice.  
+Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
+Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  
+Shortcut buttons to other reports.
+
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
@@ -70,5 +73,5 @@ You can check the addon changelog and development roadmap on our GitHub project 
 Find our community at https://discord.gg/M7wQQFRjaq  
 
 Help us with a donation using the methods availiable on our Discord Channel on Help Us Chat.  
-Donations: PagSeguro/PagBank (https://pag.ae/7_BDYY22Q) or PayPal.
+Donations: PagSeguro/PagBank (https://pag.ae/7_BDYY22Q) or PayPal.  
 Only for Donations from Brazil: Pix.
