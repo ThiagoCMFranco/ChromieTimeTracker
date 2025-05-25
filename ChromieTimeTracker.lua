@@ -1110,9 +1110,52 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
         else
             addonRootFrame:Hide()
         end
+        if(not ChromieTimeTrackerDB.HideToastWindow) then
+            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
+        end
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
+
+        if(not ChromieTimeTrackerDB.HideToastWindow) then
+        --Limit alert to trigger only when there is a timeline change
+            if(PlayerInfo["Timeline"] ~= currentExpansionName) then
+
+                --Get player position to trigger validation only when near Chromie
+                _zone = C_Map.GetBestMapForUnit("player");
+
+                --Check if player zone id is a valid number
+                if type(_zone) ~= "number" then
+                    _zone = 0
+                end
+
+                if(_zone ~= 0) then
+
+                    playerPosition = C_Map.GetPlayerMapPosition(_zone,"player");
+                    
+                    x = math.ceil(playerPosition.x*10000)/100
+                    y = math.ceil(playerPosition.y*10000)/100
+
+                    --Check for Alliance (Stormwind Chromie)
+                    if (_zone == 84) then
+                        if (x > 55.95 and x < 56.50 and y > 16.95 and y < 17.65) then
+                            --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
+                            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
+                            PlayerInfo["Timeline"] = currentExpansionName
+                        end
+                    end
+
+                    --Check for Horde (Orgrimmar Chromie)
+                    if (_zone == 85) then
+                        if (x > 40.53 and x < 41.15 and y > 79.80 and y < 80.65) then
+                            --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
+                            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
+                            PlayerInfo["Timeline"] = currentExpansionName
+                        end
+                    end
+                end
+            end
+        end
     end
 end)
 

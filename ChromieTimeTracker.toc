@@ -36,6 +36,7 @@ localization\ruRU.lua
 
 # Main Files
 Utils\Data.lua
+Utils\Toast.lua
 Utils\FlashMessage.lua
 ChromieTimeTracker.lua
 Settings.lua
