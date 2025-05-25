@@ -1111,13 +1111,15 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
             addonRootFrame:Hide()
         end
         if(not ChromieTimeTrackerDB.HideToastWindow) then
-            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
+            if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
+                ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
+            end
         end
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
 
-        if(not ChromieTimeTrackerDB.HideToastWindow) then
+        if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
         --Limit alert to trigger only when there is a timeline change
             if(PlayerInfo["Timeline"] ~= currentExpansionName) then
 

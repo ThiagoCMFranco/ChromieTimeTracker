@@ -102,3 +102,7 @@ L["chkShowMissionExpirationTimeOnReportWindow"] = "Exibir tempo para missões ex
 L["Expires_in"] = "Expira em:"
 L["chkHideChatWelcomeMessage"] = "Ocultar mensagem de Boas Vindas na caixa de mensagens."
 L["chkHideMainWindow"] = "Ocultar janela principal."
+L["ddlToastVisibility"] = "Notificação de Mudança de Linha do Tempo"
+L["Visibility_Always_Show"] = "Exibir Sempre"
+L["Visibility_Hide_Current_Timeline"] = "Ocultar na linha do tempo atual"
+L["Visibility_Never_Show"] = "Ocultar Sempre"
