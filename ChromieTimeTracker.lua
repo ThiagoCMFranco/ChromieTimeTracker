@@ -29,45 +29,63 @@ end
 
 local name, mct = ...
 local L = mct.L 
-local C = {}
-C[2] = "FF00AA00" --BC
-C[3] = "FF07DAF7" --WotLK
-C[4] = "FFEB8A0E" --Cata
-C[5] = "FF00FF98" --MoP
-C[6] = "FFA1481D" --WoD
-C[7] = "FF00FF00" --Legion
-C[8] = "FF056AC4" --BfA
-C[9] = "FF888888" --SL
-C[10] = "FFC90A67" --DF
-C[11] = "FF7F27" --TWW
 
-local ExpansionGarrisonID = {}
-ExpansionGarrisonID[2] = 0 --BC
-ExpansionGarrisonID[3] = 0 --WotLK
-ExpansionGarrisonID[4] = 0 --Cata
-ExpansionGarrisonID[5] = 0 --MoP
-ExpansionGarrisonID[6] = 2 --WoD
-ExpansionGarrisonID[7] = 3 --Legion
-ExpansionGarrisonID[8] = 9 --BfA
-ExpansionGarrisonID[9] = 111 --SL
-ExpansionGarrisonID[10] = "DF" --DF
-ExpansionGarrisonID[11] = "TWW" --TWW
+--Load constants from Data.lua
+local C_ExpansionColors = mct.C_ExpansionColors
+local C_ExpansionGarrisonID = mct.C_ExpansionGarrisonID
+local C_ExpansionGarrisonMiddleClickOptions = mct.C_ExpansionGarrisonMiddleClickOptions
+local C_ExpansionSummaries = mct.C_ExpansionSummaries
+local C_ClassTextures = mct.C_ClassTextures
+local C_GarrisonTextures = mct.C_GarrisonTextures
+local C_WarCampaignTextures = mct.C_WarCampaignTextures
+local C_CovenantChoicesTextures = mct.C_CovenantChoicesTextures
+local C_ClassTabTextures = mct.C_ClassTabTextures
+local C_GarrisonTabTextures = mct.C_GarrisonTabTextures
+local C_WarCampaignTabTextures = mct.C_WarCampaignTabTextures
+local C_CovenantChoicesTabTextures = mct.C_CovenantChoicesTabTextures
+local L_ButtonFrames = mct.C_ButtonFrames
+local L_CurrencyId = mct.C_CurrencyId
 
-local ExpansionGarrisonMiddleClickOptions = {}
-ExpansionGarrisonMiddleClickOptions[1] = 6 --WoD
-ExpansionGarrisonMiddleClickOptions[2] = 7 --Legion
-ExpansionGarrisonMiddleClickOptions[3] = 8 --Missions
-ExpansionGarrisonMiddleClickOptions[4] = 9 --Covenant
-ExpansionGarrisonMiddleClickOptions[5] = 10 --Dragon Isles
-ExpansionGarrisonMiddleClickOptions[6] = 11 --Khaz Algar
+--local C_ExpansionColors = {}
 
-local Summaries = {}
-Summaries[1] = L["MiddleClickOption_Warlords"] --WoD
-Summaries[2] = L["MiddleClickOption_Legion"] --Legion
-Summaries[3] = L["MiddleClickOption_Missions"] --Missions
-Summaries[4] = L["MiddleClickOption_Covenant"] --Covenant
-Summaries[5] = L["MiddleClickOption_DragonIsles"] --Dragon Isles
-Summaries[6] = L["MiddleClickOption_KhazAlgar"] --Khaz Algar
+--C_ExpansionColors[2] = "FF00AA00" --BC
+--C_ExpansionColors[3] = "FF07DAF7" --WotLK
+--C_ExpansionColors[4] = "FFEB8A0E" --Cata
+--C_ExpansionColors[5] = "FF00FF98" --MoP
+--C_ExpansionColors[6] = "FFA1481D" --WoD
+--C_ExpansionColors[7] = "FF00FF00" --Legion
+--C_ExpansionColors[8] = "FF056AC4" --BfA
+--C_ExpansionColors[9] = "FF888888" --SL
+--C_ExpansionColors[10] = "FFC90A67" --DF
+--C_ExpansionColors[11] = "FF7F27" --TWW
+
+--local C_ExpansionGarrisonID = {}
+--C_ExpansionGarrisonID[2] = 0 --BC
+--C_ExpansionGarrisonID[3] = 0 --WotLK
+--C_ExpansionGarrisonID[4] = 0 --Cata
+--C_ExpansionGarrisonID[5] = 0 --MoP
+--C_ExpansionGarrisonID[6] = 2 --WoD
+--C_ExpansionGarrisonID[7] = 3 --Legion
+--C_ExpansionGarrisonID[8] = 9 --BfA
+--C_ExpansionGarrisonID[9] = 111 --SL
+--C_ExpansionGarrisonID[10] = "DF" --DF
+--C_ExpansionGarrisonID[11] = "TWW" --TWW
+
+--local C_ExpansionGarrisonMiddleClickOptions = {}
+--C_ExpansionGarrisonMiddleClickOptions[1] = 6 --WoD
+--C_ExpansionGarrisonMiddleClickOptions[2] = 7 --Legion
+--C_ExpansionGarrisonMiddleClickOptions[3] = 8 --Missions
+--C_ExpansionGarrisonMiddleClickOptions[4] = 9 --Covenant
+--C_ExpansionGarrisonMiddleClickOptions[5] = 10 --Dragon Isles
+--C_ExpansionGarrisonMiddleClickOptions[6] = 11 --Khaz Algar
+
+--local C_ExpansionSummaries = {}
+--C_ExpansionSummaries[1] = L["MiddleClickOption_Warlords"] --WoD
+--C_ExpansionSummaries[2] = L["MiddleClickOption_Legion"] --Legion
+--C_ExpansionSummaries[3] = L["MiddleClickOption_Missions"] --Missions
+--C_ExpansionSummaries[4] = L["MiddleClickOption_Covenant"] --Covenant
+--C_ExpansionSummaries[5] = L["MiddleClickOption_DragonIsles"] --Dragon Isles
+--C_ExpansionSummaries[6] = L["MiddleClickOption_KhazAlgar"] --Khaz Algar
 
 local playerClass, englishClass = UnitClass("player")
 englishFaction, localizedFaction = UnitFactionGroup("player")
@@ -76,102 +94,103 @@ local PlayerInfo = {}
 PlayerInfo["Name"] = ""
 PlayerInfo["Class"] = englishClass
 PlayerInfo["Faction"] = englishFaction
+PlayerInfo["Timeline"] = ""
 
 CurrentGarrisonID = 0
 
-local C_ClassTextures =
-{
-  ["DRUID"] = "Classhall-Circle-Druid",
-  ["SHAMAN"] = "Classhall-Circle-Shaman",
-  ["DEATHKNIGHT"] = "Classhall-Circle-DeathKnight",
-  ["PALADIN"] = "Classhall-Circle-Paladin",
-  ["WARRIOR"] = "Classhall-Circle-Warrior",
-  ["HUNTER"] = "Classhall-Circle-Hunter",
-  ["ROGUE"] = "Classhall-Circle-Rogue",
-  ["PRIEST"] = "Classhall-Circle-Priest",
-  ["MAGE"] = "Classhall-Circle-Mage",
-  ["WARLOCK"] = "Classhall-Circle-Warlock",
-  ["MONK"] = "Classhall-Circle-Monk",
-  ["DEMONHUNTER"] = "Classhall-Circle-DemonHunter"
-}
-
-local C_GarrisonTextures =
-{
-  ["Alliance"] = "GarrLanding-MinimapIcon-Alliance-Up",
-  ["Horde"] = "GarrLanding-MinimapIcon-Horde-Up",
-}
-
-local C_WarCampaignTextures =
-{
-  ["Alliance"] = "bfa-landingbutton-alliance-up",
-  ["Horde"] = "bfa-landingbutton-horde-up",
-}
-
-local C_CovenantChoicesTextures =
-{
-    ["Necrolord"] = "shadowlands-landingbutton-Necrolord-up",
-    ["NightFae"] = "shadowlands-landingbutton-NightFae-up",
-    ["Venthyr"] = "shadowlands-landingbutton-Venthyr-up",
-    ["Kyrian"] = "shadowlands-landingbutton-Kyrian-up",
-    ["Not_Selected"] = "covenantsanctum-renown-icon-available-nightfae",
-}
-
-local C_ClassTabTextures =
-{
-  ["DRUID"] = "Interface\\Icons\\Classicon_druid",
-  ["SHAMAN"] = "Interface\\Icons\\Classicon_shaman",
-  ["DEATHKNIGHT"] = "Interface\\Icons\\Classicon_deathknight",
-  ["PALADIN"] = "Interface\\Icons\\Classicon_paladin",
-  ["WARRIOR"] = "Interface\\Icons\\Classicon_warrior",
-  ["HUNTER"] = "Interface\\Icons\\Classicon_hunter",
-  ["ROGUE"] = "Interface\\Icons\\Classicon_rogue",
-  ["PRIEST"] = "Interface\\Icons\\Classicon_priest",
-  ["MAGE"] = "Interface\\Icons\\Classicon_mage",
-  ["WARLOCK"] = "Interface\\Icons\\Classicon_warlock",
-  ["MONK"] = "Interface\\Icons\\Classicon_monk",
-  ["DEMONHUNTER"] = "Interface\\Icons\\Classicon_demonhunter",
-  ["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
-}
-
-local C_GarrisonTabTextures =
-{
-  ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
-  ["Horde"] = "Interface\\Icons\\achievement_garrison_tier01_horde",
-}
-
-local C_WarCampaignTabTextures =
-{
-  ["Alliance"] = "Interface\\Icons\\ui_allianceicon",
-  ["Horde"] = "Interface\\Icons\\ui_hordeicon",
-}
-
-local C_CovenantChoicesTabTextures =
-{
-    ["Necrolord"] = "Interface\\Icons\\ui_sigil_necrolord",
-    ["NightFae"] = "Interface\\Icons\\ui_sigil_nightfae",
-    ["Venthyr"] = "Interface\\Icons\\ui_sigil_vanthyr",
-    ["Kyrian"] = "Interface\\Icons\\ui_sigil_kyrian",
-    ["Not_Selected"] = "Interface\\Icons\\inv_misc_covenant_renown",
-}
-
-local L_ButtonFrames =
-{
-    [2] = "ChromieTimeTrackerGarrisonIconFrame",
-    [3] = "ChromieTimeTrackerClassHallIconFrame",
-    [9] = "ChromieTimeTrackerMissionsIconFrame",
-    [111] = "ChromieTimeTrackerCovenantIconFrame",
-    ["DF"] = "ChromieTimeTrackerDragonIslesIconFrame",
-    ["TWW"] = "ChromieTimeTrackerKhazAlgarIconFrame",
-}
-
-local L_CurrencyId =
-{
-    ["Garrison_Resources"] = 824, 
-    ["Garrison_Oil"] = 1101,
-    ["Order_Resources"] = 1220,
-    ["War_Resources"] = 1560,
-    ["Reservoir_Anima"] = 1813,
-}
+--local C_ClassTextures =
+--{
+--  ["DRUID"] = "Classhall-Circle-Druid",
+--  ["SHAMAN"] = "Classhall-Circle-Shaman",
+--  ["DEATHKNIGHT"] = "Classhall-Circle-DeathKnight",
+--  ["PALADIN"] = "Classhall-Circle-Paladin",
+--  ["WARRIOR"] = "Classhall-Circle-Warrior",
+--  ["HUNTER"] = "Classhall-Circle-Hunter",
+--  ["ROGUE"] = "Classhall-Circle-Rogue",
+--  ["PRIEST"] = "Classhall-Circle-Priest",
+--  ["MAGE"] = "Classhall-Circle-Mage",
+--  ["WARLOCK"] = "Classhall-Circle-Warlock",
+--  ["MONK"] = "Classhall-Circle-Monk",
+--  ["DEMONHUNTER"] = "Classhall-Circle-DemonHunter"
+--}
+--
+--local C_GarrisonTextures =
+--{
+--  ["Alliance"] = "GarrLanding-MinimapIcon-Alliance-Up",
+--  ["Horde"] = "GarrLanding-MinimapIcon-Horde-Up",
+--}
+--
+--local C_WarCampaignTextures =
+--{
+--  ["Alliance"] = "bfa-landingbutton-alliance-up",
+--  ["Horde"] = "bfa-landingbutton-horde-up",
+--}
+--
+--local C_CovenantChoicesTextures =
+--{
+--    ["Necrolord"] = "shadowlands-landingbutton-Necrolord-up",
+--    ["NightFae"] = "shadowlands-landingbutton-NightFae-up",
+--    ["Venthyr"] = "shadowlands-landingbutton-Venthyr-up",
+--    ["Kyrian"] = "shadowlands-landingbutton-Kyrian-up",
+--    ["Not_Selected"] = "covenantsanctum-renown-icon-available-nightfae",
+--}
+--
+--local C_ClassTabTextures =
+--{
+--  ["DRUID"] = "Interface\\Icons\\Classicon_druid",
+--  ["SHAMAN"] = "Interface\\Icons\\Classicon_shaman",
+--  ["DEATHKNIGHT"] = "Interface\\Icons\\Classicon_deathknight",
+--  ["PALADIN"] = "Interface\\Icons\\Classicon_paladin",
+--  ["WARRIOR"] = "Interface\\Icons\\Classicon_warrior",
+--  ["HUNTER"] = "Interface\\Icons\\Classicon_hunter",
+--  ["ROGUE"] = "Interface\\Icons\\Classicon_rogue",
+--  ["PRIEST"] = "Interface\\Icons\\Classicon_priest",
+--  ["MAGE"] = "Interface\\Icons\\Classicon_mage",
+--  ["WARLOCK"] = "Interface\\Icons\\Classicon_warlock",
+--  ["MONK"] = "Interface\\Icons\\Classicon_monk",
+--  ["DEMONHUNTER"] = "Interface\\Icons\\Classicon_demonhunter",
+--  ["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
+--}
+--
+--local C_GarrisonTabTextures =
+--{
+--  ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
+--  ["Horde"] = "Interface\\Icons\\achievement_garrison_tier01_horde",
+--}
+--
+--local C_WarCampaignTabTextures =
+--{
+--  ["Alliance"] = "Interface\\Icons\\ui_allianceicon",
+--  ["Horde"] = "Interface\\Icons\\ui_hordeicon",
+--}
+--
+--local C_CovenantChoicesTabTextures =
+--{
+--    ["Necrolord"] = "Interface\\Icons\\ui_sigil_necrolord",
+--    ["NightFae"] = "Interface\\Icons\\ui_sigil_nightfae",
+--    ["Venthyr"] = "Interface\\Icons\\ui_sigil_vanthyr",
+--    ["Kyrian"] = "Interface\\Icons\\ui_sigil_kyrian",
+--    ["Not_Selected"] = "Interface\\Icons\\inv_misc_covenant_renown",
+--}
+--
+--local L_ButtonFrames =
+--{
+--    [2] = "ChromieTimeTrackerGarrisonIconFrame",
+--    [3] = "ChromieTimeTrackerClassHallIconFrame",
+--    [9] = "ChromieTimeTrackerMissionsIconFrame",
+--    [111] = "ChromieTimeTrackerCovenantIconFrame",
+--    ["DF"] = "ChromieTimeTrackerDragonIslesIconFrame",
+--    ["TWW"] = "ChromieTimeTrackerKhazAlgarIconFrame",
+--}
+--
+--local L_CurrencyId =
+--{
+--    ["Garrison_Resources"] = 824, 
+--    ["Garrison_Oil"] = 1101,
+--    ["Order_Resources"] = 1220,
+--    ["War_Resources"] = 1560,
+--    ["Reservoir_Anima"] = 1813,
+--}
 
 local isGarrisonUIFirstLoad = true
 
@@ -523,7 +542,7 @@ function CTT_getChromieTime()
     if(canEnter) then
         for _, ChromieTimeItem in pairs(expansionOptions) do
             if(ChromieTimeItem.alreadyOn) then
-                currentExpansionName = "|c" .. C[ChromieTimeItem.sortPriority] .. ChromieTimeItem.name .. "|r"
+                currentExpansionName = "|c" .. C_ExpansionColors[ChromieTimeItem.sortPriority] .. ChromieTimeItem.name .. "|r"
                 CurrentGarrisonID = ChromieTimeItem.sortPriority
             end
         end
@@ -610,10 +629,10 @@ function CTT_updateChromieTime()
             iconFrame.icon:SetAllPoints()
             iconFrame.icon:SetTexture("Interface\\Icons\\Inv_dragonwhelp3_bronze", false)
         else 
-            if(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == "" or Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == nil) then
+            if(C_ExpansionSummaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == "" or C_ExpansionSummaries[ChromieTimeTrackerDB.DefaultMiddleClickOption] == nil) then
                 mainFrame.playerTimeline:SetText(L["ConfigurationMissing"])
             else
-                mainFrame.playerTimeline:SetText(Summaries[ChromieTimeTrackerDB.DefaultMiddleClickOption])
+                mainFrame.playerTimeline:SetText(C_ExpansionSummaries[ChromieTimeTrackerDB.DefaultMiddleClickOption])
             end
         end
     else
@@ -631,7 +650,7 @@ function CTT_updateChromieTime()
     mainFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
     iconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", 0, 0)
     addonRootFrame:SetPoint(ChromieTimeTrackerDB.BasePoint or "CENTER", UIParent, ChromieTimeTrackerDB.RelativePoint or "CENTER", ChromieTimeTrackerDB.OffsetX or 0, ChromieTimeTrackerDB.OffsetY or 0)    
-    
+        
 end
 
 --Icon
@@ -1095,39 +1114,39 @@ function CTT_showMainFrame()
     addonRootFrame:Show()
 end
 
-function CTT_flashMessage(_message, _duration, _fontScale)
-                        duration = _duration
-                        elapsed = 0
-                        totalRepeat = 0
-
-                        PlaySound(847)
-
-                        local msgFrame = CreateFrame("FRAME", nil, UIParent)
-                        msgFrame:SetWidth(1)
-                        msgFrame:SetHeight(1)
-                        msgFrame:SetPoint("CENTER")
-                        msgFrame:SetFrameStrata("TOOLTIP")
-                        msgFrame.text = msgFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-                        msgFrame.text:SetPoint("CENTER")
-                        msgFrame.text:SetText(_message)
-                        local font, size, style = msgFrame.text:GetFont()
-                        msgFrame.text:SetFont(font, _fontScale*size, style)
-
-                        msgFrame:SetScript("OnUpdate", function(self, e)
-                            elapsed = elapsed + e
-                            if elapsed >= duration then
-                                if totalRepeat == 0 then
-                                    self:Hide()
-                                    return
-                                end
-                                elapsed = 0
-                                totalRepeat = totalRepeat - 1
-                                self:SetAlpha(0)
-                                return
-                            end
-                            self:SetAlpha(-(elapsed / (duration / 2) - 1) ^ 2 + 1)
-                        end)
-end
+--function CTT_flashMessage(_message, _duration, _fontScale)
+--                        duration = _duration
+--                        elapsed = 0
+--                        totalRepeat = 0
+--
+--                        PlaySound(847)
+--
+--                        local msgFrame = CreateFrame("FRAME", nil, UIParent)
+--                        msgFrame:SetWidth(1)
+--                        msgFrame:SetHeight(1)
+--                        msgFrame:SetPoint("CENTER")
+--                        msgFrame:SetFrameStrata("TOOLTIP")
+--                        msgFrame.text = msgFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+--                        msgFrame.text:SetPoint("CENTER")
+--                        msgFrame.text:SetText(_message)
+--                        local font, size, style = msgFrame.text:GetFont()
+--                        msgFrame.text:SetFont(font, _fontScale*size, style)
+--
+--                        msgFrame:SetScript("OnUpdate", function(self, e)
+--                            elapsed = elapsed + e
+--                            if elapsed >= duration then
+--                                if totalRepeat == 0 then
+--                                    self:Hide()
+--                                    return
+--                                end
+--                                elapsed = 0
+--                                totalRepeat = totalRepeat - 1
+--                                self:SetAlpha(0)
+--                                return
+--                            end
+--                            self:SetAlpha(-(elapsed / (duration / 2) - 1) ^ 2 + 1)
+--                        end)
+--end
 
 function CreateInlineIcon(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset)
 	sizeX = sizeX or 16;
@@ -1316,10 +1335,10 @@ function CTT_MouseMiddleButtonClick()
     local selected = 0
 
     if ChromieTimeTrackerDB.LockMiddleClickOption or currentExpansionName == L["currentExpansionLabel"] then
-        selected = ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]]
+        selected = C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]]
     else
-        if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
-            selected = ExpansionGarrisonID[CurrentGarrisonID]
+        if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
+            selected = C_ExpansionGarrisonID[CurrentGarrisonID]
         end
     end
     if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and selected == GarrisonLandingPage.garrTypeID) then
@@ -1360,14 +1379,14 @@ function CTT_ShowToolTip(tooltip, mode)
     end
 
     local TimelineCurrency = ""
-    if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
-        if ExpansionGarrisonID[CurrentGarrisonID] == 2 then
+    if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
+        if C_ExpansionGarrisonID[CurrentGarrisonID] == 2 then
             TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true)
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 3 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 3 then
             TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Order_Resources"], true)
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 9 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 9 then
             TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["War_Resources"], true)
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 111 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 111 then
             TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Reservoir_Anima"], true)
         end
     else
@@ -1376,17 +1395,17 @@ function CTT_ShowToolTip(tooltip, mode)
 
     if ChromieTimeTrackerDB.LockMiddleClickOption or currentExpansionName == L["currentExpansionLabel"] then
         
-        if ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 2 then
+        if C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 2 then
             MClickAction = L["MClickAction_Warlords"]      
-        elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 3 then
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 3 then
             MClickAction = L["MClickAction_Legion"]            
-        elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 9 then
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 9 then
             MClickAction = L["MClickAction_Missions"]            
-        elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 111 then
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 111 then
             MClickAction = L["MClickAction_Covenant"]            
-        elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "DF" then
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "DF" then
             MClickAction = L["MClickAction_DragonIsles"]
-        elseif ExpansionGarrisonID[ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
             MClickAction = L["MClickAction_KhazAlgar"]
         else
             MClickAction = L["MClickAction"]
@@ -1401,19 +1420,19 @@ function CTT_ShowToolTip(tooltip, mode)
         --end
         
 else
-    if not (ExpansionGarrisonID[CurrentGarrisonID] == 0) then
+    if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
 
-        if ExpansionGarrisonID[CurrentGarrisonID] == 2 then
+        if C_ExpansionGarrisonID[CurrentGarrisonID] == 2 then
             MClickAction = L["MClickAction_Warlords"]
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 3 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 3 then
             MClickAction = L["MClickAction_Legion"]
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 9 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 9 then
             MClickAction = L["MClickAction_Missions"]
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == 111 then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 111 then
             MClickAction = L["MClickAction_Covenant"]
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == "DF" then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "DF" then
             MClickAction = L["MClickAction_DragonIsles"]
-        elseif ExpansionGarrisonID[CurrentGarrisonID] == "TWW" then
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "TWW" then
             MClickAction = L["MClickAction_KhazAlgar"]
         else
             MClickAction = L["MClickAction"]
@@ -1641,4 +1660,5 @@ function CTT_setupSlashCommands()
     end
     
     CTT_setupSlashCommands()
+
     
