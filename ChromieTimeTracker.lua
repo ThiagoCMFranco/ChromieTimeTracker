@@ -1089,7 +1089,9 @@ eventListenerFrame:RegisterEvent("QUEST_LOG_UPDATE")
 eventListenerFrame:SetScript("OnEvent", function(self, event)
     if event == "PLAYER_LOGIN" then
         CTT_updateChromieTime()
-        print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
+        if(not ChromieTimeTrackerDB.HideChatWelcomeMessage) then
+            print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
+        end
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
