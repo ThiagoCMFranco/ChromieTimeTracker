@@ -546,6 +546,7 @@ local LabelAlternateMode = AceGUI:Create("Label")
 local LabelAdvancedMode = AceGUI:Create("Label")
 local CheckBox = AceGUI:Create("CheckBox")
 local chkHideChatWelcomeMessage = AceGUI:Create("CheckBox")
+local chkHideMainWindow = AceGUI:Create("CheckBox")
 local chkLockDragDrop = AceGUI:Create("CheckBox")
 local ddlDefaultMiddleClickOption = AceGUI:Create("Dropdown")
 local LabelMiddleClick = AceGUI:Create("Label")
@@ -594,6 +595,14 @@ scrollFrameMainSettings:AddChild(LabelAdvancedMode)
 heading1:SetRelativeWidth(1)
 scrollFrameMainSettings:AddChild(heading1)
 
+chkHideMainWindow:SetLabel(L["chkHideMainWindow"])
+chkHideMainWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.HideMainWindow = chkHideMainWindow:GetValue()
+    CTT_updateChromieTime()
+    CTT_showMainFrame()
+end)
+chkHideMainWindow:SetWidth(700)
+scrollFrameMainSettings:AddChild(chkHideMainWindow)
 
 CheckBox:SetLabel(L["HideWhenNotTimeTraveling"])
 CheckBox:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -689,6 +698,7 @@ scrollFrameMainSettings:AddChild(btnResetPosition)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
+    chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
@@ -703,6 +713,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
     OnAccept = function()
         ChromieTimeTrackerDB.Mode = 2;
         ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
+        ChromieTimeTrackerDB.HideMainWindow = true;
         ChromieTimeTrackerDB.HideChatWelcomeMessage = false;
         ChromieTimeTrackerDB.LockDragDrop = false;
         ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
@@ -753,6 +764,7 @@ scrollFrameMainSettings:AddChild(btnResetSettings)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
+    chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
@@ -839,6 +851,7 @@ CTT_LoadAbout()
 function loadSettings()
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
+    chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)

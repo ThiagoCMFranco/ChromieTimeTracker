@@ -436,7 +436,12 @@ addonRootFrame:ClearAllPoints()
 addonRootFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 addonRootFrame:SetSize(280, 195)
 addonRootFrame:SetFrameLevel(0)
-addonRootFrame:Show()
+
+if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+    addonRootFrame:Show()
+else
+    addonRootFrame:Hide()
+end
 
 addonRootFrame:EnableMouse(true)
 addonRootFrame:SetMovable(true)
@@ -581,7 +586,11 @@ function CTT_updateChromieTime()
         if ChromieTimeTrackerDB.AlternateModeShowIconOnly then
         iconFrame:SetSize(32,32)
         iconFrame:Show()
-        addonRootFrame:Show()
+        if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+            addonRootFrame:Show()
+        else
+            addonRootFrame:Hide()
+        end
         mainFrame:Hide()
         addonRootFrame:SetSize(32, 32)
         garrisonIconFrame:Hide()
@@ -1026,8 +1035,10 @@ end
 function ChromieTimeTracker:ToggleMainFrame()
     if not addonRootFrame:IsShown() then
         addonRootFrame:Show()
+        ChromieTimeTrackerDB.HideMainWindow = true
     else
         addonRootFrame:Hide()
+        ChromieTimeTrackerDB.HideMainWindow = false
     end
 end
 
@@ -1048,13 +1059,15 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
         if btn == "LeftButton" then
             if addonRootFrame:IsShown() then
                 addonRootFrame:Hide()
+                ChromieTimeTrackerDB.HideMainWindow = false
             else
                 addonRootFrame:Show()
+                ChromieTimeTrackerDB.HideMainWindow = true
             end
         elseif btn == "RightButton" then
             --PlaySound(808)
             --ChromieTimeTracker:ToggleSettingsFrame()
-            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
+            local contextMenu = MenuUtil.CreateContextMenu(UIParent, GeneratorFunction);
         elseif btn == "MiddleButton" then
 
             if IsShiftKeyDown() then
@@ -1092,6 +1105,11 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
         if(not ChromieTimeTrackerDB.HideChatWelcomeMessage) then
             print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
         end
+        if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+            addonRootFrame:Show()
+        else
+            addonRootFrame:Hide()
+        end
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
@@ -1113,7 +1131,11 @@ end
 --Funções Principais
 
 function CTT_showMainFrame()
-    addonRootFrame:Show()
+    if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+        addonRootFrame:Show()
+    else
+        addonRootFrame:Hide()
+    end
 end
 
 --function CTT_flashMessage(_message, _duration, _fontScale)
@@ -1604,7 +1626,11 @@ function CTT_setupSlashCommands()
     
             CTT_updateChromieTime();
     
-            addonRootFrame:Show()
+            ChromieTimeTrackerDB.HideMainWindow = true
+
+            if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+                addonRootFrame:Show()
+            end
 
             print(L["RunCommandMessage_ResetPosition"])
     
@@ -1653,8 +1679,10 @@ function CTT_setupSlashCommands()
             print(L["RunCommandMessage_ResetAll"])
         else
             if addonRootFrame:IsShown() then
+                ChromieTimeTrackerDB.HideMainWindow = false
                 addonRootFrame:Hide()
             else
+                ChromieTimeTrackerDB.HideMainWindow = true
                 addonRootFrame:Show()
             end
         end

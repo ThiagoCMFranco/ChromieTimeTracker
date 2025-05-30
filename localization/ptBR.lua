@@ -101,3 +101,4 @@ L["chkShowReportTabsOnReportWindow"] = "Exibir atalhos de outros resumos nas jan
 L["chkShowMissionExpirationTimeOnReportWindow"] = "Exibir tempo para missões expirarem nas janelas de resumo"
 L["Expires_in"] = "Expira em:"
 L["chkHideChatWelcomeMessage"] = "Ocultar mensagem de Boas Vindas na caixa de mensagens."
+L["chkHideMainWindow"] = "Ocultar janela principal."
