@@ -1035,10 +1035,10 @@ end
 function ChromieTimeTracker:ToggleMainFrame()
     if not addonRootFrame:IsShown() then
         addonRootFrame:Show()
-        ChromieTimeTrackerDB.HideMainWindow = true
+        ChromieTimeTrackerDB.HideMainWindow = false
     else
         addonRootFrame:Hide()
-        ChromieTimeTrackerDB.HideMainWindow = false
+        ChromieTimeTrackerDB.HideMainWindow = true
     end
 end
 
@@ -1059,10 +1059,10 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
         if btn == "LeftButton" then
             if addonRootFrame:IsShown() then
                 addonRootFrame:Hide()
-                ChromieTimeTrackerDB.HideMainWindow = false
+                ChromieTimeTrackerDB.HideMainWindow = true
             else
                 addonRootFrame:Show()
-                ChromieTimeTrackerDB.HideMainWindow = true
+                ChromieTimeTrackerDB.HideMainWindow = false
             end
         elseif btn == "RightButton" then
             --PlaySound(808)
@@ -1626,7 +1626,7 @@ function CTT_setupSlashCommands()
     
             CTT_updateChromieTime();
     
-            ChromieTimeTrackerDB.HideMainWindow = true
+            ChromieTimeTrackerDB.HideMainWindow = false
 
             if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
                 addonRootFrame:Show()
@@ -1679,10 +1679,10 @@ function CTT_setupSlashCommands()
             print(L["RunCommandMessage_ResetAll"])
         else
             if addonRootFrame:IsShown() then
-                ChromieTimeTrackerDB.HideMainWindow = false
+                ChromieTimeTrackerDB.HideMainWindow = true
                 addonRootFrame:Hide()
             else
-                ChromieTimeTrackerDB.HideMainWindow = true
+                ChromieTimeTrackerDB.HideMainWindow = false
                 addonRootFrame:Show()
             end
         end
