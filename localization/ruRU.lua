@@ -102,3 +102,7 @@ L["chkShowMissionExpirationTimeOnReportWindow"] = "Show remaining time before mi
 L["Expires_in"] = "Expires in:"
 L["chkHideChatWelcomeMessage"] = "Hide chatbox welcome message."
 L["chkHideMainWindow"] = "Hide main window."
+L["ddlToastVisibility"] = "Toast Window on Timeline Change"
+L["Visibility_Always_Show"] = "Always Show"
+L["Visibility_Hide_Current_Timeline"] = "Hide when not time traveling"
+L["Visibility_Never_Show"] = "Always Hide"
