@@ -46,46 +46,6 @@ local C_CovenantChoicesTabTextures = mct.C_CovenantChoicesTabTextures
 local L_ButtonFrames = mct.C_ButtonFrames
 local L_CurrencyId = mct.C_CurrencyId
 
---local C_ExpansionColors = {}
-
---C_ExpansionColors[2] = "FF00AA00" --BC
---C_ExpansionColors[3] = "FF07DAF7" --WotLK
---C_ExpansionColors[4] = "FFEB8A0E" --Cata
---C_ExpansionColors[5] = "FF00FF98" --MoP
---C_ExpansionColors[6] = "FFA1481D" --WoD
---C_ExpansionColors[7] = "FF00FF00" --Legion
---C_ExpansionColors[8] = "FF056AC4" --BfA
---C_ExpansionColors[9] = "FF888888" --SL
---C_ExpansionColors[10] = "FFC90A67" --DF
---C_ExpansionColors[11] = "FF7F27" --TWW
-
---local C_ExpansionGarrisonID = {}
---C_ExpansionGarrisonID[2] = 0 --BC
---C_ExpansionGarrisonID[3] = 0 --WotLK
---C_ExpansionGarrisonID[4] = 0 --Cata
---C_ExpansionGarrisonID[5] = 0 --MoP
---C_ExpansionGarrisonID[6] = 2 --WoD
---C_ExpansionGarrisonID[7] = 3 --Legion
---C_ExpansionGarrisonID[8] = 9 --BfA
---C_ExpansionGarrisonID[9] = 111 --SL
---C_ExpansionGarrisonID[10] = "DF" --DF
---C_ExpansionGarrisonID[11] = "TWW" --TWW
-
---local C_ExpansionGarrisonMiddleClickOptions = {}
---C_ExpansionGarrisonMiddleClickOptions[1] = 6 --WoD
---C_ExpansionGarrisonMiddleClickOptions[2] = 7 --Legion
---C_ExpansionGarrisonMiddleClickOptions[3] = 8 --Missions
---C_ExpansionGarrisonMiddleClickOptions[4] = 9 --Covenant
---C_ExpansionGarrisonMiddleClickOptions[5] = 10 --Dragon Isles
---C_ExpansionGarrisonMiddleClickOptions[6] = 11 --Khaz Algar
-
---local C_ExpansionSummaries = {}
---C_ExpansionSummaries[1] = L["MiddleClickOption_Warlords"] --WoD
---C_ExpansionSummaries[2] = L["MiddleClickOption_Legion"] --Legion
---C_ExpansionSummaries[3] = L["MiddleClickOption_Missions"] --Missions
---C_ExpansionSummaries[4] = L["MiddleClickOption_Covenant"] --Covenant
---C_ExpansionSummaries[5] = L["MiddleClickOption_DragonIsles"] --Dragon Isles
---C_ExpansionSummaries[6] = L["MiddleClickOption_KhazAlgar"] --Khaz Algar
 
 local playerClass, englishClass = UnitClass("player")
 englishFaction, localizedFaction = UnitFactionGroup("player")
@@ -98,99 +58,6 @@ PlayerInfo["Timeline"] = ""
 
 CurrentGarrisonID = 0
 
---local C_ClassTextures =
---{
---  ["DRUID"] = "Classhall-Circle-Druid",
---  ["SHAMAN"] = "Classhall-Circle-Shaman",
---  ["DEATHKNIGHT"] = "Classhall-Circle-DeathKnight",
---  ["PALADIN"] = "Classhall-Circle-Paladin",
---  ["WARRIOR"] = "Classhall-Circle-Warrior",
---  ["HUNTER"] = "Classhall-Circle-Hunter",
---  ["ROGUE"] = "Classhall-Circle-Rogue",
---  ["PRIEST"] = "Classhall-Circle-Priest",
---  ["MAGE"] = "Classhall-Circle-Mage",
---  ["WARLOCK"] = "Classhall-Circle-Warlock",
---  ["MONK"] = "Classhall-Circle-Monk",
---  ["DEMONHUNTER"] = "Classhall-Circle-DemonHunter"
---}
---
---local C_GarrisonTextures =
---{
---  ["Alliance"] = "GarrLanding-MinimapIcon-Alliance-Up",
---  ["Horde"] = "GarrLanding-MinimapIcon-Horde-Up",
---}
---
---local C_WarCampaignTextures =
---{
---  ["Alliance"] = "bfa-landingbutton-alliance-up",
---  ["Horde"] = "bfa-landingbutton-horde-up",
---}
---
---local C_CovenantChoicesTextures =
---{
---    ["Necrolord"] = "shadowlands-landingbutton-Necrolord-up",
---    ["NightFae"] = "shadowlands-landingbutton-NightFae-up",
---    ["Venthyr"] = "shadowlands-landingbutton-Venthyr-up",
---    ["Kyrian"] = "shadowlands-landingbutton-Kyrian-up",
---    ["Not_Selected"] = "covenantsanctum-renown-icon-available-nightfae",
---}
---
---local C_ClassTabTextures =
---{
---  ["DRUID"] = "Interface\\Icons\\Classicon_druid",
---  ["SHAMAN"] = "Interface\\Icons\\Classicon_shaman",
---  ["DEATHKNIGHT"] = "Interface\\Icons\\Classicon_deathknight",
---  ["PALADIN"] = "Interface\\Icons\\Classicon_paladin",
---  ["WARRIOR"] = "Interface\\Icons\\Classicon_warrior",
---  ["HUNTER"] = "Interface\\Icons\\Classicon_hunter",
---  ["ROGUE"] = "Interface\\Icons\\Classicon_rogue",
---  ["PRIEST"] = "Interface\\Icons\\Classicon_priest",
---  ["MAGE"] = "Interface\\Icons\\Classicon_mage",
---  ["WARLOCK"] = "Interface\\Icons\\Classicon_warlock",
---  ["MONK"] = "Interface\\Icons\\Classicon_monk",
---  ["DEMONHUNTER"] = "Interface\\Icons\\Classicon_demonhunter",
---  ["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
---}
---
---local C_GarrisonTabTextures =
---{
---  ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
---  ["Horde"] = "Interface\\Icons\\achievement_garrison_tier01_horde",
---}
---
---local C_WarCampaignTabTextures =
---{
---  ["Alliance"] = "Interface\\Icons\\ui_allianceicon",
---  ["Horde"] = "Interface\\Icons\\ui_hordeicon",
---}
---
---local C_CovenantChoicesTabTextures =
---{
---    ["Necrolord"] = "Interface\\Icons\\ui_sigil_necrolord",
---    ["NightFae"] = "Interface\\Icons\\ui_sigil_nightfae",
---    ["Venthyr"] = "Interface\\Icons\\ui_sigil_vanthyr",
---    ["Kyrian"] = "Interface\\Icons\\ui_sigil_kyrian",
---    ["Not_Selected"] = "Interface\\Icons\\inv_misc_covenant_renown",
---}
---
---local L_ButtonFrames =
---{
---    [2] = "ChromieTimeTrackerGarrisonIconFrame",
---    [3] = "ChromieTimeTrackerClassHallIconFrame",
---    [9] = "ChromieTimeTrackerMissionsIconFrame",
---    [111] = "ChromieTimeTrackerCovenantIconFrame",
---    ["DF"] = "ChromieTimeTrackerDragonIslesIconFrame",
---    ["TWW"] = "ChromieTimeTrackerKhazAlgarIconFrame",
---}
---
---local L_CurrencyId =
---{
---    ["Garrison_Resources"] = 824, 
---    ["Garrison_Oil"] = 1101,
---    ["Order_Resources"] = 1220,
---    ["War_Resources"] = 1560,
---    ["Reservoir_Anima"] = 1813,
---}
 
 local isGarrisonUIFirstLoad = true
 
@@ -217,6 +84,7 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.Mode = 2;
         ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
         ChromieTimeTrackerDB.LockDragDrop = false;
+        ChromieTimeTrackerDB.ToastVisibility = 1;
         ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
@@ -1111,7 +979,7 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
             addonRootFrame:Hide()
         end
         if(not ChromieTimeTrackerDB.HideToastWindow) then
-            if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
+            if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel']) or (ChromieTimeTrackerDB.ToastVisibility == nil)) then
                 ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
             end
         end
@@ -1119,7 +987,7 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
 
-        if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
+        if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel']) or (ChromieTimeTrackerDB.ToastVisibility == nil)) then
         --Limit alert to trigger only when there is a timeline change
             if(PlayerInfo["Timeline"] ~= currentExpansionName) then
 
@@ -1135,24 +1003,28 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
 
                     playerPosition = C_Map.GetPlayerMapPosition(_zone,"player");
                     
-                    x = math.ceil(playerPosition.x*10000)/100
-                    y = math.ceil(playerPosition.y*10000)/100
+                    if playerPosition == nil then
+                        --Invalid map position (Inside instance)
+                    else
+                        x = math.ceil(playerPosition.x*10000)/100
+                        y = math.ceil(playerPosition.y*10000)/100
 
-                    --Check for Alliance (Stormwind Chromie)
-                    if (_zone == 84) then
-                        if (x > 55.95 and x < 56.50 and y > 16.95 and y < 17.65) then
-                            --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
-                            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
-                            PlayerInfo["Timeline"] = currentExpansionName
+                        --Check for Alliance (Stormwind Chromie)
+                        if (_zone == 84) then
+                            if (x > 55.95 and x < 56.50 and y > 16.95 and y < 17.65) then
+                                --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
+                                ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
+                                PlayerInfo["Timeline"] = currentExpansionName
+                            end
                         end
-                    end
 
-                    --Check for Horde (Orgrimmar Chromie)
-                    if (_zone == 85) then
-                        if (x > 40.53 and x < 41.15 and y > 79.80 and y < 80.65) then
-                            --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
-                            ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
-                            PlayerInfo["Timeline"] = currentExpansionName
+                        --Check for Horde (Orgrimmar Chromie)
+                        if (_zone == 85) then
+                            if (x > 40.53 and x < 41.15 and y > 79.80 and y < 80.65) then
+                                --print(C_Map.GetMapInfo(z).name, math.ceil(pos.x*10000)/100, math.ceil(pos.y*10000)/100)
+                                ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,0)
+                                PlayerInfo["Timeline"] = currentExpansionName
+                            end
                         end
                     end
                 end
@@ -1183,39 +1055,6 @@ function CTT_showMainFrame()
     end
 end
 
---function CTT_flashMessage(_message, _duration, _fontScale)
---                        duration = _duration
---                        elapsed = 0
---                        totalRepeat = 0
---
---                        PlaySound(847)
---
---                        local msgFrame = CreateFrame("FRAME", nil, UIParent)
---                        msgFrame:SetWidth(1)
---                        msgFrame:SetHeight(1)
---                        msgFrame:SetPoint("CENTER")
---                        msgFrame:SetFrameStrata("TOOLTIP")
---                        msgFrame.text = msgFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
---                        msgFrame.text:SetPoint("CENTER")
---                        msgFrame.text:SetText(_message)
---                        local font, size, style = msgFrame.text:GetFont()
---                        msgFrame.text:SetFont(font, _fontScale*size, style)
---
---                        msgFrame:SetScript("OnUpdate", function(self, e)
---                            elapsed = elapsed + e
---                            if elapsed >= duration then
---                                if totalRepeat == 0 then
---                                    self:Hide()
---                                    return
---                                end
---                                elapsed = 0
---                                totalRepeat = totalRepeat - 1
---                                self:SetAlpha(0)
---                                return
---                            end
---                            self:SetAlpha(-(elapsed / (duration / 2) - 1) ^ 2 + 1)
---                        end)
---end
 
 function CreateInlineIcon(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset)
 	sizeX = sizeX or 16;
@@ -1482,11 +1321,6 @@ function CTT_ShowToolTip(tooltip, mode)
 
         CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
 
-        --if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
-        --else
-        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        --end
         
 else
     if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
@@ -1509,15 +1343,7 @@ else
 
         CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
 
-        --if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
-        --else
-        --    tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. TimelineCurrency .. "\n\n" .. LClickAction .. "\n" .. MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        --end
     else
-
-        --CTT_SetupTooltip(tooltip, LClickAction, MClickAction, TimelineCurrency)
-
         if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
             tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. LClickAction .. "\n" .. L["RClickAction"] .."", nil, nil, nil, nil)
         else
@@ -1683,6 +1509,7 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.Mode = 2;
             ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
             ChromieTimeTrackerDB.LockDragDrop = false;
+            ChromieTimeTrackerDB.ToastVisibility = 1;
             ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
             ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
             ChromieTimeTrackerDB.LockMiddleClickOption = false;
