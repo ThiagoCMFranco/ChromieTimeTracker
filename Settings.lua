@@ -28,6 +28,7 @@ local L = mct.L
 local C_LanguageContributors = {}
 
 local modes = {L["CompactMode"], L["StandardMode"], L["AlternateMode"], L["AdvancedMode"]}
+local visibilityOptions = {L["Visibility_Always_Show"], L["Visibility_Hide_Current_Timeline"], L["Visibility_Never_Show"]}
 local buttonAlignments = {L["alignLeft"],L["alignCenter"],L["alignRight"]}
 local buttonPositions = {L["positionAbove"], L["positionBelow"]}
 local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOption_Legion"],L["MiddleClickOption_Missions"],string.format(L["MiddleClickOption_Covenant"], "-"),L["MiddleClickOption_DragonIsles"],L["MiddleClickOption_KhazAlgar"]}
@@ -547,6 +548,7 @@ local LabelAdvancedMode = AceGUI:Create("Label")
 local CheckBox = AceGUI:Create("CheckBox")
 local chkHideChatWelcomeMessage = AceGUI:Create("CheckBox")
 local chkHideMainWindow = AceGUI:Create("CheckBox")
+local ddlToastVisibility = AceGUI:Create("Dropdown")
 local chkLockDragDrop = AceGUI:Create("CheckBox")
 local ddlDefaultMiddleClickOption = AceGUI:Create("Dropdown")
 local LabelMiddleClick = AceGUI:Create("Label")
@@ -629,6 +631,15 @@ end)
 chkLockDragDrop:SetWidth(700)
 scrollFrameMainSettings:AddChild(chkLockDragDrop)
 
+ddlToastVisibility:SetList(visibilityOptions)
+ddlToastVisibility:SetLabel(L["ddlToastVisibility"])
+ddlToastVisibility:SetWidth(250)
+ddlToastVisibility:SetCallback("OnValueChanged", function(widget, event, text)
+    textStore = text
+    ChromieTimeTrackerDB.ToastVisibility = ddlToastVisibility.value
+end)
+scrollFrameMainSettings:AddChild(ddlToastVisibility)
+
 heading2:SetRelativeWidth(1)
 scrollFrameMainSettings:AddChild(heading2)
 
@@ -697,6 +708,7 @@ end)
 scrollFrameMainSettings:AddChild(btnResetPosition)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
+    ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
@@ -717,6 +729,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.HideChatWelcomeMessage = false;
         ChromieTimeTrackerDB.LockDragDrop = false;
         ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+        ChromieTimeTrackerDB.ToastVisibility = 1;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
@@ -766,6 +779,7 @@ scrollFrameMainSettings:AddChild(btnResetSettings)
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
+    ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
@@ -853,6 +867,7 @@ function loadSettings()
     CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
     chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
     chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
+    ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
