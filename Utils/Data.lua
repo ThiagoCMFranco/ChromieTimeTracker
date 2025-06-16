@@ -29,12 +29,13 @@ mct.C_ClassTextures = {}
 mct.C_GarrisonTextures = {}
 mct.C_WarCampaignTextures = {}
 mct.C_CovenantChoicesTextures = {}
+mct.C_LandingPagesTextures = {}
 mct.C_ClassTabTextures = {}
 mct.C_GarrisonTabTextures = {}
 mct.C_WarCampaignTabTextures = {}
 mct.C_CovenantChoicesTabTextures = {}
-mct.L_ButtonFrames = {}
-mct.L_CurrencyId = {}
+mct.C_ButtonFrames = {}
+mct.C_CurrencyId = {}
 
 local L = mct.L
 
@@ -118,6 +119,12 @@ mct.C_CovenantChoicesTextures =
     ["Venthyr"] = "shadowlands-landingbutton-Venthyr-up",
     ["Kyrian"] = "shadowlands-landingbutton-Kyrian-up",
     ["Not_Selected"] = "covenantsanctum-renown-icon-available-nightfae",
+}
+
+mct.C_LandingPagesTextures =
+{
+    ["DragonIsles"] = "dragonflight-landingbutton-up",
+    ["KhazAlgar"] = "warwithin-landingbutton-up",
 }
 
 mct.C_ClassTabTextures =

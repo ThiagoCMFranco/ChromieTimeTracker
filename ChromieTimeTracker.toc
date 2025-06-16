@@ -38,5 +38,6 @@ localization\ruRU.lua
 Utils\Data.lua
 Utils\Toast.lua
 Utils\FlashMessage.lua
+Utils\Functions.lua
 ChromieTimeTracker.lua
 Settings.lua
