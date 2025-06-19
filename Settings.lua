@@ -183,6 +183,18 @@ function CTT_LoadReportEnhancementSettings()
     end)
     chkShowReportTabsOnReportWindow:SetWidth(700)
 
+    local chkShowEmissaryMissionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
+    chkShowEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = chkShowEmissaryMissionsOnReportWindow:GetValue()
+                if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+                    garrisonUIEmissaryMissionsFrame:Show();
+                else
+                    garrisonUIEmissaryMissionsFrame:Hide();
+                end
+    end)
+    chkShowEmissaryMissionsOnReportWindow:SetWidth(700)
+
     local chkShowMissionExpirationTimeOnReportWindow = AceGUI:Create("CheckBox")
     chkShowMissionExpirationTimeOnReportWindow:SetLabel(L["chkShowMissionExpirationTimeOnReportWindow"])
     chkShowMissionExpirationTimeOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -217,11 +229,14 @@ function CTT_LoadReportEnhancementSettings()
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowEmissaryMissionsOnReportWindow)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
     chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
+    chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
+    
 end
 
 function CTT_LoadAdvancedModeSettings()

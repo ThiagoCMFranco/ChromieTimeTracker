@@ -60,7 +60,9 @@ PlayerInfo["Timeline"] = ""
 
 CurrentGarrisonID = 0
 
-local isGarrisonUIFirstLoad = true
+
+local isGarrisonUIFirstLoad_ResourcesWidget = true
+local isGarrisonUIFirstLoad_EmissaryMissionsWidget = true
 
 local isUnlocked = {}
 
@@ -1035,8 +1037,8 @@ local function CTT_ShowReportMissionExpirationTime(b, item)
 end
 
 function drawGarrisonReportCurrencyWidget(_garrisonID)
-    if(isGarrisonUIFirstLoad) then
-        isGarrisonUIFirstLoad = false
+    if(isGarrisonUIFirstLoad_ResourcesWidget) then
+        isGarrisonUIFirstLoad_ResourcesWidget = false
 
             garrisonUIResourcesFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "")
 
@@ -1071,6 +1073,7 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
         HideUIPanel(GarrisonLandingPage);
         ShowGarrisonLandingPage(_garrisonID)
         drawGarrisonReportCurrencyWidget(_garrisonID)
+        drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
     else
         requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
         ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
@@ -1080,6 +1083,7 @@ elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
     HideUIPanel(GarrisonLandingPage);
     ShowGarrisonLandingPage(_garrisonID)
     drawGarrisonReportCurrencyWidget(_garrisonID)
+    drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
  else
     local funcionalidade = ""
     if (_garrisonID == 2) then
@@ -1297,7 +1301,7 @@ E:SetScript('OnEvent', function(self, event, addon)
 
         local _CovData = {}
         _CovData = getCovenantData()
-        
+
         for _, _garrisonTab in next, {
             {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
@@ -1486,6 +1490,486 @@ hooksecurefunc("CTT_OpenExpansionLandingPage", function(_LandingPageId)
     end)
 
 --Add garrison and expansions buttons to GarrisonLandingPage and Expansiob Landing Pages - Fim
+--Add Emissary Missions to GarrisonLandingPage - Início
+
+local function OpenWorldMap(mapId)
+
+    --627 - Legion - Dalaran
+    --1161 - BFA - Estreito Tiragarde
+    --862 - BFA - Zuldazar
+
+    if(mapId == 627) then --Legion
+        mId = 619
+    end
+
+    if(mapId == 1161) then --Alliance Battle for Azeroth
+        mId = 876
+    end
+
+    if(mapId == 862) then --Horde Battle for Azeroth
+        mId = 875
+    end
+
+    C_Map.OpenWorldMap(mId)
+end
+
+function getFormatedEmissaryQuestsByMapId(mapID)
+    local bounties = C_QuestLog.GetBountiesForMapID(mapID)
+
+    local info = {}
+    local ret = ""
+
+
+    if bounties then
+        for _, bounty in ipairs(bounties) do
+            if not C_QuestLog.IsComplete(bounty.questID) then
+                info.text =  C_QuestLog.GetTitleForQuestID(bounty.questID)
+                info.icon = bounty.icon
+                info.value = bounty.questID
+                info.checked = info.value == value
+
+                --ret = ret .. "\n" .. CreateInlineIcon(info.icon) .. info.text
+                ret = ret .. "\n" .. info.text
+            end
+        end
+    end
+    return ret
+end
+
+function addDummyEmissaryQuest(_text, _objective, _time)
+    local info = {}
+                info.text =  _text -- "Missão indisponível"
+                info.objective = _objective -- "Retorne amanhã para uma nova missão."
+                info.complete = false
+                info.icon = ""
+                info.value = ""
+                info.checked = "false"
+                info.remainingTimeMinutes = _time -- "0"
+                info.rewardName = ""
+                info.rewardTexture = ""
+                info.rewardNumItems = ""
+                return info
+end
+
+local emissaryMissionRewardLoadedOk = false
+
+function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
+    if(isGarrisonUIFirstLoad_EmissaryMissionsWidget) then
+        isGarrisonUIFirstLoad_EmissaryMissionsWidget = false
+
+            garrisonUIEmissaryMissionsFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "") -- TooltipBorderedFrameTemplate
+
+            garrisonUIEmissaryMissionsFrame:ClearAllPoints()
+            garrisonUIEmissaryMissionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
+            garrisonUIEmissaryMissionsFrame:SetSize(290, 80)
+            garrisonUIEmissaryMissionsFrame:SetFrameLevel(5)
+
+            garrisonUIEmissaryMissionsFrame.texture = garrisonUIEmissaryMissionsFrame:CreateTexture(nil,"BACKGROUND")
+            garrisonUIEmissaryMissionsFrame.texture:SetPoint("TOPLEFT",garrisonUIEmissaryMissionsFrame,"TOPLEFT",0,10)
+            garrisonUIEmissaryMissionsFrame.texture:SetPoint("BOTTOMRIGHT",garrisonUIEmissaryMissionsFrame,"BOTTOMRIGHT",10,50)
+            garrisonUIEmissaryMissionsFrame.texture:SetTexture("interface/questframe/worldquest")
+            garrisonUIEmissaryMissionsFrame.texture:SetTexCoord(0.001953125,0.544921875,0.435546875,0.51421875)
+
+            garrisonUIEmissaryMissionsFrame.title = garrisonUIEmissaryMissionsFrame:CreateFontString(nil,"ARTWORK","GameFontNormalLarge")
+            garrisonUIEmissaryMissionsFrame.title:SetPoint("TOPLEFT",garrisonUIEmissaryMissionsFrame,"TOPLEFT",-2,-2)
+            garrisonUIEmissaryMissionsFrame.title:SetWidth(302)
+            garrisonUIEmissaryMissionsFrame.title:SetHeight(12)
+            garrisonUIEmissaryMissionsFrame.title:SetJustifyV("MIDDLE")
+            garrisonUIEmissaryMissionsFrame.title:SetJustifyH("CENTER")
+            garrisonUIEmissaryMissionsFrame.title:SetText("|cFFFFFFFF" .. L["EmissaryMissions_Title"] .. "|r")
+
+            emissaryMissionBorderFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionBorderFrame_1:SetPoint('TOPLEFT', 58 * 1 - 2, -28)
+            emissaryMissionBorderFrame_1:SetSize(58,58)
+            emissaryMissionBorderFrame_1:SetFrameLevel(10)
+            emissaryMissionBorderFrame_1:SetNormalTexture('Artifacts-PerkRing-Final')
+
+            emissaryMissionBorderFrame_2 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionBorderFrame_2:SetPoint('TOPLEFT', 58 * 2 , -28)
+            emissaryMissionBorderFrame_2:SetSize(58,58)
+            emissaryMissionBorderFrame_2:SetFrameLevel(10)
+            emissaryMissionBorderFrame_2:SetNormalTexture('Artifacts-PerkRing-Final')
+
+            emissaryMissionBorderFrame_3 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionBorderFrame_3:SetPoint('TOPLEFT', 58 * 3 + 2, -28)
+            emissaryMissionBorderFrame_3:SetSize(58,58)
+            emissaryMissionBorderFrame_3:SetFrameLevel(10)
+            emissaryMissionBorderFrame_3:SetNormalTexture('Artifacts-PerkRing-Final')
+
+            emissaryMissionCpmpletedFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionCpmpletedFrame_1:SetPoint('TOPLEFT', 64 * 1 - 0, -38)
+            emissaryMissionCpmpletedFrame_1:SetSize(40,40)
+            emissaryMissionCpmpletedFrame_1:SetFrameLevel(8)
+            emissaryMissionCpmpletedFrame_1:SetNormalTexture('worldquest-tracker-checkmark')
+
+            emissaryMissionCpmpletedFrame_2 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionCpmpletedFrame_2:SetPoint('TOPLEFT', 64 * 2 - 6, -38)
+            emissaryMissionCpmpletedFrame_2:SetSize(40,40)
+            emissaryMissionCpmpletedFrame_2:SetFrameLevel(8)
+            emissaryMissionCpmpletedFrame_2:SetNormalTexture('worldquest-tracker-checkmark')
+
+            emissaryMissionCpmpletedFrame_3 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionCpmpletedFrame_3:SetPoint('TOPLEFT', 64 * 3 - 10, -38)
+            emissaryMissionCpmpletedFrame_3:SetSize(40,40)
+            emissaryMissionCpmpletedFrame_3:SetFrameLevel(9)
+            emissaryMissionCpmpletedFrame_3:SetNormalTexture('worldquest-tracker-checkmark')
+
+            -- Sinalização de missão de emissário expirando (emissaryMissionExpiringFrame) só é necessário para a primeira janela pois nunca deve existir duas missões com
+            -- o mesmo dia para encerramento para um mesmo contexto.
+            emissaryMissionExpiringFrame = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionExpiringFrame:SetPoint('TOPLEFT', 75 * 1 - 0, -58)
+            emissaryMissionExpiringFrame:SetSize(20,20)
+            emissaryMissionExpiringFrame:SetFrameLevel(9)
+            emissaryMissionExpiringFrame:SetNormalTexture('questlog-questtypeicon-clockorange')
+
+            emissaryMissionIconFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionIconFrame_1:SetPoint('TOPLEFT', 60 * 1, -30)
+            emissaryMissionIconFrame_1:SetSize(50,50)
+            emissaryMissionIconFrame_1.texture_1 = emissaryMissionIconFrame_1:CreateTexture()
+            emissaryMissionIconFrame_1.texture_1:SetAllPoints(emissaryMissionIconFrame_1)
+
+            emissaryMissionIconFrame_2 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionIconFrame_2:SetPoint('TOPLEFT', 60 * 2, -30)
+            emissaryMissionIconFrame_2:SetSize(50,50)
+            emissaryMissionIconFrame_2.texture_2 = emissaryMissionIconFrame_2:CreateTexture()
+            emissaryMissionIconFrame_2.texture_2:SetAllPoints(emissaryMissionIconFrame_2)
+
+            emissaryMissionIconFrame_3 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionIconFrame_3:SetPoint('TOPLEFT', 60 * 3, -30)
+            emissaryMissionIconFrame_3:SetSize(50,50)
+            emissaryMissionIconFrame_3.texture_3 = emissaryMissionIconFrame_3:CreateTexture()
+            emissaryMissionIconFrame_3.texture_3:SetAllPoints(emissaryMissionIconFrame_3)
+
+            emissaryMissionIconFrameHover_1 = CreateFrame('CheckButton', emissaryMissionIconFrame, garrisonUIEmissaryMissionsFrame, '')
+            emissaryMissionIconFrameHover_1:SetPoint('TOPLEFT', 60 * 1 -4, -28)
+            emissaryMissionIconFrameHover_1:SetSize(58,58)
+            emissaryMissionIconFrameHover_1:SetFrameLevel(12)
+
+            emissaryMissionIconFrameHover_2 = CreateFrame('CheckButton', emissaryMissionIconFrame, garrisonUIEmissaryMissionsFrame, '')
+            emissaryMissionIconFrameHover_2:SetPoint('TOPLEFT', 60 * 2 -4, -28)
+            emissaryMissionIconFrameHover_2:SetSize(58,58)
+            emissaryMissionIconFrameHover_2:SetFrameLevel(12)
+
+            emissaryMissionIconFrameHover_3 = CreateFrame('CheckButton', emissaryMissionIconFrame, garrisonUIEmissaryMissionsFrame, '')
+            emissaryMissionIconFrameHover_3:SetPoint('TOPLEFT', 60 * 3 -4, -28)
+            emissaryMissionIconFrameHover_3:SetSize(58,58)
+            emissaryMissionIconFrameHover_3:SetFrameLevel(12)           
+    end
+
+    garrisonUIEmissaryMissionsFrame:Hide()
+
+    local mapID = 0
+
+    if(_garrisonID == 3) then
+        mapID = 627
+    end
+    if(_garrisonID == 9) then
+        mapID = 1161
+    end
+
+    if mapID ~= 0 then
+
+        garrisonUIEmissaryMissionsFrame:Show()
+
+        local emissaryMission = {}
+        local emissaryMissionHover = {}
+        local emissaryMissionBorder = {}
+        local bountyList = C_QuestLog.GetBountiesForMapID(mapID)
+        local _bountyList = {}
+
+        if bountyList then
+            for _, bounty in ipairs(bountyList) do
+                local info = {}
+                local obj = C_QuestLog.GetQuestObjectives(bounty.questID)
+                
+                info.text =  C_QuestLog.GetTitleForQuestID(bounty.questID)
+                info.objective = obj[1].text
+                info.complete = C_QuestLog.IsComplete(bounty.questID)
+                info.icon = bounty.icon
+                info.value = bounty.questID
+                info.checked = info.value == value
+                info.remainingTimeMinutes = C_TaskQuest.GetQuestTimeLeftMinutes(bounty.questID)
+                local numQuestRewards = GetNumQuestLogRewards(bounty.questID)
+                local name, texture, numItems, currencyID
+                local hasCurrencyReward = false
+                for _, currencyInfo in ipairs(C_QuestLog.GetQuestRewardCurrencies(bounty.questID)) do
+                    info.rewardName = currencyInfo.name
+                    info.rewardTexture = currencyInfo.texture
+                    info.rewardNumItems = currencyInfo.totalRewardAmount    
+                    info.currencyID = currencyInfo.currencyID
+                    hasCurrencyReward = true              
+                end 
+                
+                if numQuestRewards > 0 then
+                    info.rewardName, info.rewardTexture, info.rewardNumItems, info.rewardQuality, info.rewardIsUsable, info.rewardItemID = GetQuestLogRewardInfo(1, bounty.questID);
+                elseif hasCurrencyReward then
+                    --already loaded, do not overwrite
+                else
+                    info.rewardName = ""
+                    info.rewardTexture = ""
+                    info.rewardNumItems = ""
+                    emissaryMissionRewardLoadedOk = false
+                end
+                table.insert(_bountyList,info)
+            end
+
+            if (table.getn(_bountyList) == 2) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
+            elseif (table.getn(_bountyList) == 1) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0))
+            elseif (table.getn(_bountyList) == 0) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0)) -- "Missão indisponível", "Retorne amanhã para uma nova missão"
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0)) -- "Missão indisponível", "Retorne em dois dias para uma nova missão"
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_3_Day"], 0)) -- "Missão indisponível", "Retorne em três dias para uma nova missão"
+            end
+
+        end
+
+            for _id, _emissaryMission in pairs(_bountyList) do 
+                if _id == 1 then          
+                emissaryMissionIconFrame_1.texture_1:SetTexture(_emissaryMission.icon)
+                emissaryMissionIconFrame_1:Show()
+                emissaryMissionIconFrame_1.tabIndex = #emissaryMission + 1
+                emissaryMissionBorderFrame_1.tooltip = _emissaryMission.text
+                emissaryMissionBorderFrame_1.tabIndex = #emissaryMissionBorder + 1
+                
+                if(_emissaryMission.complete) then
+                    emissaryMissionCpmpletedFrame_1:Show()
+                else
+                    emissaryMissionCpmpletedFrame_1:Hide()
+                end
+
+                if(_emissaryMission.complete or _emissaryMission.text == L["EmissaryMissions_Inactive"]) then
+                    emissaryMissionExpiringFrame:Hide()
+                else
+                    if(_emissaryMission.remainingTimeMinutes < 360) then
+                        emissaryMissionExpiringFrame:Show()
+                    else
+                        emissaryMissionExpiringFrame:Hide()
+                    end
+                end
+
+                
+
+                emissaryMissionIconFrameHover_1:SetScript('OnClick',function(self)
+                    OpenWorldMap(mapID)
+                end)
+
+                SetPortraitToTexture(emissaryMissionIconFrame_1.texture_1, _emissaryMission.icon)
+
+                local hours = math.floor(_emissaryMission.remainingTimeMinutes / 60)
+                local days =  math.floor(hours / 24)
+                if(days > 0) then
+                    hours = math.fmod(hours,24)
+                end
+                local minutes = math.fmod(_emissaryMission.remainingTimeMinutes,60)
+
+                local daysText = L["EmissaryMissions_RemainingTime_Days_P"]
+                local hoursText = L["EmissaryMissions_RemainingTime_Hours_P"]
+                local minutesText = L["EmissaryMissions_RemainingTime_Minutes_P"]
+
+                if(days == 1) then
+                    daysText = L["EmissaryMissions_RemainingTime_Days_S"]
+                end
+
+                if(hours == 1) then
+                    hoursText = L["EmissaryMissions_RemainingTime_Hours_S"]
+                end
+
+                if(minutes == 1) then
+                    minutesText = L["EmissaryMissions_RemainingTime_Minutes_S"]
+                end
+
+                emissaryMissionIconFrameHover_1:SetNormalTexture('dragonflight-landingbutton-circleglow')
+                
+                if(_emissaryMission.text ~= nil and _emissaryMission.objective ~= nil and _emissaryMission.rewardName ~= nil and _emissaryMission.rewardNumItems ~= nil and _emissaryMission.rewardTexture ~= nil and _emissaryMission.remainingTimeMinutes ~= nil) then
+                    if(days == 0) then
+                        emissaryMissionIconFrameHover_1.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    else
+                        emissaryMissionIconFrameHover_1.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. days .. daysText .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    end
+                end
+
+                if(_emissaryMission.remainingTimeMinutes == 0) then
+                    emissaryMissionIconFrameHover_1.tooltip = _emissaryMission.text .. "\n" .. _emissaryMission.objective
+                end
+
+                table.insert(emissaryMission, emissaryMissionIconFrame_1)
+                table.insert(emissaryMissionHover, emissaryMissionIconFrameHover_1)
+                table.insert(emissaryMissionBorder, emissaryMissionBorderFrame_1)
+                end
+
+                if _id == 2 then          
+                emissaryMissionIconFrame_2.texture_2:SetTexture(_emissaryMission.icon)
+                emissaryMissionIconFrame_2:Show()
+                emissaryMissionIconFrame_2.tabIndex = #emissaryMission + 1
+                emissaryMissionBorderFrame_2.tooltip = _emissaryMission.text
+                emissaryMissionBorderFrame_2.tabIndex = #emissaryMissionBorder + 1
+
+                if(_emissaryMission.complete) then
+                    emissaryMissionCpmpletedFrame_2:Show()
+                else
+                    emissaryMissionCpmpletedFrame_2:Hide()
+                end
+
+                emissaryMissionIconFrameHover_2:SetScript('OnClick',function(self)
+                        OpenWorldMap(mapID)
+                    end)
+
+                SetPortraitToTexture(emissaryMissionIconFrame_2.texture_2, _emissaryMission.icon)
+
+                local hours = math.floor(_emissaryMission.remainingTimeMinutes / 60)
+                local days =  math.floor(hours / 24)
+                if(days > 0) then
+                    hours = math.fmod(hours,24)
+                end
+                local minutes = math.fmod(_emissaryMission.remainingTimeMinutes,60)
+
+                local daysText = L["EmissaryMissions_RemainingTime_Days_P"]
+                local hoursText = L["EmissaryMissions_RemainingTime_Hours_P"]
+                local minutesText = L["EmissaryMissions_RemainingTime_Minutes_P"]
+
+                if(days == 1) then
+                    daysText = L["EmissaryMissions_RemainingTime_Days_S"]
+                end
+
+                if(hours == 1) then
+                    hoursText = L["EmissaryMissions_RemainingTime_Hours_S"]
+                end
+
+                if(minutes == 1) then
+                    minutesText = L["EmissaryMissions_RemainingTime_Minutes_S"]
+                end
+
+                emissaryMissionIconFrameHover_2:SetNormalTexture('dragonflight-landingbutton-circleglow')
+                
+                if(_emissaryMission.text ~= nil and _emissaryMission.objective ~= nil and _emissaryMission.rewardName ~= nil and _emissaryMission.rewardNumItems ~= nil and _emissaryMission.rewardTexture ~= nil and _emissaryMission.remainingTimeMinutes ~= nil) then
+                    if(days == 0) then
+                        emissaryMissionIconFrameHover_2.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    else
+                        emissaryMissionIconFrameHover_2.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. days .. daysText .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    end
+                end
+
+                if(_emissaryMission.remainingTimeMinutes == 0) then
+                    emissaryMissionIconFrameHover_2.tooltip = _emissaryMission.text .. "\n" .. _emissaryMission.objective
+                end
+
+                table.insert(emissaryMission, emissaryMissionIconFrame_2)
+                table.insert(emissaryMissionHover, emissaryMissionIconFrameHover_2)
+                table.insert(emissaryMissionBorder, emissaryMissionBorderFrame_2)
+                end
+
+                if _id == 3 then          
+                emissaryMissionIconFrame_3.texture_3:SetTexture(_emissaryMission.icon)           
+                emissaryMissionIconFrame_3:Show()
+                emissaryMissionIconFrame_3.tabIndex = #emissaryMission + 1
+
+                emissaryMissionBorderFrame_3.tooltip = _emissaryMission.text
+                emissaryMissionBorderFrame_3.tabIndex = #emissaryMissionBorder + 1
+
+                if(_emissaryMission.complete) then
+                    emissaryMissionCpmpletedFrame_3:Show()
+                else
+                    emissaryMissionCpmpletedFrame_3:Hide()
+                end
+
+                emissaryMissionIconFrameHover_3:SetScript('OnClick',function(self)
+                    OpenWorldMap(mapID)
+                end)
+
+                SetPortraitToTexture(emissaryMissionIconFrame_3.texture_3, _emissaryMission.icon)
+
+                local hours = math.floor(_emissaryMission.remainingTimeMinutes / 60)
+                local days =  math.floor(hours / 24)
+                if(days > 0) then
+                    hours = math.fmod(hours,24)
+                end
+                local minutes = math.fmod(_emissaryMission.remainingTimeMinutes,60)
+
+                local daysText = L["EmissaryMissions_RemainingTime_Days_P"]
+                local hoursText = L["EmissaryMissions_RemainingTime_Hours_P"]
+                local minutesText = L["EmissaryMissions_RemainingTime_Minutes_P"]
+
+                if(days == 1) then
+                    daysText = L["EmissaryMissions_RemainingTime_Days_S"]
+                end
+
+                if(hours == 1) then
+                    hoursText = L["EmissaryMissions_RemainingTime_Hours_S"]
+                end
+
+                if(minutes == 1) then
+                    minutesText = L["EmissaryMissions_RemainingTime_Minutes_S"]
+                end
+
+                emissaryMissionIconFrameHover_3:SetNormalTexture('dragonflight-landingbutton-circleglow')
+
+                if(_emissaryMission.text ~= nil and _emissaryMission.objective ~= nil and _emissaryMission.rewardName ~= nil and _emissaryMission.rewardNumItems ~= nil and _emissaryMission.rewardTexture ~= nil and _emissaryMission.remainingTimeMinutes ~= nil) then
+                    if(days == 0) then
+                        emissaryMissionIconFrameHover_3.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    else
+                        emissaryMissionIconFrameHover_3.tooltip = _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. days .. daysText .. hours .. hoursText .. minutes .. minutesText .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r" .. CreateInlineIcon(_emissaryMission.rewardTexture) .. _emissaryMission.rewardNumItems .. " " .. _emissaryMission.rewardName
+                    end
+                end
+
+                if(_emissaryMission.remainingTimeMinutes == 0) then
+                    emissaryMissionIconFrameHover_3.tooltip = _emissaryMission.text .. "\n" .. _emissaryMission.objective
+                end
+
+                table.insert(emissaryMission, emissaryMissionIconFrame_3)
+                table.insert(emissaryMissionHover, emissaryMissionIconFrameHover_3)
+                table.insert(emissaryMissionBorder, emissaryMissionBorderFrame_3)
+                end
+            end  
+
+            for _, _garBorder in pairs(emissaryMissionBorder) do
+                    _garBorder:SetScript("OnEnter", function(self)
+                        emissaryMissionHover[_garBorder.tabIndex]:Show()
+                    end)
+            end
+
+            for _, _garTabHover in pairs(emissaryMissionHover) do
+                    _garTabHover:SetScript("OnEnter", function(self)
+                        GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+
+                        --Reload widget to fix mission rewards not loaded.
+                        if(not emissaryMissionRewardLoadedOk) then
+                            emissaryMissionRewardLoadedOk = true
+                            drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
+                        end
+
+                        CTT_ShowIconTooltip(GameTooltip, _garTabHover.tooltip)
+                        GameTooltip:Show()
+                    end)
+
+                    _garTabHover:SetScript("OnLeave", function(self)
+                        GameTooltip:Hide()
+                        _garTabHover:Hide()
+                    end)
+            end
+
+            for _, _garTabHover in pairs(emissaryMissionHover) do
+                _garTabHover:Hide()
+            end
+
+        if(_garrisonID == 3 or _garrisonID == 9) then
+            garrisonUIEmissaryMissionsFrame:Show()
+        else
+            garrisonUIEmissaryMissionsFrame:Hide()
+        end
+
+        if(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow == nil) then
+            garrisonUIEmissaryMissionsFrame:Show()
+        else
+            garrisonUIEmissaryMissionsFrame:Hide()
+        end
+
+    end
+end
+
+--Add Emissary Missions to GarrisonLandingPage - Fim
 
 function CTT_setupSlashCommands()
     -- Criação dos slash comands.
@@ -1502,6 +1986,13 @@ function CTT_setupSlashCommands()
             HideUIPanel(GarrisonLandingPage);
             ShowGarrisonLandingPage(tonumber(arg))
             drawGarrisonReportCurrencyWidget(tonumber(arg))
+        elseif (arg == "emissary") then
+            --627 - Legion - Dalaran
+            --1161 - BFA - Estreito Tiragarde
+            --862 - BFA - Zuldazar
+            print(getEmissaryQuestsByMapId(627))
+            print(getEmissaryQuestsByMapId(1161))
+            print(getEmissaryQuestsByMapId(862))
         elseif(arg == "commands") then
             print(L["SlashCommands"])
         elseif(arg == "resetPosition") then
@@ -1591,7 +2082,7 @@ function CTT_setupSlashCommands()
     
     CTT_setupSlashCommands()
 
-    --Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Início
+--Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Início
 if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
 	GARRISON_LANDING_COVIEW_PATCH_VERSION = 3
 	hooksecurefunc("ShowGarrisonLandingPage", function(_LandingPageId)
