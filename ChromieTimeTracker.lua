@@ -1455,4 +1455,29 @@ function CTT_setupSlashCommands()
     
     CTT_setupSlashCommands()
 
-    
+    --Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Início
+if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
+	GARRISON_LANDING_COVIEW_PATCH_VERSION = 3
+	hooksecurefunc("ShowGarrisonLandingPage", function(_LandingPageId)
+		if GARRISON_LANDING_COVIEW_PATCH_VERSION ~= 3 then
+			return
+		end
+		_LandingPageId = (_LandingPageId or C_Garrison.GetLandingPageGarrisonType() or 0)
+		if _LandingPageId ~= 111 and GarrisonLandingPage.SoulbindPanel then
+			GarrisonLandingPage.FollowerTab.autoSpellPool:ReleaseAll()
+			GarrisonLandingPage.FollowerTab.autoCombatStatsPool:ReleaseAll()
+			GarrisonLandingPage.FollowerTab.AbilitiesFrame:Layout()
+			GarrisonLandingPage.FollowerTab.CovenantFollowerPortraitFrame:Hide()
+		end
+		if _LandingPageId > 2 and GarrisonThreatCountersFrame then
+			GarrisonThreatCountersFrame:Hide()
+		end
+		if _LandingPageId > 3 then
+			GarrisonLandingPage.FollowerTab.NumFollowers:SetText("")
+		end
+		if GarrisonLandingPageReport.Sections then
+			GarrisonLandingPageReport.Sections:SetShown(_LandingPageId == 111)
+		end
+	end)
+end
+--Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Fim
