@@ -20,7 +20,7 @@
 --
 --------------------------------------------------------------------------------
 
---ChromieTimeTrackerUtil = ChromieTimeTrackerUtil or {}
+ChromieTimeTrackerUtil = ChromieTimeTrackerUtil or {}
 
 local msgFrame = CreateFrame("FRAME", "CTT_FlashMessageFrame", UIParent)
     msgFrame:SetWidth(1)
@@ -34,8 +34,7 @@ local msgFrame = CreateFrame("FRAME", "CTT_FlashMessageFrame", UIParent)
 
 local font, size, style = msgFrame.text:GetFont()
 
---function ChromieTimeTrackerUtil:CTT_flashMessage(_message, _duration, _fontScale)
-function CTT_flashMessage(_message, _duration, _fontScale)
+function ChromieTimeTrackerUtil:FlashMessage(_message, _duration, _fontScale)
     duration = _duration
     elapsed = 0
     totalRepeat = 0

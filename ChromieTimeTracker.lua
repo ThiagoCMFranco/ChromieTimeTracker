@@ -39,12 +39,13 @@ local C_ClassTextures = mct.C_ClassTextures
 local C_GarrisonTextures = mct.C_GarrisonTextures
 local C_WarCampaignTextures = mct.C_WarCampaignTextures
 local C_CovenantChoicesTextures = mct.C_CovenantChoicesTextures
+local C_LandingPagesTextures = mct.C_LandingPagesTextures
 local C_ClassTabTextures = mct.C_ClassTabTextures
 local C_GarrisonTabTextures = mct.C_GarrisonTabTextures
 local C_WarCampaignTabTextures = mct.C_WarCampaignTabTextures
 local C_CovenantChoicesTabTextures = mct.C_CovenantChoicesTabTextures
-local L_ButtonFrames = mct.C_ButtonFrames
-local L_CurrencyId = mct.C_CurrencyId
+local C_ButtonFrames = mct.C_ButtonFrames
+local C_CurrencyId = mct.C_CurrencyId
 
 
 local playerClass, englishClass = UnitClass("player")
@@ -57,7 +58,6 @@ PlayerInfo["Faction"] = englishFaction
 PlayerInfo["Timeline"] = ""
 
 CurrentGarrisonID = 0
-
 
 local isGarrisonUIFirstLoad = true
 
@@ -136,38 +136,6 @@ local covenantIconFrame = CreateFrame("Frame", "ChromieTimeTrackerCovenantIconFr
 local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "")
 local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "")
 
-function getCovenantData()
-    local l_Covenant = "Not_Selected"
-    local l_CovenantID = C_Covenants.GetActiveCovenantID()
-    local _CovenantData = {}
-    local _ActiveCovenantName = "-"
-    if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
-        if l_CovenantID == 1 then
-            l_Covenant = "Kyrian"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 2 then
-            l_Covenant = "Venthyr"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 3 then
-            l_Covenant = "NightFae"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-        if l_CovenantID == 4 then
-            l_Covenant = "Necrolord"
-            _CovenantData = C_Covenants.GetCovenantData(l_CovenantID)
-            _ActiveCovenantName = "- ".. _CovenantData.name .. " -"
-        end
-    end
-    local L_CovenantData = {
-        l_Covenant, l_CovenantID, _ActiveCovenantName, _CovenantData
-    }
-    return L_CovenantData
-end
 
 --contextMenu
 
@@ -360,16 +328,8 @@ mainFrame:SetScript("OnDragStart", function(self)
 end)
 mainFrame:SetScript("OnMouseDown", function(self, btn)
     if btn == 'MiddleButton' then 
-        if IsShiftKeyDown() then
-            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
-        else
-        
         CTT_MouseMiddleButtonClick()
-
-        end
     elseif btn == "RightButton" then
-        --PlaySound(808)
-        --ChromieTimeTracker:ToggleSettingsFrame()
         local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
     end
 end)
@@ -551,14 +511,8 @@ iconFrame:SetScript("OnDragStart", function(self)
 end)
 iconFrame:SetScript("OnMouseDown", function(self, btn)
     if btn == 'MiddleButton' then 
-        if IsShiftKeyDown() then
-            local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
-        else
             CTT_MouseMiddleButtonClick()
-        end
     elseif btn == "RightButton" then
-        --PlaySound(808)
-        --ChromieTimeTracker:ToggleSettingsFrame()
         local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
     end
 end)
@@ -590,7 +544,7 @@ iconFrame:SetScript("OnEnter", function(self)
     elseif(_ttpPoint[1] == "BOTTOMRIGHT") then
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     else
-        GameTooltip:SetOwner(self, "ANCHOR_LEFT") --ANCHOR_CURSOR
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     end
 
         CTT_ShowToolTip(GameTooltip, "Alternate")
@@ -643,8 +597,6 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
                 CTT_CheckExpansionContentAccess(_garrisonID)
             end
         elseif btn == "RightButton" then
-            --PlaySound(808)
-            --ChromieTimeTracker:ToggleSettingsFrame()
             local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
         end
     end)
@@ -683,7 +635,7 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
             GameTooltip:Show()
             _garrisonIconFrame.iconHightLight:SetAtlas("bag-border-highlight", false)
             _garrisonIconFrame.iconHightLight:ClearAllPoints()
-            _garrisonIconFrame.iconHightLight:SetPoint("TOPLEFT", L_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
+            _garrisonIconFrame.iconHightLight:SetPoint("TOPLEFT", C_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
             _garrisonIconFrame.iconHightLight:SetWidth(_size)
             _garrisonIconFrame.iconHightLight:SetHeight(_size)
             
@@ -696,24 +648,24 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
     end)
 
     _garrisonIconFrame.iconBorder = _garrisonIconFrame:CreateTexture(nil,"BACKGROUND",nil,0)
-    _garrisonIconFrame.iconBorder:SetPoint("TOPLEFT", L_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
+    _garrisonIconFrame.iconBorder:SetPoint("TOPLEFT", C_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
     _garrisonIconFrame.iconBorder:SetWidth(_size)
     _garrisonIconFrame.iconBorder:SetHeight(_size)
     _garrisonIconFrame.iconBorder:SetAtlas("Map_Faction_Ring", false)
 
     _garrisonIconFrame.iconHightLight = _garrisonIconFrame:CreateTexture(nil,"BACKGROUND",nil,-1)
-    _garrisonIconFrame.iconHightLight:SetPoint("TOPLEFT", L_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
+    _garrisonIconFrame.iconHightLight:SetPoint("TOPLEFT", C_ButtonFrames[_garrisonID], "TOPLEFT", 1, -1)
     _garrisonIconFrame.iconHightLight:SetWidth(_size)
     _garrisonIconFrame.iconHightLight:SetHeight(_size)
 
     _garrisonIconFrame.icon = _garrisonIconFrame:CreateTexture(nil,"BACKGROUND",nil,-2)
-    _garrisonIconFrame.icon:SetPoint("TOPLEFT", L_ButtonFrames[_garrisonID], "TOPLEFT", 0, 0)
+    _garrisonIconFrame.icon:SetPoint("TOPLEFT", C_ButtonFrames[_garrisonID], "TOPLEFT", 0, 0)
     _garrisonIconFrame.icon:SetWidth(_size)
     _garrisonIconFrame.icon:SetHeight(_size)
 
     _garrisonIconFrame.iconBackGround = _garrisonIconFrame:CreateTexture(nil,"BACKGROUND",nil,-3)
     _garrisonIconFrame.iconBackGround:ClearAllPoints()
-    _garrisonIconFrame.iconBackGround:SetPoint("TOPLEFT", L_ButtonFrames[_garrisonID], "TOPLEFT", 0, 0)
+    _garrisonIconFrame.iconBackGround:SetPoint("TOPLEFT", C_ButtonFrames[_garrisonID], "TOPLEFT", 0, 0)
     _garrisonIconFrame.iconBackGround:SetWidth(_size)
     _garrisonIconFrame.iconBackGround:SetHeight(_size)
 
@@ -728,20 +680,6 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
     _garrisonIconFrame:SetSize(_size,_size)
 
     _garrisonIconFrame:Show()
-
-    end
-
-    function getClassTexture(_playerClass)    
-        return C_ClassTextures[_playerClass]  
-    end
-
-    function getFactionTexture(_playerFaction, _context)
-
-        if (_context == "G") then
-            return C_GarrisonTextures[_playerFaction]
-        else
-            return C_WarCampaignTextures[_playerFaction]
-        end
 
     end
 
@@ -848,14 +786,14 @@ function CTT_LoadAvancedModeIcons()
     local position = 0;
     
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
-        CTT_setupGarrisonIconFrame(garrisonIconFrame,iconSize,2,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],"G"), "Atlas", L["MiddleClickOption_Warlords"])
+        CTT_setupGarrisonIconFrame(garrisonIconFrame,iconSize,2,(left + (step * position)),top,C_GarrisonTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Warlords"])
         position = position + 1;
     else
         garrisonIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowClassHall and (isUnlocked[2]) then
         if PlayerInfo["Class"]~= "EVOKER" then
-            CTT_setupGarrisonIconFrame(classHallIconFrame,iconSize,3,(left + (step * position)),top,getClassTexture(PlayerInfo["Class"]), "Atlas", L["MiddleClickOption_Legion"])
+            CTT_setupGarrisonIconFrame(classHallIconFrame,iconSize,3,(left + (step * position)),top,C_ClassTextures[PlayerInfo["Class"]], "Atlas", L["MiddleClickOption_Legion"])
             position = position + 1;
         else
             --Since Evoker was launched after Legion there is no class hall for them.
@@ -865,16 +803,12 @@ function CTT_LoadAvancedModeIcons()
         classHallIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowWarEffort and (isUnlocked[3]) then
-        CTT_setupGarrisonIconFrame(missionsIconFrame,iconSize,9,(left + (step * position)),top,getFactionTexture(PlayerInfo["Faction"],""), "Atlas", L["MiddleClickOption_Missions"])
+        CTT_setupGarrisonIconFrame(missionsIconFrame,iconSize,9,(left + (step * position)),top,C_WarCampaignTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Missions"])
         position = position + 1;
     else
         missionsIconFrame:Hide();
     end
 
-    local l_Covenant = "Not_Selected"
-    local l_CovenantID = C_Covenants.GetActiveCovenantID()
-    local _CovenantData = {}
-    local _ActiveCovenantName = "-"
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
 
         local _CovData = {}
@@ -886,13 +820,13 @@ function CTT_LoadAvancedModeIcons()
         covenantIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,"dragonflight-landingbutton-up", "Atlas", L["MiddleClickOption_DragonIsles"])
+        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,C_LandingPagesTextures["DragonIsles"], "Atlas", L["MiddleClickOption_DragonIsles"])
         position = position + 1;
     else
         dragonIslesIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,"warwithin-landingbutton-up", "Atlas", L["MiddleClickOption_KhazAlgar"])
+        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,C_LandingPagesTextures["KhazAlgar"], "Atlas", L["MiddleClickOption_KhazAlgar"])
         position = position + 1;
     else
         khazAlgarIconFrame:Hide();
@@ -933,18 +867,11 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
                 ChromieTimeTrackerDB.HideMainWindow = false
             end
         elseif btn == "RightButton" then
-            --PlaySound(808)
-            --ChromieTimeTracker:ToggleSettingsFrame()
             local contextMenu = MenuUtil.CreateContextMenu(UIParent, GeneratorFunction);
         elseif btn == "MiddleButton" then
 
-            if IsShiftKeyDown() then
-                local contextMenu = MenuUtil.CreateContextMenu(ChromieTimeTrackerRootFrame, GeneratorFunction);
-            else
-
             CTT_MouseMiddleButtonClick()
             
-            end
         end
 	end,
 
@@ -1055,43 +982,6 @@ function CTT_showMainFrame()
     end
 end
 
-
-function CreateInlineIcon(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset)
-	sizeX = sizeX or 16;
-	sizeY = sizeY or sizeX;
-	xOffset = xOffset or 0;
-	yOffset = yOffset or 0;
-
-	if (type(atlasNameOrTexID) == "number") then
-		-- REF.: CreateTextureMarkup(file, fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
-		return CreateTextureMarkup(atlasNameOrTexID, 0, 0, sizeX, sizeY, 0, 0, 0, 0, xOffset, yOffset);  --> keep original color
-		-- return string.format("|T%d:%d:%d:%d:%d|t", atlasNameOrTexID, size, size, xOffset, yOffset);
-	end
-	-- if ( type(atlasNameOrTexID) == "string" or tonumber(atlasNameOrTexID) ~= nil ) then
-	if (type(atlasNameOrTexID) == "string") then
-		-- REF.: CreateAtlasMarkup(atlasName, width, height, offsetX, offsetY, rVertexColor, gVertexColor, bVertexColor)
-		return CreateAtlasMarkup(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset);  --> keep original color
-	end
-
-	return ''
-end
-
-function getCurrencyById(_currencyId, _showCurrencyName) 
-    local warband = ""
-    local _currency = {}
-    _currency = C_CurrencyInfo.GetCurrencyInfo(_currencyId)
-    if(_currency.isAccountWide) then
-        warband = CreateInlineIcon("warbands-icon")
-    end
-
-    local iconString = CreateInlineIcon(_currency.iconFileID)
-    if(_showCurrencyName) then
-        return _currency.name .. ": |cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
-    else
-        return "|cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
-    end
-end
-
 function updateGarrisonReportDisplayedCurrency(_garrisonID)
     if(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow) then
         garrisonUIResourcesFrame:Show()
@@ -1099,16 +989,16 @@ function updateGarrisonReportDisplayedCurrency(_garrisonID)
         garrisonUIResourcesFrame:Hide()
     end
     if _garrisonID == 2 then
-        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "    " .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true))
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(C_CurrencyId["Garrison_Resources"], true) .. "    " .. getCurrencyById(C_CurrencyId["Garrison_Oil"], true))
     end
     if _garrisonID == 3 then
-        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Order_Resources"], true))
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(C_CurrencyId["Order_Resources"], true))
     end
     if _garrisonID == 9 then
-        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["War_Resources"], true))
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(C_CurrencyId["War_Resources"], true))
     end
     if _garrisonID == 111 then
-        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(L_CurrencyId["Reservoir_Anima"], true))
+        garrisonUIResourcesFrame.garrisonCurrency:SetText(getCurrencyById(C_CurrencyId["Reservoir_Anima"], true))
     end
 end
 
@@ -1147,7 +1037,7 @@ function drawGarrisonReportCurrencyWidget(_garrisonID)
     if(isGarrisonUIFirstLoad) then
         isGarrisonUIFirstLoad = false
 
-            garrisonUIResourcesFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "") -- TooltipBorderedFrameTemplate
+            garrisonUIResourcesFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "")
 
             garrisonUIResourcesFrame:ClearAllPoints()
             garrisonUIResourcesFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "TOPLEFT", 40, -12)
@@ -1182,7 +1072,7 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
         drawGarrisonReportCurrencyWidget(_garrisonID)
     else
         requisito = L["UndiscoveredContentUnlockRequirement_Covenant"]
-        CTT_flashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
+        ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
     end
 elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
  if not not (C_Garrison.GetGarrisonInfo(_garrisonID)) then
@@ -1194,23 +1084,23 @@ elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
     if (_garrisonID == 2) then
         funcionalidade = L["UndiscoveredContent_Warlords"]
         requisito = L["UndiscoveredContentUnlockRequirement_Warlords"]
-        CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+        ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
     elseif (_garrisonID == 3) then
         if PlayerInfo["Class"]~= "EVOKER" then
             funcionalidade = L["UndiscoveredContent_Legion"]
             requisito = L["UndiscoveredContentUnlockRequirement_Legion"]
-            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+            ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         else
             --Since Evoker was launched after Legion there is no class hall for them.
-            CTT_flashMessage(L["EvokerHasNoClassHall"], 5, 1.5)
+            ChromieTimeTrackerUtil:FlashMessage(L["EvokerHasNoClassHall"], 5, 1.5)
         end
     elseif (_garrisonID == 9) then
         funcionalidade = L["UndiscoveredContent_Missions"]
         requisito = L["UndiscoveredContentUnlockRequirement_Missions"]
-        CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+        ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
     else
         funcionalidade = ""
-        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
+        ChromieTimeTrackerUtil:FlashMessage(L["ConfigurationMissing"], 5, 1.5)
     end
 end
 else
@@ -1221,7 +1111,7 @@ else
         else
             funcionalidade = L["UndiscoveredContent_DragonIsles"]
             requisito = L["UndiscoveredContentUnlockRequirement_DragonIsles"]
-            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+            ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         end
     elseif _garrisonID == "TWW" then
         local funcionalidade = ""
@@ -1230,10 +1120,10 @@ else
         else
             funcionalidade = L["UndiscoveredContent_KhazAlgar"]
             requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
-            CTT_flashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+            ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         end
     else
-        CTT_flashMessage(L["ConfigurationMissing"], 5, 1.5)
+        ChromieTimeTrackerUtil:FlashMessage(L["ConfigurationMissing"], 5, 1.5)
     end
 end
 end
@@ -1289,13 +1179,13 @@ function CTT_ShowToolTip(tooltip, mode)
     local TimelineCurrency = ""
     if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
         if C_ExpansionGarrisonID[CurrentGarrisonID] == 2 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(L_CurrencyId["Garrison_Oil"], true)
+            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(C_CurrencyId["Garrison_Oil"], true)
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 3 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Order_Resources"], true)
+            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Order_Resources"], true)
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 9 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["War_Resources"], true)
+            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["War_Resources"], true)
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 111 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(L_CurrencyId["Reservoir_Anima"], true)
+            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Reservoir_Anima"], true)
         end
     else
         --Adicionar funcionalidade de exibir recursos específicos quando não estiver em nenhuma linha temporal.
@@ -1388,15 +1278,14 @@ E:RegisterEvent('ADDON_LOADED')
 E:SetScript('OnEvent', function(self, event, addon)
     if(addon == 'Blizzard_GarrisonUI') then
 
-        local l_Covenant = "Not_Selected"
         local _CovData = {}
         _CovData = getCovenantData()
         
         for _, _garrisonTab in next, {
-            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},--[[Interface\Icons\inv_garrison_resource]]
-            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},--[[Interface\Icons\inv_orderhall_orderresources]]
-            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},--[[Interface\Icons\inv__faction_warresources]]
-			{111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},--[[Interface\Icons\spell_animabastion_orb]]
+            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
+            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
+            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
+			{111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
         } do
             garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonLandingPage, 'UIButtonTemplate')
             garrisonTabFrame:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
@@ -1414,7 +1303,6 @@ E:SetScript('OnEvent', function(self, event, addon)
             garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
             garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
             garrisonTabFrameHover:SetFrameLevel(10)
-            --garrisonTabFrameHover:Hide()
             garrisonTabFrameHover.pageID = _garrisonTab[1]
             garrisonTabFrameHover.tooltip = _garrisonTab[2]
             
@@ -1474,6 +1362,10 @@ function CTT_setupSlashCommands()
             
         elseif(arg == "DF" or arg == "TWW") then
             CTT_OpenExpansionLandingPage(arg)
+        elseif(arg == "2" or arg == "3" or arg == "9" or arg == "111") then
+            HideUIPanel(GarrisonLandingPage);
+            ShowGarrisonLandingPage(tonumber(arg))
+            drawGarrisonReportCurrencyWidget(tonumber(arg))
         elseif(arg == "commands") then
             print(L["SlashCommands"])
         elseif(arg == "resetPosition") then
@@ -1563,4 +1455,29 @@ function CTT_setupSlashCommands()
     
     CTT_setupSlashCommands()
 
-    
+    --Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Início
+if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
+	GARRISON_LANDING_COVIEW_PATCH_VERSION = 3
+	hooksecurefunc("ShowGarrisonLandingPage", function(_LandingPageId)
+		if GARRISON_LANDING_COVIEW_PATCH_VERSION ~= 3 then
+			return
+		end
+		_LandingPageId = (_LandingPageId or C_Garrison.GetLandingPageGarrisonType() or 0)
+		if _LandingPageId ~= 111 and GarrisonLandingPage.SoulbindPanel then
+			GarrisonLandingPage.FollowerTab.autoSpellPool:ReleaseAll()
+			GarrisonLandingPage.FollowerTab.autoCombatStatsPool:ReleaseAll()
+			GarrisonLandingPage.FollowerTab.AbilitiesFrame:Layout()
+			GarrisonLandingPage.FollowerTab.CovenantFollowerPortraitFrame:Hide()
+		end
+		if _LandingPageId > 2 and GarrisonThreatCountersFrame then
+			GarrisonThreatCountersFrame:Hide()
+		end
+		if _LandingPageId > 3 then
+			GarrisonLandingPage.FollowerTab.NumFollowers:SetText("")
+		end
+		if GarrisonLandingPageReport.Sections then
+			GarrisonLandingPageReport.Sections:SetShown(_LandingPageId == 111)
+		end
+	end)
+end
+--Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Fim

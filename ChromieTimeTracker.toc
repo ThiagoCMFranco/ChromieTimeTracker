@@ -15,7 +15,7 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 2.3.1
+## Version: 2.3.2
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables:
@@ -38,5 +38,6 @@ localization\ruRU.lua
 Utils\Data.lua
 Utils\Toast.lua
 Utils\FlashMessage.lua
+Utils\Functions.lua
 ChromieTimeTracker.lua
 Settings.lua
