@@ -187,12 +187,23 @@ function CTT_LoadReportEnhancementSettings()
     chkShowEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
     chkShowEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
         ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = chkShowEmissaryMissionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 3 or _garrisonId == 9) then
                 if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
-                    garrisonUIEmissaryMissionsFrame:Show();
+                    if (garrisonUIEmissaryMissionsFrame) then
+                        garrisonUIEmissaryMissionsFrame:Show();
+                    end
                 else
-                    garrisonUIEmissaryMissionsFrame:Hide();
+                    if (garrisonUIEmissaryMissionsFrame) then
+                        garrisonUIEmissaryMissionsFrame:Hide();
+                    end
                 end
-    end)
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
     chkShowEmissaryMissionsOnReportWindow:SetWidth(700)
 
     local chkShowMissionExpirationTimeOnReportWindow = AceGUI:Create("CheckBox")

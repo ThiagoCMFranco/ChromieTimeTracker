@@ -1557,7 +1557,8 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
     if(isGarrisonUIFirstLoad_EmissaryMissionsWidget) then
         isGarrisonUIFirstLoad_EmissaryMissionsWidget = false
 
-            garrisonUIEmissaryMissionsFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIResourcesFrame", GarrisonLandingPageReport, "") -- TooltipBorderedFrameTemplate
+            garrisonUIEmissaryMissionsFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIEmissaryMissionsFrame", GarrisonLandingPageReport, "")
+            garrisonUIEmissaryMissionsFrameDisabled = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIEmissaryMissionsFrameDisabled", GarrisonLandingPageReport, "")
 
             garrisonUIEmissaryMissionsFrame:ClearAllPoints()
             garrisonUIEmissaryMissionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
@@ -1577,6 +1578,19 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
             garrisonUIEmissaryMissionsFrame.title:SetJustifyV("MIDDLE")
             garrisonUIEmissaryMissionsFrame.title:SetJustifyH("CENTER")
             garrisonUIEmissaryMissionsFrame.title:SetText("|cFFFFFFFF" .. L["EmissaryMissions_Title"] .. "|r")
+
+            garrisonUIEmissaryMissionsFrameDisabled:ClearAllPoints()
+            garrisonUIEmissaryMissionsFrameDisabled:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
+            garrisonUIEmissaryMissionsFrameDisabled:SetSize(290, 80)
+            garrisonUIEmissaryMissionsFrameDisabled:SetFrameLevel(5)
+
+            garrisonUIEmissaryMissionsFrameDisabled.message = garrisonUIEmissaryMissionsFrameDisabled:CreateFontString(nil,"ARTWORK","GameFontNormalLarge")
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetPoint("TOPLEFT",garrisonUIEmissaryMissionsFrameDisabled,"TOPLEFT",-2,-2)
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetWidth(302)
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetHeight(40)
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetJustifyV("MIDDLE")
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetJustifyH("CENTER")
+            garrisonUIEmissaryMissionsFrameDisabled.message:SetText("|cFFFFFFFF" .. L["EmissaryMissions_Locked"] .. "|r")
 
             emissaryMissionBorderFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
             emissaryMissionBorderFrame_1:SetPoint('TOPLEFT', 58 * 1 - 2, -28)
@@ -1661,10 +1675,18 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
     local mapID = 0
 
     if(_garrisonID == 3) then
+        --627 - Legion - Dalaran
         mapID = 627
     end
     if(_garrisonID == 9) then
-        mapID = 1161
+        if(PlayerInfo["Faction"] == "Alliance") then
+            --1161 - BFA - Estreito Tiragarde
+            mapID = 1161
+        end
+        if(PlayerInfo["Faction"] == "Horde") then
+            --862 - BFA - Zuldazar
+            mapID = 862
+        end
     end
 
     if mapID ~= 0 then
@@ -1955,18 +1977,28 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
             end
 
         if(_garrisonID == 3 or _garrisonID == 9) then
-            garrisonUIEmissaryMissionsFrame:Show()
+            if(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow == nil) then
+                if bountyList ~= nil then
+                    garrisonUIEmissaryMissionsFrame:Show()
+                    garrisonUIEmissaryMissionsFrameDisabled:Hide()
+                else
+                    garrisonUIEmissaryMissionsFrame:Hide()
+                    garrisonUIEmissaryMissionsFrameDisabled:Show()
+                end
+            else
+                garrisonUIEmissaryMissionsFrame:Hide()
+                garrisonUIEmissaryMissionsFrameDisabled:Hide()
+            end
         else
             garrisonUIEmissaryMissionsFrame:Hide()
+            garrisonUIEmissaryMissionsFrameDisabled:Hide()
         end
 
-        if(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow == nil) then
-            garrisonUIEmissaryMissionsFrame:Show()
-        else
-            garrisonUIEmissaryMissionsFrame:Hide()
-        end
-
+    else
+        garrisonUIEmissaryMissionsFrame:Hide()
+        garrisonUIEmissaryMissionsFrameDisabled:Hide()
     end
+
 end
 
 --Add Emissary Missions to GarrisonLandingPage - Fim

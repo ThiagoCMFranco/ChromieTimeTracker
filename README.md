@@ -15,8 +15,11 @@ Access your timeline summary using the game own inferface. This feature allows a
 Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to track resources, access reports and sumaries, remember you Covenant Sanctum choice, easily track Emissary Quests by expansion and many more quality of life features.
 
 Currently Supported Languages:   
-Full Support: Brazilian Portuguese (ptBR) and English (enUS).  
-Partial Support: Russian (ruRU).  
+Full Support:
+- Brazilian Portuguese (ptBR) - Developer Native Language  
+- English (enUS) - 100% translated  
+Partial Support:  
+- Russian (ruRU) - 45% translated    
 
 ## Main Features
 Track your current Timewalking Campaign.  
