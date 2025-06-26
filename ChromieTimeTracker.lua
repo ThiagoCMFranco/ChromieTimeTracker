@@ -1714,16 +1714,32 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
                 local numQuestRewards = GetNumQuestLogRewards(bounty.questID)
                 local name, texture, numItems, currencyID
                 local hasCurrencyReward = false
+                local hasMoneyReward = false
+
+                local money = GetQuestLogRewardMoney(bounty.questID)
+                
+                if ( money > 0 ) then
+                        local gold = floor(money / (10000))
+                        info.rewardTexture = "Coin-Gold"
+                        info.rewardName = ""
+                        info.rewardNumItems = gold
+                        hasMoneyReward = true  
+                end
+
+                if not ( money > 0 ) then
                 for _, currencyInfo in ipairs(C_QuestLog.GetQuestRewardCurrencies(bounty.questID)) do
-                    info.rewardName = currencyInfo.name
-                    info.rewardTexture = currencyInfo.texture
-                    info.rewardNumItems = currencyInfo.totalRewardAmount    
-                    info.currencyID = currencyInfo.currencyID
-                    hasCurrencyReward = true              
-                end 
+                        info.rewardName = currencyInfo.name
+                        info.rewardTexture = currencyInfo.texture
+                        info.rewardNumItems = currencyInfo.totalRewardAmount    
+                        info.currencyID = currencyInfo.currencyID
+                        hasCurrencyReward = true              
+                end
+                end
                 
                 if numQuestRewards > 0 then
                     info.rewardName, info.rewardTexture, info.rewardNumItems, info.rewardQuality, info.rewardIsUsable, info.rewardItemID = GetQuestLogRewardInfo(1, bounty.questID);
+                elseif hasMoneyReward then
+                    --already loaded, do not overwrite
                 elseif hasCurrencyReward then
                     --already loaded, do not overwrite
                 else
