@@ -165,6 +165,12 @@ mct.C_CovenantChoicesTabTextures =
     ["Not_Selected"] = "Interface\\Icons\\inv_misc_covenant_renown",
 }
 
+mct.C_LandingPagesTabTextures =
+{
+    ["DragonIsles"] = "Interface\\Icons\\spell_arcane_teleportvaldrakken",
+    ["KhazAlgar"] = "Interface\\Icons\\inv_achievement_alliedrace_earthen",
+}
+
 mct.C_ButtonFrames =
 {
     [2] = "ChromieTimeTrackerGarrisonIconFrame",

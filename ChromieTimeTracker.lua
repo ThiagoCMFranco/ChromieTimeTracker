@@ -44,6 +44,7 @@ local C_ClassTabTextures = mct.C_ClassTabTextures
 local C_GarrisonTabTextures = mct.C_GarrisonTabTextures
 local C_WarCampaignTabTextures = mct.C_WarCampaignTabTextures
 local C_CovenantChoicesTabTextures = mct.C_CovenantChoicesTabTextures
+local C_LandingPagesTabTextures = mct.C_LandingPagesTabTextures
 local C_ButtonFrames = mct.C_ButtonFrames
 local C_CurrencyId = mct.C_CurrencyId
 
@@ -1107,6 +1108,9 @@ else
     if _garrisonID == "DF" then
         local funcionalidade = ""
         if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+            if(ExpansionLandingPage.Overlay.WarWithinLandingOverlay) then
+                ExpansionLandingPage.Overlay.WarWithinLandingOverlay.CloseButton:Click()
+            end
             CTT_OpenExpansionLandingPage(_garrisonID);
         else
             funcionalidade = L["UndiscoveredContent_DragonIsles"]
@@ -1116,6 +1120,9 @@ else
     elseif _garrisonID == "TWW" then
         local funcionalidade = ""
         if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+            if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
+                ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
+            end
             CTT_OpenExpansionLandingPage(_garrisonID);
         else
             funcionalidade = L["UndiscoveredContent_KhazAlgar"]
@@ -1270,6 +1277,16 @@ end
 garrisonTabs = {}
 garrisonTabsHover = {}
 local function SelectGarrison(self)
+    if(self.pageID == 2 or self.pageID == 3 or self.pageID == 9 or self.pageID == 111) then
+        if ExpansionLandingPage.overlayFrame and ExpansionLandingPage.overlayFrame:IsShown() then
+            if(ExpansionLandingPage.Overlay.WarWithinLandingOverlay) then
+                ExpansionLandingPage.Overlay.WarWithinLandingOverlay.CloseButton:Click()
+            end
+            if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
+                ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
+            end
+        end
+    end
     CTT_CheckExpansionContentAccess(self.pageID)
 end
 
@@ -1286,6 +1303,8 @@ E:SetScript('OnEvent', function(self, event, addon)
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
 			{111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+	        {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
         } do
             garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonLandingPage, 'UIButtonTemplate')
             garrisonTabFrame:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
@@ -1350,6 +1369,123 @@ end
 end)
 
 --Add garrison buttons to GarrisonLandingPage - Fim
+
+--Add garrison and expansions buttons to GarrisonLandingPage and Expansiob Landing Pages - Início
+
+expansionTabs = {}
+expansionTabsHover = {}
+
+local E = CreateFrame('Frame')
+E:RegisterEvent('ADDON_LOADED')
+E:SetScript('OnEvent', function(self, event, addon)
+
+    --Delay feature loading for 5 seconds to make sure garrison information and images were fully loaded on Blizzard variables.
+    C_Timer.After(5,function()
+
+        local l_Covenant = "Not_Selected"
+        local _CovData = {}
+        _CovData = getCovenantData()
+
+        for _, _garrisonTab in next, {
+            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
+            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
+            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
+	        {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+ 	        {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+	        {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+        } do
+            garrisonTabFrame = CreateFrame('CheckButton', nil, ExpansionLandingPage, 'UIButtonTemplate')
+            garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
+            garrisonTabFrame:SetSize(30,30)
+            garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
+            garrisonTabFrame:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrame:Show()
+            garrisonTabFrame.tabIndex = #expansionTabs + 1
+            garrisonTabFrame.pageID = _garrisonTab[1]
+            garrisonTabFrame.tooltip = _garrisonTab[2]
+
+            garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, ExpansionLandingPage, '')
+            garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
+            garrisonTabFrameHover:SetSize(30,30)
+            garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
+            garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrameHover:SetFrameLevel(10)
+            --garrisonTabFrameHover:Hide()
+            garrisonTabFrameHover.pageID = _garrisonTab[1]
+            garrisonTabFrameHover.tooltip = _garrisonTab[2]
+            
+            table.insert(expansionTabs, garrisonTabFrame)
+            table.insert(expansionTabsHover, garrisonTabFrameHover)
+        end     
+        
+        for _, _garTab in pairs(expansionTabs) do
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTab:SetScript("OnEnter", function(self)
+                    expansionTabsHover[_garTab.tabIndex]:Show()
+                end)
+                _garTab:Show();
+            else
+                _garTab:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(expansionTabsHover) do
+
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTabHover:SetScript("OnEnter", function(self)
+                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                    CTT_ShowIconTooltip(GameTooltip, _garTabHover.tooltip)
+                    GameTooltip:Show()
+                end)
+
+                _garTabHover:SetScript("OnLeave", function(self)
+                    GameTooltip:Hide()
+                    _garTabHover:Hide()
+                end)
+                _garTabHover:Show();
+            else
+                _garTabHover:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(expansionTabsHover) do
+            _garTabHover:Hide()
+        end
+
+        end)
+
+        self:UnregisterEvent(event)
+    
+end)
+
+hooksecurefunc("CTT_OpenExpansionLandingPage", function(_LandingPageId)
+        if(_LandingPageId == "TWW") then
+            for _index, _garTab in pairs(expansionTabs) do
+                _garTab:SetPoint('TOPRIGHT', -10, - 30 -(40 * (_index)))
+            end
+            
+            for _index, _garTabHover in pairs(expansionTabsHover) do
+                _garTabHover:SetPoint('TOPRIGHT', -10, - 30 - (40 * (_index)))
+            end
+        end
+
+        if(_LandingPageId == "DF") then
+            for _index, _garTab in pairs(expansionTabs) do
+                _garTab:SetPoint('TOPRIGHT', 38, -(40 * (_index)))
+            end
+
+            for _index, _garTabHover in pairs(expansionTabsHover) do
+                _garTabHover:SetPoint('TOPRIGHT', 38, -(40 * (_index)))
+            end
+        end
+
+        if(GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+            GarrisonLandingPage_Toggle()
+        end
+
+    end)
+
+--Add garrison and expansions buttons to GarrisonLandingPage and Expansiob Landing Pages - Fim
 
 function CTT_setupSlashCommands()
     -- Criação dos slash comands.
