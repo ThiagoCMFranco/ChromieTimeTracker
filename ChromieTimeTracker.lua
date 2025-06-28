@@ -1379,6 +1379,9 @@ local E = CreateFrame('Frame')
 E:RegisterEvent('ADDON_LOADED')
 E:SetScript('OnEvent', function(self, event, addon)
 
+    --Delay feature loading for 5 seconds to make sure garrison information and images were fully loaded on Blizzard variables.
+    C_Timer.After(5,function()
+
         local l_Covenant = "Not_Selected"
         local _CovData = {}
         _CovData = getCovenantData()
@@ -1448,6 +1451,8 @@ E:SetScript('OnEvent', function(self, event, addon)
         for _, _garTabHover in pairs(expansionTabsHover) do
             _garTabHover:Hide()
         end
+
+        end)
 
         self:UnregisterEvent(event)
     
