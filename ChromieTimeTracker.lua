@@ -1791,7 +1791,9 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
                 
 
                 emissaryMissionIconFrameHover_1:SetScript('OnClick',function(self)
-                    OpenWorldMap(mapID)
+                    if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
+                        OpenWorldMap(mapID)
+                    end
                 end)
 
                 SetPortraitToTexture(emissaryMissionIconFrame_1.texture_1, _emissaryMission.icon)
@@ -1852,7 +1854,9 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
                 end
 
                 emissaryMissionIconFrameHover_2:SetScript('OnClick',function(self)
+                    if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
                         OpenWorldMap(mapID)
+                    end
                     end)
 
                 SetPortraitToTexture(emissaryMissionIconFrame_2.texture_2, _emissaryMission.icon)
@@ -1914,7 +1918,9 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
                 end
 
                 emissaryMissionIconFrameHover_3:SetScript('OnClick',function(self)
-                    OpenWorldMap(mapID)
+                    if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
+                        OpenWorldMap(mapID)
+                    end
                 end)
 
                 SetPortraitToTexture(emissaryMissionIconFrame_3.texture_3, _emissaryMission.icon)
@@ -2034,13 +2040,6 @@ function CTT_setupSlashCommands()
             HideUIPanel(GarrisonLandingPage);
             ShowGarrisonLandingPage(tonumber(arg))
             drawGarrisonReportCurrencyWidget(tonumber(arg))
-        elseif (arg == "emissary") then
-            --627 - Legion - Dalaran
-            --1161 - BFA - Estreito Tiragarde
-            --862 - BFA - Zuldazar
-            print(getEmissaryQuestsByMapId(627))
-            print(getEmissaryQuestsByMapId(1161))
-            print(getEmissaryQuestsByMapId(862))
         elseif(arg == "commands") then
             print(L["SlashCommands"])
         elseif(arg == "resetPosition") then
