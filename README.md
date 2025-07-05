@@ -12,22 +12,27 @@ Swap between diferent layout modes and place it bellow your chat window, near th
 
 Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
 
-Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to track resources, access reports and sumaries, remember you Covenant Sanctum choice and many more quality of life features.
+Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to track resources, access reports and sumaries, remember you Covenant Sanctum choice, easily track Emissary Quests by expansion and many more quality of life features.
 
 Currently Supported Languages:   
-Full Support: Brazilian Portuguese (ptBR) and English (enUS).  
-Partial Support: Russian (ruRU).  
+Full Support:
+- Brazilian Portuguese (ptBR) - Developer Native Language  
+- English (enUS) - 100% translated  
+  
+Partial Support:  
+- Russian (ruRU) - 45% translated    
 
 ## Main Features
 Track your current Timewalking Campaign.  
 Check your Garrison, Class Hall, War Campaign and Covenant Sanctum Reports.  
-Check your Dragonflight and The War Within sumaries.
+Check your Dragonflight and The War Within sumaries.  
 
 ## Quality of Life Features
+Track Emissary Quests from Legion and Battle for Azeroth in your Class Hall and War Effort report windows.  
 Check your current Covenant Sanctum choice.  
 Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  
-Shortcut buttons to other reports.
+Shortcut buttons to other reports.  
 
 
 ## Controls, Configurations, Commands and Usability Features

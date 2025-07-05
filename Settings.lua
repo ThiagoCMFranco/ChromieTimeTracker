@@ -183,6 +183,29 @@ function CTT_LoadReportEnhancementSettings()
     end)
     chkShowReportTabsOnReportWindow:SetWidth(700)
 
+    local chkShowEmissaryMissionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
+    chkShowEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = chkShowEmissaryMissionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 3 or _garrisonId == 9) then
+                if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+                    if (garrisonUIEmissaryMissionsFrame) then
+                        garrisonUIEmissaryMissionsFrame:Show();
+                    end
+                else
+                    if (garrisonUIEmissaryMissionsFrame) then
+                        garrisonUIEmissaryMissionsFrame:Hide();
+                    end
+                end
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
+    chkShowEmissaryMissionsOnReportWindow:SetWidth(700)
+
     local chkShowMissionExpirationTimeOnReportWindow = AceGUI:Create("CheckBox")
     chkShowMissionExpirationTimeOnReportWindow:SetLabel(L["chkShowMissionExpirationTimeOnReportWindow"])
     chkShowMissionExpirationTimeOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -217,11 +240,14 @@ function CTT_LoadReportEnhancementSettings()
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowEmissaryMissionsOnReportWindow)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
     chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
+    chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
+    
 end
 
 function CTT_LoadAdvancedModeSettings()
