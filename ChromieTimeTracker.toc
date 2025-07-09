@@ -41,3 +41,4 @@ Utils\FlashMessage.lua
 Utils\Functions.lua
 ChromieTimeTracker.lua
 Settings.lua
+Welcome.lua

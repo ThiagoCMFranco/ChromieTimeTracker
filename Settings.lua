@@ -579,6 +579,7 @@ local chkLockDragDrop = AceGUI:Create("CheckBox")
 local ddlDefaultMiddleClickOption = AceGUI:Create("Dropdown")
 local LabelMiddleClick = AceGUI:Create("Label")
 local chkLockMiddleClickOption = AceGUI:Create("CheckBox")
+local chkHideWelcomeWindowInFutureVersionChanges = AceGUI:Create("CheckBox")
 local chkHideDeveloperCreditOnTooltips = AceGUI:Create("CheckBox")
 local btnSave = AceGUI:Create("Button")
 local btnResetPosition = AceGUI:Create("Button")
@@ -698,6 +699,13 @@ scrollFrameMainSettings:AddChild(chkLockMiddleClickOption)
 heading3:SetRelativeWidth(1)
 scrollFrameMainSettings:AddChild(heading3)
 
+chkHideWelcomeWindowInFutureVersionChanges:SetLabel(L["chkHideWelcomeWindowInFutureVersionChanges"])
+chkHideWelcomeWindowInFutureVersionChanges:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = chkHideWelcomeWindowInFutureVersionChanges:GetValue()
+end)
+chkHideWelcomeWindowInFutureVersionChanges:SetWidth(575)
+scrollFrameMainSettings:AddChild(chkHideWelcomeWindowInFutureVersionChanges)
+
 chkHideDeveloperCreditOnTooltips:SetLabel(L["HideDeveloperCreditOnTooltips"])
 chkHideDeveloperCreditOnTooltips:SetCallback("OnValueChanged", function(widget, event, text) 
     ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = chkHideDeveloperCreditOnTooltips:GetValue()
@@ -742,6 +750,7 @@ scrollFrameMainSettings:AddChild(btnResetPosition)
     --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
+    chkHideWelcomeWindowInFutureVersionChanges:SetValue(ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
 
 StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
@@ -758,6 +767,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ToastVisibility = 1;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
+        ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
         
         ChromieTimeTrackerDB.AdvShowGarrison = true;
@@ -809,6 +819,7 @@ scrollFrameMainSettings:AddChild(btnResetSettings)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
+    chkHideWelcomeWindowInFutureVersionChanges:SetValue(ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
    
 end
@@ -897,6 +908,7 @@ function loadSettings()
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
+    chkHideWelcomeWindowInFutureVersionChanges:SetValue(ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges)
     chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
 end
 

@@ -124,8 +124,9 @@ function CTT_SetupFirstAccess(arg)
 end
 
 
-
-CTT_SetupFirstAccess()
+C_Timer.After(5, function()
+    CTT_SetupFirstAccess()
+end)
 
 -- Criação dos frames.
 --Principal
