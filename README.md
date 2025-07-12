@@ -20,7 +20,7 @@ Full Support:
 - English (enUS) - 100% translated  
   
 Partial Support:  
-- Russian (ruRU) - 45% translated    
+- Russian (ruRU) - 42% translated    
 
 ## Main Features
 Track your current Timewalking Campaign.  
