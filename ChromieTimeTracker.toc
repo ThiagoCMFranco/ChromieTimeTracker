@@ -29,16 +29,21 @@ Libs\LibSharedMedia-3.0\lib.xml
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
 
+#Versioning Information
+Version_Data.lua
+
 # Localization
 localization\enUS.lua
 localization\ptBR.lua
 localization\ruRU.lua
 
-# Main Files
+# Utilities
 Utils\Data.lua
 Utils\Toast.lua
 Utils\FlashMessage.lua
 Utils\Functions.lua
+
+# Main Files
 ChromieTimeTracker.lua
 Settings.lua
 Welcome.lua
