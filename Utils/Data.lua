@@ -39,8 +39,6 @@ mct.C_CurrencyId = {}
 
 local L = mct.L
 
-C_CTT_VERSION_UID = 2005000
-
 local C_ExpansionColors = mct.C_ExpansionColors
 
 C_ExpansionColors[2] = "FF00AA00" --BC

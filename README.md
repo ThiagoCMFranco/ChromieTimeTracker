@@ -18,9 +18,8 @@ Currently Supported Languages:
 Full Support:
 - Brazilian Portuguese (ptBR) - Developer Native Language  
 - English (enUS) - 100% translated  
-  
-Partial Support:  
-- Russian (ruRU) - 42% translated    
+- Russian (ruRU) - 100% translated  
+ 
 
 ## Main Features
 Track your current Timewalking Campaign.  
