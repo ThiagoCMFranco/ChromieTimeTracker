@@ -27,6 +27,10 @@ if not ChromieTimeTrackerDB then
     ChromieTimeTrackerDB = {}
 end
 
+if not ChromieTimeTrackerSharedDB then
+    ChromieTimeTrackerSharedDB = {minimap = {hide = false}}
+end
+
 local name, mct = ...
 local L = mct.L 
 
@@ -854,10 +858,9 @@ CTT_updateChromieTime()
 
 
 -- Adição do ícone de minimapa.
-local addon = LibStub("AceAddon-3.0"):NewAddon("ChromieTimeTracker")
 ChromieTimeTrackerMinimapButton = LibStub("LibDBIcon-1.0", true)
 
-local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracker", {
+local CTT_miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracker", {
 	type = "data source",
 	text = L["AddonName"],
 	icon = "Interface\\AddOns\\ChromieTimeTracker\\Chromie.png",
@@ -890,16 +893,23 @@ local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTracke
 	end,
 })
 
-ChromieTimeTrackerMinimapButton:Show(L["AddonName"])
+ChromieTimeTrackerMinimapButton:Show("ChromieTimeTracker")
 
 --Monitor de eventos
 local eventListenerFrame = CreateFrame("Frame", "ChromieTimeTrackerEventListenerFrame", UIParent)
 
 eventListenerFrame:RegisterEvent("PLAYER_LOGIN")
 eventListenerFrame:RegisterEvent("QUEST_LOG_UPDATE")
+eventListenerFrame:RegisterEvent("ADDON_LOADED")
 
-eventListenerFrame:SetScript("OnEvent", function(self, event)
-    if event == "PLAYER_LOGIN" then
+eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        local name = ...
+        local addonName = "ChromieTimeTracker"
+        if name == addonName then
+            ChromieTimeTrackerMinimapButton:Register("ChromieTimeTracker", CTT_miniButton, ChromieTimeTrackerSharedDB.minimap)
+        end
+    elseif event == "PLAYER_LOGIN" then
         CTT_updateChromieTime()
         if(not ChromieTimeTrackerDB.HideChatWelcomeMessage) then
             print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
@@ -964,17 +974,6 @@ eventListenerFrame:SetScript("OnEvent", function(self, event)
     end
 end)
 
-function addon:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("ChromieTimeTrackerMinimapPOS", {
-		profile = {
-			minimap = {
-				hide = false,
-			},
-		},
-	})
-
-	ChromieTimeTrackerMinimapButton:Register(L["AddonName"], miniButton, self.db.profile.minimap)
-end
 
 --Funções Principais
 
