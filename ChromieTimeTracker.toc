@@ -15,10 +15,10 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 2.5.0
+## Version: 2.5.2
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
-## SavedVariables:
+## SavedVariables: ChromieTimeTrackerSharedDB
 ## SavedVariablesPerCharacter: ChromieTimeTrackerDB
 ## IconTexture: Interface\AddOns\ChromieTimeTracker\Chromie.png
 
