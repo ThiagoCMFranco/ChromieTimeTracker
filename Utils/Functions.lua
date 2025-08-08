@@ -89,3 +89,24 @@ function getCurrencyById(_currencyId, _showCurrencyName)
         return "|cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
     end
 end
+
+function CTT_OpenWorldMap(mapId)
+
+    --627 - Legion - Dalaran
+    --1161 - BFA - Estreito Tiragarde
+    --862 - BFA - Zuldazar
+
+    local mId = mapId
+
+    if(mapId == 627) then --Legion
+        mId = 619
+    elseif(mapId == 1161) then --Alliance Battle for Azeroth
+        mId = 876
+    elseif(mapId == 862) then --Horde Battle for Azeroth
+        mId = 875
+    else
+        mId = mapId
+    end
+
+    C_Map.OpenWorldMap(mId)
+end
