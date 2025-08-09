@@ -27,7 +27,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 
 -- Create a container frame
 local welcomeFrame = AceGUI:Create("Frame")
-welcomeFrame:SetCallback("OnClose",function(widget) ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID end)
+welcomeFrame:SetCallback("OnClose",function(widget) ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID; ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID end)
 welcomeFrame:SetTitle(L["AddonName"] .. " - " .. L["Welcome"])
 welcomeFrame:SetWidth(610)
 welcomeFrame:SetHeight(330)
@@ -129,27 +129,27 @@ function CTT_LoadWelcome()
         --Atualização de Versão
         if(ChromieTimeTrackerDB.Version_UID < C_CTT_VERSION_UID) then
             LabelWelcome:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["Welcome_Upgrade_Line1"] .. "\n\n" .. L["Welcome_Upgrade_Line2"] .. "\n\n" .. L["Welcome_Upgrade_Line3"] .. "\n\n")
-            welcomeFrame:SetHeight(350)
+            welcomeFrame:SetHeight(370)
         end
 
         --Reeversão de Versão
         if(ChromieTimeTrackerDB.Version_UID > C_CTT_VERSION_UID) then
             LabelWelcome:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r" .. "\n\n|cFFF25252" .. L["Welcome_Downgrade_Line1"] .. "|r\n\n" .. L["Welcome_Downgrade_Line2"] .. "\n\n" .. L["Welcome_Downgrade_Line3"] .. "\n\n")
-            welcomeFrame:SetHeight(325)
+            welcomeFrame:SetHeight(345)
         end
 
         --Nova Instalação
         if(not ChromieTimeTrackerDB.AlreadyUsed) then
             LabelWelcome:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["Welcome_New_Line1"] .. "\n\n" .. L["Welcome_New_Line2"] .. "\n\n" .. L["Welcome_New_Line3"] .. "\n\n")
-            welcomeFrame:SetHeight(330)
+            welcomeFrame:SetHeight(360)
         end
     else
         if(not ChromieTimeTrackerDB.AlreadyUsed) then
             LabelWelcome:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["Welcome_New_Line1"] .. "\n\n" .. L["Welcome_New_Line2"] .. "\n\n" .. L["Welcome_New_Line3"] .. "\n\n")
-            welcomeFrame:SetHeight(330)
+            welcomeFrame:SetHeight(360)
         else
             LabelWelcome:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["Welcome_Upgrade_Line1"] .. "\n\n" .. L["Welcome_Upgrade_Line2"] .. "\n\n" .. L["Welcome_Upgrade_Line3"] .. "\n\n")
-            welcomeFrame:SetHeight(350)
+            welcomeFrame:SetHeight(370)
         end
     end
 
@@ -168,6 +168,14 @@ function CTT_LoadWelcome()
     end)
     chkHideWelcomeWindowInFutureVersionChanges:SetWidth(575)
     scrollFrameWelcome:AddChild(chkHideWelcomeWindowInFutureVersionChanges)
+
+    local chkWelcomeWindowShowOnlyOnce = AceGUI:Create("CheckBox")
+    chkWelcomeWindowShowOnlyOnce:SetLabel(L["chkWelcomeWindowShowOnlyOnce"])
+    chkWelcomeWindowShowOnlyOnce:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce = chkWelcomeWindowShowOnlyOnce:GetValue()
+    end)
+    chkWelcomeWindowShowOnlyOnce:SetWidth(575)
+    scrollFrameWelcome:AddChild(chkWelcomeWindowShowOnlyOnce)
     
     local headingWelcome2 = AceGUI:Create("Heading")
     headingWelcome2:SetRelativeWidth(1)
@@ -179,6 +187,7 @@ function CTT_LoadWelcome()
         ChromieTimeTracker:ToggleSettingsFrame();
         welcomeFrame:Hide()
         ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID
+        ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID
     end)
     
     btnResetSettings:SetText(L["buttonResetSettings"])
@@ -186,6 +195,7 @@ function CTT_LoadWelcome()
     btnResetSettings:SetCallback("OnClick", function() 
         StaticPopup_Show ("POPUP_DIALOG_CONFIRM_RESET_SETTINGS")
         ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID
+        ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID
     end)
     
     btnKeepSettings:SetText(L["buttonKeepSettings"])
@@ -193,6 +203,7 @@ function CTT_LoadWelcome()
     btnKeepSettings:SetCallback("OnClick", function() 
         welcomeFrame:Hide()
         ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID
+        ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID
     end)
     
     btnSkipSettings:SetText(L["buttonSkipSettings"])
@@ -200,6 +211,7 @@ function CTT_LoadWelcome()
     btnSkipSettings:SetCallback("OnClick", function() 
         welcomeFrame:Hide()
         ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID
+        ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID
     end)
 
     if(ChromieTimeTrackerDB.AlreadyUsed) then
@@ -228,6 +240,11 @@ end
 
 C_Timer.After(2, function()
     if ((ChromieTimeTrackerDB.Version_UID ~= C_CTT_VERSION_UID or ChromieTimeTrackerDB.Version_UID == nil) and not ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges) then
-        ChromieTimeTracker:ToggleWelcomeFrame()
+        if(ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce and ChromieTimeTrackerSharedDB.Version_UID == C_CTT_VERSION_UID) then
+            ChromieTimeTrackerDB.Version_UID = C_CTT_VERSION_UID
+            ChromieTimeTrackerSharedDB.Version_UID = C_CTT_VERSION_UID
+        else
+            ChromieTimeTracker:ToggleWelcomeFrame()
+        end
     end
 end)

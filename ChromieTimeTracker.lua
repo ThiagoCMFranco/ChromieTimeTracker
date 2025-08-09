@@ -192,8 +192,17 @@ local function GeneratorFunction(owner, rootDescription)
         end
     end
     
-    if ChromieTimeTrackerDB.ContextMenuShowGarrison and (isUnlocked[1]) then
+    if (ChromieTimeTrackerDB.ContextMenuShowGarrison and isUnlocked[1]) or
+       (ChromieTimeTrackerDB.ContextMenuShowClassHall and isUnlocked[2]) or 
+       (ChromieTimeTrackerDB.ContextMenuShowWarEffort and isUnlocked[3]) or 
+       (ChromieTimeTrackerDB.ContextMenuShowCovenant and isUnlocked[4]) or 
+       (ChromieTimeTrackerDB.ContextMenuShowDragonIsles and isUnlocked[5]) or 
+       (ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and isUnlocked[6])
+    then
         rootDescription:CreateTitle(L["ContextMenuTitle"]);
+    end
+    
+    if ChromieTimeTrackerDB.ContextMenuShowGarrison and (isUnlocked[1]) then
         rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
             
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and 2 == GarrisonLandingPage.garrTypeID) then
@@ -485,7 +494,8 @@ function CTT_updateChromieTime()
     end
 
     if ChromieTimeTrackerDB.HideWhenNotTimeTraveling and currentExpansionName == L["currentExpansionLabel"] and ChromieTimeTrackerDB.Mode ~= 3 then
-        mainFrame:Hide()
+        --mainFrame:Hide()
+        addonRootFrame:Hide()
     end
 
     mainFrame:ClearAllPoints()
@@ -894,6 +904,14 @@ local CTT_miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTr
 })
 
 ChromieTimeTrackerMinimapButton:Show("ChromieTimeTracker")
+
+function CTT_ToggleMinimapButton(_param)
+    if _param then
+        ChromieTimeTrackerMinimapButton:Hide("ChromieTimeTracker")
+    else
+        ChromieTimeTrackerMinimapButton:Show("ChromieTimeTracker")
+    end
+end
 
 --Monitor de eventos
 local eventListenerFrame = CreateFrame("Frame", "ChromieTimeTrackerEventListenerFrame", UIParent)
@@ -1492,26 +1510,6 @@ hooksecurefunc("CTT_OpenExpansionLandingPage", function(_LandingPageId)
 --Add garrison and expansions buttons to GarrisonLandingPage and Expansiob Landing Pages - Fim
 --Add Emissary Missions to GarrisonLandingPage - Início
 
-local function OpenWorldMap(mapId)
-
-    --627 - Legion - Dalaran
-    --1161 - BFA - Estreito Tiragarde
-    --862 - BFA - Zuldazar
-
-    if(mapId == 627) then --Legion
-        mId = 619
-    end
-
-    if(mapId == 1161) then --Alliance Battle for Azeroth
-        mId = 876
-    end
-
-    if(mapId == 862) then --Horde Battle for Azeroth
-        mId = 875
-    end
-
-    C_Map.OpenWorldMap(mId)
-end
 
 function getFormatedEmissaryQuestsByMapId(mapID)
     local bounties = C_QuestLog.GetBountiesForMapID(mapID)
@@ -1792,7 +1790,7 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
 
                 emissaryMissionIconFrameHover_1:SetScript('OnClick',function(self)
                     if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
-                        OpenWorldMap(mapID)
+                        CTT_OpenWorldMap(mapID)
                     end
                 end)
 
@@ -1855,7 +1853,7 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
 
                 emissaryMissionIconFrameHover_2:SetScript('OnClick',function(self)
                     if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
-                        OpenWorldMap(mapID)
+                        CTT_OpenWorldMap(mapID)
                     end
                     end)
 
@@ -1919,7 +1917,7 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
 
                 emissaryMissionIconFrameHover_3:SetScript('OnClick',function(self)
                     if (_emissaryMission.text ~= L["EmissaryMissions_Inactive"]) then
-                        OpenWorldMap(mapID)
+                        CTT_OpenWorldMap(mapID)
                     end
                 end)
 
