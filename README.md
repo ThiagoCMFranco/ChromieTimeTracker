@@ -6,7 +6,7 @@ Easily track your current Timewalking Campaign (Chromie Time).
 
 Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.  
 
-A small yet usefull addon to fulfill a simple need, remember which Timewalk Campaign timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
+A full featured companion tool for Timewalk Campaigns. Remember which timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
 
 Swap between diferent layout modes and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like.  
 
@@ -32,6 +32,7 @@ Check your current Covenant Sanctum choice.
 Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  
 Shortcut buttons to other reports.  
+Alert to remember to eliminate experience gain before reaching the level limit to time travel.  
 
 
 ## Controls, Configurations, Commands and Usability Features

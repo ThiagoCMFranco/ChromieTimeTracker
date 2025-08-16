@@ -152,6 +152,144 @@ function CTT_LoadAlternateModeSettings()
     chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
 end
 
+function CTT_LoadExperienceSettings()
+    treeW:ReleaseChildren()
+
+    scrollContainerExperience = AceGUI:Create("SimpleGroup")
+    scrollContainerExperience:SetFullWidth(true)
+    scrollContainerExperience:SetFullHeight(true)
+    scrollContainerExperience:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerExperience)
+    
+    scrollFrameExperience = AceGUI:Create("ScrollFrame")
+    scrollFrameExperience:SetLayout("Flow")
+    scrollContainerExperience:AddChild(scrollFrameExperience)
+
+    local description = ""
+    local _EliminatedExperienceAura = C_UnitAuras.GetPlayerAuraBySpellID(306715)
+
+    if(_EliminatedExperienceAura ~= nil) then
+        description = L["Experience_AlertDescription"] .. "\n\n|cffff0000" .. L["Experience_GainDisabled"] .. "|r"
+    else
+        description = L["Experience_AlertDescription"]
+    end
+
+    local lblExperienceAlertDescription = AceGUI:Create("Label")
+    
+    lblExperienceAlertDescription:SetText(description)
+    CTT_setACE3WidgetFontSide(lblExperienceAlertDescription, 12)
+    lblExperienceAlertDescription:SetWidth(580)
+    scrollFrameExperience:AddChild(lblExperienceAlertDescription)
+
+    local headingExp = AceGUI:Create("Heading")
+    headingExp:SetRelativeWidth(1)
+    scrollFrameExperience:AddChild(headingExp)
+
+    local lblExperienceShowPopup = AceGUI:Create("Label")
+    lblExperienceShowPopup:SetText("|cFFD6AE12" .. L["Experience_PopupLabel"] .. "|r")
+    CTT_setACE3WidgetFontSide(lblExperienceShowPopup, 12)
+    lblExperienceShowPopup:SetWidth(580)
+    scrollFrameExperience:AddChild(lblExperienceShowPopup)
+
+    local chkShowExperienceAlertPopup = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertPopup:SetLabel(L["Experience_ShowAlert"])
+    chkShowExperienceAlertPopup:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertPopup = chkShowExperienceAlertPopup:GetValue()
+    end)
+    chkShowExperienceAlertPopup:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertPopup)
+
+    local txtExperienceAlertLevelPopup = AceGUI:Create("Slider")
+    txtExperienceAlertLevelPopup:SetLabel(L["Experience_AlertMinLevelLabel"])
+    txtExperienceAlertLevelPopup:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelPopup:SetCallback("OnMouseUp", function(widget, event, text) 
+        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = tonumber(txtExperienceAlertLevelPopup:GetValue())
+        if ChromieTimeTrackerDB.ExperienceAlertLevelPopup == nil then
+            ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65
+            txtExperienceAlertLevelPopup:SetValue(65)
+        end
+    end)
+    scrollFrameExperience:AddChild(txtExperienceAlertLevelPopup)
+
+    local chkShowExperienceAlertPopupOnLogin = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertPopupOnLogin:SetLabel(L["Experience_ShowAlertOnLogin"])
+    chkShowExperienceAlertPopupOnLogin:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = chkShowExperienceAlertPopupOnLogin:GetValue()
+    end)
+    chkShowExperienceAlertPopupOnLogin:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertPopupOnLogin)
+
+    local chkShowExperienceAlertPopupOnLevelUp = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertPopupOnLevelUp:SetLabel(L["Experience_ShowAlertOnLevelUp"])
+    chkShowExperienceAlertPopupOnLevelUp:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = chkShowExperienceAlertPopupOnLevelUp:GetValue()
+    end)
+    chkShowExperienceAlertPopupOnLevelUp:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertPopupOnLevelUp)
+
+    local headingExp1 = AceGUI:Create("Heading")
+    headingExp1:SetRelativeWidth(1)
+    scrollFrameExperience:AddChild(headingExp1)
+
+    local lblExperienceShowFlash = AceGUI:Create("Label")
+    lblExperienceShowFlash:SetText("|cFFD6AE12" .. L["Experience_FlashLabel"] .. "|r")
+    CTT_setACE3WidgetFontSide(lblExperienceShowFlash, 12)
+    lblExperienceShowFlash:SetWidth(580)
+    scrollFrameExperience:AddChild(lblExperienceShowFlash)
+
+    local chkShowExperienceAlertFlash = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertFlash:SetLabel(L["Experience_ShowAlert"])
+    chkShowExperienceAlertFlash:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertFlash = chkShowExperienceAlertFlash:GetValue()
+    end)
+    chkShowExperienceAlertFlash:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertFlash)
+
+    local txtExperienceAlertLevelFlash = AceGUI:Create("Slider")
+    txtExperienceAlertLevelFlash:SetLabel(L["Experience_AlertMinLevelLabel"])
+    txtExperienceAlertLevelFlash:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelFlash:SetCallback("OnMouseUp", function(widget, event, text) 
+        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = tonumber(txtExperienceAlertLevelFlash:GetValue())
+        if ChromieTimeTrackerDB.ExperienceAlertLevelFlash == nil then
+            ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65
+            txtExperienceAlertLevelFlash:SetValue(65)
+        end
+    end)
+    scrollFrameExperience:AddChild(txtExperienceAlertLevelFlash)
+
+    local chkShowExperienceAlertFlashOnLogin = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertFlashOnLogin:SetLabel(L["Experience_ShowAlertOnLogin"])
+    chkShowExperienceAlertFlashOnLogin:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = chkShowExperienceAlertFlashOnLogin:GetValue()
+    end)
+    chkShowExperienceAlertFlashOnLogin:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertFlashOnLogin)
+
+
+    local chkShowExperienceAlertFlashOnLevelUp = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertFlashOnLevelUp:SetLabel(L["Experience_ShowAlertOnLevelUp"])
+    chkShowExperienceAlertFlashOnLevelUp:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = chkShowExperienceAlertFlashOnLevelUp:GetValue()
+    end)
+    chkShowExperienceAlertFlashOnLevelUp:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertFlashOnLevelUp)
+
+    chkShowExperienceAlertPopup:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopup)
+    if ChromieTimeTrackerDB.ExperienceAlertLevelPopup ~= nil then
+        txtExperienceAlertLevelPopup:SetValue(ChromieTimeTrackerDB.ExperienceAlertLevelPopup)
+    end
+    chkShowExperienceAlertPopupOnLogin:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin)
+    chkShowExperienceAlertPopupOnLevelUp:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp)
+
+    chkShowExperienceAlertFlash:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertFlash)
+    if ChromieTimeTrackerDB.ExperienceAlertLevelFlash ~= nil then
+        txtExperienceAlertLevelFlash:SetValue(ChromieTimeTrackerDB.ExperienceAlertLevelFlash)
+    end
+    chkShowExperienceAlertFlashOnLogin:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin)
+    chkShowExperienceAlertFlashOnLevelUp:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp)
+    
+end
 
 function CTT_LoadReportEnhancementSettings()
     treeW:ReleaseChildren()
@@ -876,6 +1014,11 @@ tree = {
         text = L["Settings_Menu_Enhancements"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
+    {
+        value = "Exp",
+        text = L["Settings_Menu_Experience"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+    },
     { 
         value = "C", 
         text = L["Settings_Menu_Credit"],
@@ -909,6 +1052,8 @@ tree = {
         CTT_LoadCurrencyMenuSettings()
     elseif group == "Enh" then
         CTT_LoadReportEnhancementSettings()
+    elseif group == "Exp" then
+        CTT_LoadExperienceSettings()
     else
         print(group)
     end
