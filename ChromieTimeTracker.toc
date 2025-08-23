@@ -48,4 +48,3 @@ ChromieTimeTracker.lua
 Settings.lua
 Welcome.lua
 Modules\ExperienceAlert.lua
-Modules\InvasionMonitoring.lua
