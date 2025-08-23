@@ -564,6 +564,18 @@ end
 function CTT_LoadContextMenuSettings()
     treeW:ReleaseChildren()
 
+    local trackerOptions = {L["ContextMenu_DefeultAddonOptions_Blizzard"]}
+
+    local TomTomLoaded = checkAddonLoaded("TomTom", "TOMTOM_WAY")
+    local MapPinEnhancedLoaded = checkAddonLoaded("MapPinEnhanced", "MapPinEnhanced")
+
+    if (TomTomLoaded) then
+        table.insert(trackerOptions, L["ContextMenu_DefeultAddonOptions_TomTom"])
+    end
+    if (MapPinEnhancedLoaded) then
+        table.insert(trackerOptions, L["ContextMenu_DefeultAddonOptions_MapPinEnhanced"])
+    end
+
     scrollContainerContextManu = AceGUI:Create("SimpleGroup")
     scrollContainerContextManu:SetFullWidth(true)
     scrollContainerContextManu:SetFullHeight(true)
@@ -585,6 +597,7 @@ local chkContextMenuShowDragonIsles = AceGUI:Create("CheckBox")
 local chkContextMenuShowKhazAlgar = AceGUI:Create("CheckBox")
 local chkContextMenuShowUnlockedOnly = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
+local heading6 = AceGUI:Create("Heading")
 
 lblSelectContextMenuOptions:SetText("\n" .. L["lblSelectContextMenuOptions"])
 CTT_setACE3WidgetFontSide(lblSelectContextMenuOptions, 12)
@@ -678,6 +691,36 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     chkContextMenuShowUnlockedOnly:SetWidth(700)
     scrollFrameContewxtMenu:AddChild(chkContextMenuShowUnlockedOnly)
 
+    heading6:SetRelativeWidth(1)
+    scrollFrameContewxtMenu:AddChild(heading6)
+
+    local ddlTrackerAddon = AceGUI:Create("Dropdown")
+
+    ddlTrackerAddon:SetList(trackerOptions)
+    ddlTrackerAddon:SetLabel(L["ddlTrackerAddon"])
+    ddlTrackerAddon:SetWidth(200)
+    ddlTrackerAddon:SetCallback("OnValueChanged", function(widget, event, text)
+        ChromieTimeTrackerDB.DefaultTrackerAddon = ddlTrackerAddon.value
+    end)
+    scrollFrameContewxtMenu:AddChild(ddlTrackerAddon)
+
+    local chkShowPinChromie = AceGUI:Create("CheckBox")
+    chkShowPinChromie:SetLabel(L["ContextMenu_ShowPinChromie"])
+    chkShowPinChromie:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ContextMenuShowPinChromie = chkShowPinChromie:GetValue()
+    end)
+    chkShowPinChromie:SetWidth(700)
+    scrollFrameContewxtMenu:AddChild(chkShowPinChromie)
+
+    local chkShowPinExperienceLock = AceGUI:Create("CheckBox")
+    chkShowPinExperienceLock:SetLabel(L["ContextMenu_ShowPinExperienceLock"])
+    chkShowPinExperienceLock:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock = chkShowPinExperienceLock:GetValue()
+    end)
+    chkShowPinExperienceLock:SetWidth(700)
+    scrollFrameContewxtMenu:AddChild(chkShowPinExperienceLock)
+    
+
     chkContextMenuShowGarrison:SetValue(ChromieTimeTrackerDB.ContextMenuShowGarrison)
     chkContextMenuShowClassHall:SetValue(ChromieTimeTrackerDB.ContextMenuShowClassHall)
     chkContextMenuShowWarEffort:SetValue(ChromieTimeTrackerDB.ContextMenuShowWarEffort)
@@ -685,6 +728,9 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     chkContextMenuShowDragonIsles:SetValue(ChromieTimeTrackerDB.ContextMenuShowDragonIsles)
     chkContextMenuShowKhazAlgar:SetValue(ChromieTimeTrackerDB.ContextMenuShowKhazAlgar)
     chkContextMenuShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly)
+    chkShowPinChromie:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinChromie)
+    chkShowPinExperienceLock:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock)
+    ddlTrackerAddon:SetValue(ChromieTimeTrackerDB.DefaultTrackerAddon)
 end
 ---
 

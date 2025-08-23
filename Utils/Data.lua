@@ -189,3 +189,37 @@ mct.C_CurrencyId =
     ["War_Resources"] = 1560,
     ["Reservoir_Anima"] = 1813,
 }
+
+C_SpecialTrackPinCoordinates = 
+{
+    ["Alliance_Chromie"] = {uiMapID = 84,
+    position =
+        {
+            x = 0.5625,
+            y = 0.1734
+        },
+	name = ""
+    },
+    ["Horde_Chromie"] = {uiMapID = 85,
+        position = {
+            x = 0.4082,
+            y = 0.8018
+        },
+	name = ""
+    },
+    ["Alliance_Exp_Lock"] = {uiMapID = 84,
+    position =
+        {
+            x = 0.8765,
+            y = 0.3580
+        },
+	name = ""
+    },
+    ["Horde_Exp_Lock"] = {uiMapID = 85,
+        position = {
+            x = 0.7425,
+            y = 0.4440
+        },
+	name = ""
+    }
+}

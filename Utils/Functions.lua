@@ -110,3 +110,43 @@ function CTT_OpenWorldMap(mapId)
 
     C_Map.OpenWorldMap(mId)
 end
+
+function checkAddonLoaded(_addonName, _addonSlashCommand)
+    name, title, notes, loadable, reason, security, newVersion = C_AddOns.GetAddOnInfo(_addonName)
+    if(title ~= nil) then
+        if(loadable)then
+            if(SlashCmdList[_addonSlashCommand] == nil)then
+                --print(_addonName .. " not loaded!")
+                return false;
+            else
+                --print(_addonName .. " loaded!")
+                return true;
+            end
+        else
+            --print(_addonName .. " indisponível!")
+            return false;
+        end 
+    end
+end
+
+--TomTomLoaded = checkAddonLoaded("TomTom", "TOMTOM_WAY")
+--MapPinEnhancedLoaded = checkAddonLoaded("MapPinEnhanced", "MapPinEnhanced")
+
+function CTT_addPin(pin, scope)
+
+    TomTomLoaded = checkAddonLoaded("TomTom", "TOMTOM_WAY")
+    MapPinEnhancedLoaded = checkAddonLoaded("MapPinEnhanced", "MapPinEnhanced")
+
+    if(scope == 2 and TomTomLoaded) then --"TomTom"
+    	local zone = C_Map.GetMapInfo(pin.uiMapID)
+    	local TTPIN = SlashCmdList["TOMTOM_WAY"]
+            TTPIN(zone.name .. " " .. 100 * pin.position.x .. " " .. 100 * pin.position.y .. " " .. pin.name)
+    elseif(scope == 3 and MapPinEnhancedLoaded) then --"MapPinEnhanced"
+    	local zone = C_Map.GetMapInfo(pin.uiMapID)
+    	local MPEPIN = SlashCmdList["MapPinEnhanced"]
+            MPEPIN(zone.name .. " " .. 100 * pin.position.x .. " " .. 100 * pin.position.y .. " " .. pin.name)
+    else -- 1 or nil -> "Blizzard"
+    	C_Map.SetUserWaypoint(pin);
+    	C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+    end
+end
