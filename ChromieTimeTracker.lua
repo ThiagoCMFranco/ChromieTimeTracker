@@ -268,6 +268,48 @@ local function GeneratorFunction(owner, rootDescription)
         hideSeparator = false
     end
 
+    --GeneratorFunction
+
+    if not hideSeparator then
+        rootDescription:CreateDivider()
+    end
+
+    hideSeparator = true
+    if ((ChromieTimeTrackerDB.ContextMenuShowPinChromie or ChromieTimeTrackerDB.ContextMenuShowPinChromie == nil) or (ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock or ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock == nil)) then
+       rootDescription:CreateTitle(L["ContextMenuPinsListTitle"]);
+    end
+
+    if (ChromieTimeTrackerDB.ContextMenuShowPinChromie or ChromieTimeTrackerDB.ContextMenuShowPinChromie == nil) then
+	if(PlayerInfo["Faction"] == "Alliance") then
+        rootDescription:CreateButton(L["ContextMenuPinsChromie"], function(data)
+	    C_SpecialTrackPinCoordinates["Alliance_Chromie"].name = L["ContextMenuPinsChromie"]
+	    CTT_addPin(C_SpecialTrackPinCoordinates["Alliance_Chromie"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+        end);
+	end
+	if(PlayerInfo["Faction"] == "Horde") then
+        rootDescription:CreateButton(L["ContextMenuPinsChromie"], function(data)
+        C_SpecialTrackPinCoordinates["Alliance_Chromie"].name = L["ContextMenuPinsChromie"]
+	    CTT_addPin(C_SpecialTrackPinCoordinates["Horde_Chromie"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+        end);
+	end
+        hideSeparator = false
+    end
+    
+    if (ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock or ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock == nil) then
+	if(PlayerInfo["Faction"] == "Alliance") then
+        rootDescription:CreateButton(L["ContextMenuPinsAllianceExpLock"], function(data)
+	    C_SpecialTrackPinCoordinates["Alliance_Exp_Lock"].name = L["ContextMenuPinsAllianceExpLock"]
+	    CTT_addPin(C_SpecialTrackPinCoordinates["Alliance_Exp_Lock"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+        end);
+	end
+	if(PlayerInfo["Faction"] == "Horde") then
+        rootDescription:CreateButton(L["ContextMenuPinsHordeExpLock"], function(data)
+	    C_SpecialTrackPinCoordinates["Horde_Exp_Lock"].name = L["ContextMenuPinsHordeExpLock"]
+	    CTT_addPin(C_SpecialTrackPinCoordinates["Horde_Exp_Lock"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+        end);
+	end
+        hideSeparator = false
+    end
 
     if not hideSeparator then
         rootDescription:CreateDivider()
