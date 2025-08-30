@@ -95,10 +95,13 @@ function lockLevelAlert(_level, _event)
     if(ChromieTimeTrackerDB.ShowExperienceAlertFlash) then
         if _level >= ChromieTimeTrackerDB.ExperienceAlertLevelFlash and _level < C_Expansion_ChromieTime_Drop_Level then
             if (_event == "PLAYER_ENTERING_WORLD" and ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin == true) then
-                ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
+                --ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
+                ChromieTimeTrackerUtil:ExtendedFlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5, 15)
             end
             if (_event == "PLAYER_LEVEL_UP" and ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp == true) then
-                ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
+                --ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
+                ChromieTimeTrackerUtil:ExtendedFlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5, 15)
+                
             end
         end
     end

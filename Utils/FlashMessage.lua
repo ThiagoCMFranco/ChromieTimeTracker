@@ -35,9 +35,9 @@ local msgFrame = CreateFrame("FRAME", "CTT_FlashMessageFrame", UIParent)
 local font, size, style = msgFrame.text:GetFont()
 
 function ChromieTimeTrackerUtil:FlashMessage(_message, _duration, _fontScale)
-    duration = _duration
-    elapsed = 0
-    totalRepeat = 0
+    local duration = _duration
+    local elapsed = 0
+    local totalRepeat = 0
 
     msgFrame:Show()
 
@@ -60,5 +60,56 @@ function ChromieTimeTrackerUtil:FlashMessage(_message, _duration, _fontScale)
             return
         end
         self:SetAlpha(-(elapsed / (duration / 2) - 1) ^ 2 + 1)
+    end)
+end
+
+function ChromieTimeTrackerUtil:ExtendedFlashMessage(_message, _duration, _fontScale, _fullAlphaTime, _soundId)
+    local duration = _duration
+    local elapsed = 0
+    local totalRepeat = 0
+    local soundId = _soundId or 847
+    local fullAlphaTime = _fullAlphaTime or 0
+
+    msgFrame:Show()
+
+    msgFrame.text:SetFont(font, _fontScale*size, style)
+
+    msgFrame.text:SetText(_message)
+
+    PlaySound(soundId)  -- 847 
+
+    local _Pause = false
+    local _PausedOnce = false
+    local _ActivatedOnce = false
+
+    msgFrame:SetScript("OnUpdate", function(self, e)
+
+        if (_Pause) then
+            if(not _PausedOnce) then
+                C_Timer.After(fullAlphaTime,function()
+                    _Pause = false
+                end)
+            _PausedOnce = true
+            end
+        else
+        elapsed = elapsed + e
+        if elapsed >= duration then
+            if totalRepeat == 0 then
+                self:Hide()
+                return
+            end
+            elapsed = 0
+            totalRepeat = totalRepeat - 1
+            self:SetAlpha(0)
+            return
+        end
+        self:SetAlpha(-(elapsed / (duration / 2) - 1) ^ 2 + 1)
+        if not _ActivatedOnce then
+        if (-(elapsed / (duration / 2) - 1) ^ 2 + 1) >= 0.99 then
+            _Pause = true
+            _ActivatedOnce = true
+        end
+    end
+    end
     end)
 end
