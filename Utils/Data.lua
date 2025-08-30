@@ -50,7 +50,7 @@ C_ExpansionColors[7] = "FF00FF00" --Legion
 C_ExpansionColors[8] = "FF056AC4" --BfA
 C_ExpansionColors[9] = "FF888888" --SL
 C_ExpansionColors[10] = "FFC90A67" --DF
-C_ExpansionColors[11] = "FF7F27" --TWW
+C_ExpansionColors[11] = "FFFF7F27" --TWW
 
 
 local C_ExpansionGarrisonID = mct.C_ExpansionGarrisonID
