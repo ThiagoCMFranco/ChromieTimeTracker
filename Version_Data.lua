@@ -20,5 +20,5 @@
 --
 --------------------------------------------------------------------------------
 
-C_CTT_VERSION_UID = 2007001
-C_CTT_VERSION_SEMANTIC_NUMBER = "2.7.1"
+C_CTT_VERSION_UID = 2007002
+C_CTT_VERSION_SEMANTIC_NUMBER = "2.7.2"
