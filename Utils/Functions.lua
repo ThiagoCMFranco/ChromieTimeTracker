@@ -150,3 +150,27 @@ function CTT_addPin(pin, scope)
     	C_SuperTrack.SetSuperTrackedUserWaypoint(true)
     end
 end
+
+function addHelpIcon(_LabelHelp, _TooltipText)
+
+    _LabelHelp:SetText("  " .. CreateInlineIcon("glueannouncementpopup-icon-info"))
+    _LabelHelp:SetWidth(22)
+    --scrollFrameMainSettings:AddChild(_LabelHelp)
+    _LabelHelp:SetCallback("OnEnter", function(widget, event, text)
+        GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+		GameTooltip:SetText(
+            _TooltipText
+            , 1, 1, 1, nil, true);
+            GameTooltip:ClearAllPoints()
+        local mX, mY = GetCursorPosition()
+        local uiScale = UIParent:GetEffectiveScale()
+        local tooltipWidth = GameTooltip:GetWidth()
+        local tooltipHeight = GameTooltip:GetHeight()
+        GameTooltip:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", mX / uiScale + 10 / uiScale, mY / uiScale - tooltipHeight)
+		GameTooltip:Show();
+    end)
+    _LabelHelp:SetCallback("OnLeave", function(widget, event, text)
+        GameTooltip:Hide();
+    end)
+
+end
