@@ -58,23 +58,6 @@ end
 C_Expansion_ChromieTime_Drop_Level = 70
 pLevel = UnitLevel("player")
 
-L["Dialog_Lock_Exp_Message"] = string.gsub(L["Dialog_Lock_Exp_Message"],"_pLevel_",pLevel)
-L["Dialog_Lock_Exp_Message"] = string.gsub(L["Dialog_Lock_Exp_Message"],"_dropLevel_",C_Expansion_ChromieTime_Drop_Level)
-L["Dialog_Lock_Exp_Message"] = string.gsub(L["Dialog_Lock_Exp_Message"],"_capital_",zoneInfo.name)
-L["Dialog_Lock_Exp_Message"] = string.gsub(L["Dialog_Lock_Exp_Message"],"_zoneColor_",zoneColor)
-    
-StaticPopupDialogs["LOCK_EXP_ALERT"] = {
-    text = L["Dialog_Lock_Exp_Message"],
-    button1 = L["Dialog_Lock_Exp_Confirm"],
-    button2 = L["Dialog_Lock_Exp_Close"],
-    OnAccept = function()
-
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = false,
-    preferredIndex = 3,
-}
     
 function lockLevelAlert(_level, _event)
 
@@ -84,6 +67,10 @@ function lockLevelAlert(_level, _event)
 
     if ChromieTimeTrackerDB.ExperienceAlertLevelPopup == nil then
         ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65
+    end
+
+    if ChromieTimeTrackerDB.ExperienceAlertLevelChat == nil then
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65
     end
 
     local _EliminatedExperienceAura = C_UnitAuras.GetPlayerAuraBySpellID(306715)
@@ -96,22 +83,58 @@ function lockLevelAlert(_level, _event)
         if _level >= ChromieTimeTrackerDB.ExperienceAlertLevelFlash and _level < C_Expansion_ChromieTime_Drop_Level then
             if (_event == "PLAYER_ENTERING_WORLD" and ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin == true) then
                 --ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
-                ChromieTimeTrackerUtil:ExtendedFlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5, 15)
+                local lockExpMessage = SetExperienceLockAlertMessage(L["Dialog_Lock_Exp_Message"], _level, C_Expansion_ChromieTime_Drop_Level,zoneInfo.name,zoneColor)
+                ChromieTimeTrackerUtil:ExtendedFlashMessage(lockExpMessage, 15, 1.5, 15)
             end
             if (_event == "PLAYER_LEVEL_UP" and ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp == true) then
                 --ChromieTimeTrackerUtil:FlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5)
-                ChromieTimeTrackerUtil:ExtendedFlashMessage(L["Dialog_Lock_Exp_Message"], 15, 1.5, 15)
+                local lockExpMessage = SetExperienceLockAlertMessage(L["Dialog_Lock_Exp_Message"], _level, C_Expansion_ChromieTime_Drop_Level,zoneInfo.name,zoneColor)
+                ChromieTimeTrackerUtil:ExtendedFlashMessage(lockExpMessage, 15, 1.5, 15)
                 
             end
         end
     end
     if(ChromieTimeTrackerDB.ShowExperienceAlertPopup) then
         if _level >= ChromieTimeTrackerDB.ExperienceAlertLevelPopup and _level < C_Expansion_ChromieTime_Drop_Level then
+
+            local lockExpMessage = SetExperienceLockAlertMessage(L["Dialog_Lock_Exp_Message"], _level, C_Expansion_ChromieTime_Drop_Level,zoneInfo.name,zoneColor)
+                StaticPopupDialogs["LOCK_EXP_ALERT" .. "_" .. _level] = {
+                    text = lockExpMessage,
+                    button1 = L["Dialog_Lock_Exp_Track_Experience_Eliminator"],
+                    button2 = L["Dialog_Lock_Exp_Confirm"],
+                    OnAccept = function()
+                        if(PlayerInfo["Faction"] == "Alliance") then
+                	        C_SpecialTrackPinCoordinates["Alliance_Exp_Lock"].name = L["ContextMenuPinsAllianceExpLock"]
+                	        CTT_addPin(C_SpecialTrackPinCoordinates["Alliance_Exp_Lock"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+                	    end
+                	    if(PlayerInfo["Faction"] == "Horde") then
+                	        C_SpecialTrackPinCoordinates["Horde_Exp_Lock"].name = L["ContextMenuPinsHordeExpLock"]
+                	        CTT_addPin(C_SpecialTrackPinCoordinates["Horde_Exp_Lock"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+                	    end
+                    end,
+                    timeout = 0,
+                    whileDead = true,
+                    hideOnEscape = false,
+                    preferredIndex = 3,
+                }
+
             if (_event == "PLAYER_ENTERING_WORLD" and ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin == true) then
-                StaticPopup_Show ("LOCK_EXP_ALERT")
+                StaticPopup_Show("LOCK_EXP_ALERT" .. "_" .. _level)
             end
             if (_event == "PLAYER_LEVEL_UP" and ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp == true) then
-                StaticPopup_Show ("LOCK_EXP_ALERT")
+                StaticPopup_Show("LOCK_EXP_ALERT" .. "_" .. _level)
+            end
+        end
+    end
+    if(ChromieTimeTrackerDB.ShowExperienceAlertChat) then
+        if _level >= ChromieTimeTrackerDB.ExperienceAlertLevelChat and _level < C_Expansion_ChromieTime_Drop_Level then
+            if (_event == "PLAYER_ENTERING_WORLD" and ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin == true) then
+                local lockExpMessage = SetExperienceLockAlertMessage(L["Dialog_Lock_Exp_Message_Chat"], _level, C_Expansion_ChromieTime_Drop_Level,zoneInfo.name,zoneColor)
+                print(lockExpMessage)
+            end
+            if (_event == "PLAYER_LEVEL_UP" and ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp == true) then
+                local lockExpMessage = SetExperienceLockAlertMessage(L["Dialog_Lock_Exp_Message_Chat"], _level, C_Expansion_ChromieTime_Drop_Level,zoneInfo.name,zoneColor)
+                print(lockExpMessage)
             end
         end
     end
@@ -126,7 +149,7 @@ E:SetScript('OnEvent', function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         local isInitialLogin, isReloadingUi = ...
         if isInitialLogin then
-            if(ChromieTimeTrackerDB.ShowExperienceAlertFlash or ChromieTimeTrackerDB.ShowExperienceAlertPopup) then
+            if(ChromieTimeTrackerDB.ShowExperienceAlertFlash or ChromieTimeTrackerDB.ShowExperienceAlertPopup or ChromieTimeTrackerDB.ShowExperienceAlertChat) then
                 C_Timer.After(1,function()
                     lockLevelAlert(pLevel, event);
                 end);
@@ -136,7 +159,7 @@ E:SetScript('OnEvent', function(self, event, ...)
 
     if event == "PLAYER_LEVEL_UP" then
         local level = ...
-        if(ChromieTimeTrackerDB.ShowExperienceAlertFlash or ChromieTimeTrackerDB.ShowExperienceAlertPopup) then
+        if(ChromieTimeTrackerDB.ShowExperienceAlertFlash or ChromieTimeTrackerDB.ShowExperienceAlertPopup or ChromieTimeTrackerDB.ShowExperienceAlertChat) then
             C_Timer.After(1,function()
                 lockLevelAlert(level, event);
             end);
@@ -144,3 +167,14 @@ E:SetScript('OnEvent', function(self, event, ...)
     end
 
 end);
+
+function SetExperienceLockAlertMessage(_lockExpMessage, _playerLevel, _timeTravelDropLevel, _zoneName, _zoneColor)
+    local LockExpMessage = _lockExpMessage
+
+    LockExpMessage = string.gsub(LockExpMessage,"_pLevel_",_playerLevel)
+    LockExpMessage = string.gsub(LockExpMessage,"_dropLevel_",_timeTravelDropLevel)
+    LockExpMessage = string.gsub(LockExpMessage,"_capital_",_zoneName)
+    LockExpMessage = string.gsub(LockExpMessage,"_zoneColor_",_zoneColor)
+
+    return LockExpMessage
+end
