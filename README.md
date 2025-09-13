@@ -33,6 +33,7 @@ Track follower action resources (Garrison Resource, Order Resource, War Resource
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  
 Shortcut buttons to other reports.  
 Alert to remember to eliminate experience gain before reaching the level limit to time travel.  
+Track points of interest like Chromie and Experience Eliminators.  
 
 
 ## Controls, Configurations, Commands and Usability Features

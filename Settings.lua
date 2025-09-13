@@ -224,6 +224,12 @@ function CTT_LoadExperienceSettings()
     end)
     scrollFrameExperience:AddChild(txtExperienceAlertLevelPopup)
 
+    local LabelExperienceLockAlertHelp = AceGUI:Create("InteractiveLabel")
+
+    scrollFrameExperience:AddChild(LabelExperienceLockAlertHelp)
+    local tooltipText = L["ExperienceLockAlertHelp"]
+    addHelpIcon(LabelExperienceLockAlertHelp, tooltipText)
+
     local chkShowExperienceAlertPopupOnLogin = AceGUI:Create("CheckBox")
     chkShowExperienceAlertPopupOnLogin:SetLabel(L["Experience_ShowAlertOnLogin"])
     chkShowExperienceAlertPopupOnLogin:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -270,6 +276,12 @@ function CTT_LoadExperienceSettings()
     end)
     scrollFrameExperience:AddChild(txtExperienceAlertLevelFlash)
 
+    local LabelExperienceLockAlertFlashHelp = AceGUI:Create("InteractiveLabel")
+
+    scrollFrameExperience:AddChild(LabelExperienceLockAlertFlashHelp)
+    local tooltipText = L["ExperienceLockAlertHelp"]
+    addHelpIcon(LabelExperienceLockAlertFlashHelp, tooltipText)
+
     local chkShowExperienceAlertFlashOnLogin = AceGUI:Create("CheckBox")
     chkShowExperienceAlertFlashOnLogin:SetLabel(L["Experience_ShowAlertOnLogin"])
     chkShowExperienceAlertFlashOnLogin:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -300,6 +312,73 @@ function CTT_LoadExperienceSettings()
     end
     chkShowExperienceAlertFlashOnLogin:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin)
     chkShowExperienceAlertFlashOnLevelUp:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp)
+
+    local headingExp2 = AceGUI:Create("Heading")
+    headingExp2:SetRelativeWidth(1)
+    scrollFrameExperience:AddChild(headingExp2)
+
+    local lblExperienceShowChat = AceGUI:Create("Label")
+    lblExperienceShowChat:SetText("|cFFD6AE12" .. L["Experience_ChatLabel"] .. "|r")
+    CTT_setACE3WidgetFontSide(lblExperienceShowChat, 12)
+    lblExperienceShowChat:SetWidth(580)
+    scrollFrameExperience:AddChild(lblExperienceShowChat)
+
+    local chkShowExperienceAlertChat = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertChat:SetLabel(L["Experience_ShowAlert"])
+    chkShowExperienceAlertChat:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertChat = chkShowExperienceAlertChat:GetValue()
+    end)
+    chkShowExperienceAlertChat:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertChat)
+
+    local txtExperienceAlertLevelChat = AceGUI:Create("Slider")
+    txtExperienceAlertLevelChat:SetLabel(L["Experience_AlertMinLevelLabel"])
+    txtExperienceAlertLevelChat:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelChat:SetCallback("OnMouseUp", function(widget, event, text) 
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = tonumber(txtExperienceAlertLevelChat:GetValue())
+        if ChromieTimeTrackerDB.ExperienceAlertLevelChat == nil then
+            ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65
+            txtExperienceAlertLevelChat:SetValue(65)
+        end
+    end)
+    scrollFrameExperience:AddChild(txtExperienceAlertLevelChat)
+
+    local LabelExperienceLockAlertChatHelp = AceGUI:Create("InteractiveLabel")
+
+    scrollFrameExperience:AddChild(LabelExperienceLockAlertChatHelp)
+    local tooltipText = L["ExperienceLockAlertHelp"]
+    addHelpIcon(LabelExperienceLockAlertChatHelp, tooltipText)
+
+    local chkShowExperienceAlertChatOnLogin = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertChatOnLogin:SetLabel(L["Experience_ShowAlertOnLogin"])
+    chkShowExperienceAlertChatOnLogin:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = chkShowExperienceAlertChatOnLogin:GetValue()
+    end)
+    chkShowExperienceAlertChatOnLogin:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertChatOnLogin)
+
+
+    local chkShowExperienceAlertChatOnLevelUp = AceGUI:Create("CheckBox")
+    chkShowExperienceAlertChatOnLevelUp:SetLabel(L["Experience_ShowAlertOnLevelUp"])
+    chkShowExperienceAlertChatOnLevelUp:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = chkShowExperienceAlertChatOnLevelUp:GetValue()
+    end)
+    chkShowExperienceAlertChatOnLevelUp:SetWidth(700)
+    scrollFrameExperience:AddChild(chkShowExperienceAlertChatOnLevelUp)
+
+    chkShowExperienceAlertPopup:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopup)
+    if ChromieTimeTrackerDB.ExperienceAlertLevelPopup ~= nil then
+        txtExperienceAlertLevelPopup:SetValue(ChromieTimeTrackerDB.ExperienceAlertLevelPopup)
+    end
+    chkShowExperienceAlertPopupOnLogin:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin)
+    chkShowExperienceAlertPopupOnLevelUp:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp)
+
+    chkShowExperienceAlertChat:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertChat)
+    if ChromieTimeTrackerDB.ExperienceAlertLevelChat ~= nil then
+        txtExperienceAlertLevelChat:SetValue(ChromieTimeTrackerDB.ExperienceAlertLevelChat)
+    end
+    chkShowExperienceAlertChatOnLogin:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin)
+    chkShowExperienceAlertChatOnLevelUp:SetValue(ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp)
     
 end
 
@@ -720,6 +799,12 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     end)
     scrollFrameContewxtMenu:AddChild(ddlTrackerAddon)
 
+    local LabelDefeultTrackerAddonHelp = AceGUI:Create("InteractiveLabel")
+
+    scrollFrameContewxtMenu:AddChild(LabelDefeultTrackerAddonHelp)
+    local tooltipText = L["DefeultTrackerAddonHelp"]
+    addHelpIcon(LabelDefeultTrackerAddonHelp, tooltipText)
+
     local chkShowPinChromie = AceGUI:Create("CheckBox")
     chkShowPinChromie:SetLabel(L["ContextMenu_ShowPinChromie"])
     chkShowPinChromie:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -1026,27 +1111,22 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
     button1 = L["Dialog_Yes"],
     button2 = L["Dialog_No"],
     OnAccept = function()
+        --Set default values for all settings
+
+        --General
         ChromieTimeTrackerDB.Mode = 2;
-        ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
-        ChromieTimeTrackerDB.HideMainWindow = true;
-        --ChromieTimeTrackerDB.HideChatWelcomeMessage = false;
-        ChromieTimeTrackerDB.LockDragDrop = false;
-        ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+        ChromieTimeTrackerDB.MainWindowVisibility = 1;
+        ChromieTimeTrackerDB.WelcomeMessageVisibility = 1;
         ChromieTimeTrackerDB.ToastVisibility = 1;
+        ChromieTimeTrackerDB.LockDragDrop = false;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
+        ChromieTimeTrackerDB.HideMinimapIcon = false;
+        --ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce = false;
         ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
-        
-        ChromieTimeTrackerDB.AdvShowGarrison = true;
-        ChromieTimeTrackerDB.AdvShowClassHall = true;
-        ChromieTimeTrackerDB.AdvShowWarEffort = true;
-        ChromieTimeTrackerDB.AdvShowCovenant = true;
-        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
-        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
-        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
-        ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
 
+        --Set initial values for Context Menu settings
         ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
         ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
         ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
@@ -1055,11 +1135,47 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
+        ChromieTimeTrackerDB.DefaultTrackerAddon = 1;
+        ChromieTimeTrackerDB.ContextMenuShowPinChromie = true;
+        ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock = true;
+
+        --Set initial values for Avanced Mode settings
+        ChromieTimeTrackerDB.AdvButtonsPosition = 2;
+        ChromieTimeTrackerDB.AdvButtonsAlignment = 2;
+        ChromieTimeTrackerDB.AdvShowGarrison = true;
+        ChromieTimeTrackerDB.AdvShowClassHall = true;
+        ChromieTimeTrackerDB.AdvShowWarEffort = true;
+        ChromieTimeTrackerDB.AdvShowCovenant = true;
+        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
+        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
+        ChromieTimeTrackerDB.AdvHideTimelineBox = false;
+
+        --Alternate Mode
+        ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+
+        --Set initial values for Enhancement settings
         ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
         ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
-
         ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
         ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
+
+        --Experience Alerts
+        ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = false;
+
+        ChromieTimeTrackerDB.ShowExperienceAlertFlash = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = false;
+
+        ChromieTimeTrackerDB.ShowExperienceAlertChat = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = false;
 
         CTT_updateChromieTime()
         CTT_showMainFrame()

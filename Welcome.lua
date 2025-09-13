@@ -57,27 +57,22 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
     button1 = L["Dialog_Yes"],
     button2 = L["Dialog_No"],
     OnAccept = function()
+        --Set initial values for all settings
+
+        --General
         ChromieTimeTrackerDB.Mode = 2;
-        ChromieTimeTrackerDB.HideWhenNotTimeTraveling = false;
-        ChromieTimeTrackerDB.HideMainWindow = false;
-        ChromieTimeTrackerDB.HideChatWelcomeMessage = false;
-        ChromieTimeTrackerDB.LockDragDrop = false;
-        ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+        ChromieTimeTrackerDB.MainWindowVisibility = 1;
+        ChromieTimeTrackerDB.WelcomeMessageVisibility = 1;
         ChromieTimeTrackerDB.ToastVisibility = 1;
+        ChromieTimeTrackerDB.LockDragDrop = false;
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
+        ChromieTimeTrackerDB.HideMinimapIcon = false;
+        --ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce = false;
+        ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
-        
-        ChromieTimeTrackerDB.AdvShowGarrison = true;
-        ChromieTimeTrackerDB.AdvShowClassHall = true;
-        ChromieTimeTrackerDB.AdvShowWarEffort = true;
-        ChromieTimeTrackerDB.AdvShowCovenant = true;
-        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
-        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
-        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
-        ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
-        ChromieTimeTrackerDB.AdvButtonsPosition = "BOTTOM";
 
+        --Set initial values for Context Menu settings
         ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
         ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
         ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
@@ -86,11 +81,49 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
+        ChromieTimeTrackerDB.DefaultTrackerAddon = 1;
+        ChromieTimeTrackerDB.ContextMenuShowPinChromie = true;
+        ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock = true;
+
+        --Set initial values for Avanced Mode settings
+        ChromieTimeTrackerDB.AdvButtonsPosition = 2;
+        ChromieTimeTrackerDB.AdvButtonsAlignment = 2;
+        ChromieTimeTrackerDB.AdvShowGarrison = true;
+        ChromieTimeTrackerDB.AdvShowClassHall = true;
+        ChromieTimeTrackerDB.AdvShowWarEffort = true;
+        ChromieTimeTrackerDB.AdvShowCovenant = true;
+        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
+        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
+        ChromieTimeTrackerDB.AdvHideTimelineBox = false;
+
+        --Alternate Mode
+        ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+
+        --Set initial values for Enhancement settings
         ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
         ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
         ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
         ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
         ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
+
+        --Experience Alerts
+        ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = false;
+
+        ChromieTimeTrackerDB.ShowExperienceAlertFlash = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = false;
+
+        ChromieTimeTrackerDB.ShowExperienceAlertChat = false;
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65;
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = false;
+        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = false;
+
+        ChromieTimeTrackerDB.AlreadyUsed = true
 
         welcomeFrame:Hide()
 
