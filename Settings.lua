@@ -50,27 +50,6 @@ _G["CTTSettingsFrameName"] = settingsFrame.frame
 -- so that it is closed when the escape key is pressed.
 tinsert(UISpecialFrames, "CTTSettingsFrameName")
 
-
---"Gambiarra da Braba - Início" - 01/03/2025
---This next lines were the only way found to resize texts on ACE3 widgets since it's a poorly documented lib that get almost no feature update in a long time.
---If someone knows a diferent way to do this or by the time you read this there are any changes in ACE3 label widget concerning font sizing ou allowing to get
---current font style, feel free to try and push a commit on GitHub project page.
-local auxFontScaleFrame = CreateFrame("Frame", "auxFontScaleFrame", UIParent, "BasicFrameTemplateWithInset")
-auxFontScaleFrame.dummyTextLabel = auxFontScaleFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-local font, size, style = auxFontScaleFrame.dummyTextLabel:GetFont() --Essas 3 variáveis são utilizadas para ajustar a escala de textos dentro dos widgets do ACE3.
-auxFontScaleFrame:Hide()
-
-function CTT_setACE3WidgetFontSide(_widget, _size)
-    _widget:SetFont(font, _size, style)
-end
---"Gambiarra da Braba - Fim"
-
-function AddLineSkip(_frame)
-    local LabelLineSkip = AceGUI:Create("InteractiveLabel")
-    LabelLineSkip:SetText("")
-    _frame:AddChild(LabelLineSkip)
-end
-
 local treeW = AceGUI:Create("TreeGroup")
 
 function CTT_LoadCredits()
@@ -90,8 +69,7 @@ function CTT_LoadCredits()
 
     local LabelCredits = AceGUI:Create("Label")
     LabelCredits:SetText(L["lblCreditColabList"])
-    --LabelCredits:SetFont(font, 13, style)
-    CTT_setACE3WidgetFontSide(LabelCredits, 13)
+    SetACE3WidgetFontSize(LabelCredits, 13)
     LabelCredits:SetWidth(580)
     scrollFrameCredits:AddChild(LabelCredits)
 
@@ -113,15 +91,13 @@ function CTT_LoadAbout()
 
     local LabelAbout_Title = AceGUI:Create("Label")
     LabelAbout_Title:SetText("|cFFFFC90E" .. L["AddonName"] .. "|r")
-    --LabelAbout_Title:SetFont(font, 20, style)
-    CTT_setACE3WidgetFontSide(LabelAbout_Title, 20)
+    SetACE3WidgetFontSize(LabelAbout_Title, 20)
     LabelAbout_Title:SetWidth(640)
     scrollFrameAbout:AddChild(LabelAbout_Title)
 
     local LabelAbout = AceGUI:Create("Label")
     LabelAbout:SetText("|cFFFFC90E" .. L["About_Version"] .. "|r\n\n" .. L["About_Title"] .. "\n\n" .. L["About_Line1"] .. "\n\n" .. L["About_Line2"] .. "\n\n" .. L["About_Line3"] .. "\n\n")
-    --LabelAbout:SetFont(font, 13, style)
-    CTT_setACE3WidgetFontSide(LabelAbout, 13)
+    SetACE3WidgetFontSize(LabelAbout, 13)
     LabelAbout:SetWidth(620)
     scrollFrameAbout:AddChild(LabelAbout)
     
@@ -131,8 +107,7 @@ function CTT_LoadAbout()
 
     local LabelAboutLocalizationDisclaimer = AceGUI:Create("Label")
     LabelAboutLocalizationDisclaimer:SetText(L["About_Line4"])
-    --LabelAbout:SetFont(font, 13, style)
-    CTT_setACE3WidgetFontSide(LabelAboutLocalizationDisclaimer, 13)
+    SetACE3WidgetFontSize(LabelAboutLocalizationDisclaimer, 13)
     LabelAboutLocalizationDisclaimer:SetWidth(620)
     scrollFrameAbout:AddChild(LabelAboutLocalizationDisclaimer)
 end
@@ -190,7 +165,7 @@ function CTT_LoadExperienceSettings()
     local lblExperienceAlertDescription = AceGUI:Create("Label")
     
     lblExperienceAlertDescription:SetText(description)
-    CTT_setACE3WidgetFontSide(lblExperienceAlertDescription, 12)
+    SetACE3WidgetFontSize(lblExperienceAlertDescription, 12)
     lblExperienceAlertDescription:SetWidth(580)
     scrollFrameExperience:AddChild(lblExperienceAlertDescription)
 
@@ -200,7 +175,7 @@ function CTT_LoadExperienceSettings()
 
     local lblExperienceShowPopup = AceGUI:Create("Label")
     lblExperienceShowPopup:SetText("|cFFD6AE12" .. L["Experience_PopupLabel"] .. "|r")
-    CTT_setACE3WidgetFontSide(lblExperienceShowPopup, 12)
+    SetACE3WidgetFontSize(lblExperienceShowPopup, 12)
     lblExperienceShowPopup:SetWidth(580)
     scrollFrameExperience:AddChild(lblExperienceShowPopup)
 
@@ -252,7 +227,7 @@ function CTT_LoadExperienceSettings()
 
     local lblExperienceShowFlash = AceGUI:Create("Label")
     lblExperienceShowFlash:SetText("|cFFD6AE12" .. L["Experience_FlashLabel"] .. "|r")
-    CTT_setACE3WidgetFontSide(lblExperienceShowFlash, 12)
+    SetACE3WidgetFontSize(lblExperienceShowFlash, 12)
     lblExperienceShowFlash:SetWidth(580)
     scrollFrameExperience:AddChild(lblExperienceShowFlash)
 
@@ -319,7 +294,7 @@ function CTT_LoadExperienceSettings()
 
     local lblExperienceShowChat = AceGUI:Create("Label")
     lblExperienceShowChat:SetText("|cFFD6AE12" .. L["Experience_ChatLabel"] .. "|r")
-    CTT_setACE3WidgetFontSide(lblExperienceShowChat, 12)
+    SetACE3WidgetFontSize(lblExperienceShowChat, 12)
     lblExperienceShowChat:SetWidth(580)
     scrollFrameExperience:AddChild(lblExperienceShowChat)
 
@@ -536,7 +511,7 @@ end)
 scrollFrameAdvancedMode:AddChild(ddlButtonAlignment)
 
 lblSelectAdvancedModeOptions:SetText("\n" .. L["lblSelectAdvancedModeOptions"])
-CTT_setACE3WidgetFontSide(lblSelectAdvancedModeOptions, 12)
+SetACE3WidgetFontSize(lblSelectAdvancedModeOptions, 12)
 lblSelectAdvancedModeOptions:SetWidth(580)
 scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
     
@@ -695,7 +670,7 @@ local heading5 = AceGUI:Create("Heading")
 local heading6 = AceGUI:Create("Heading")
 
 lblSelectContextMenuOptions:SetText("\n" .. L["lblSelectContextMenuOptions"])
-CTT_setACE3WidgetFontSide(lblSelectContextMenuOptions, 12)
+SetACE3WidgetFontSize(lblSelectContextMenuOptions, 12)
 lblSelectContextMenuOptions:SetWidth(580)
 scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     
@@ -853,19 +828,11 @@ scrollContainerMainSettings:AddChild(scrollFrameMainSettings)
 --Geral
 local dropdown = AceGUI:Create("Dropdown")
 local LabelAddonModesHelp = AceGUI:Create("InteractiveLabel")
---local LabelCompactMode = AceGUI:Create("Label")
---local LabelStandardMode = AceGUI:Create("Label")
---local LabelAlternateMode = AceGUI:Create("Label")
---local LabelAdvancedMode = AceGUI:Create("Label")
---local CheckBox = AceGUI:Create("CheckBox")
---local chkHideChatWelcomeMessage = AceGUI:Create("CheckBox")
 local ddlChatWelcomeMessageVisibility = AceGUI:Create("Dropdown")
---local chkHideMainWindow = AceGUI:Create("CheckBox")
 local ddlMainWindowVisibility = AceGUI:Create("Dropdown")
 local ddlToastVisibility = AceGUI:Create("Dropdown")
 local chkLockDragDrop = AceGUI:Create("CheckBox")
 local ddlDefaultMiddleClickOption = AceGUI:Create("Dropdown")
---local LabelMiddleClick = AceGUI:Create("Label")
 local LabelDefaultMiddleClickHelp = AceGUI:Create("InteractiveLabel")
 local chkLockMiddleClickOption = AceGUI:Create("CheckBox")
 local chkHideMinimapIcon = AceGUI:Create("CheckBox")
@@ -900,52 +867,6 @@ scrollFrameMainSettings:AddChild(dropdown)
                        "\n\n|cFFD6AE12" .. L["AlternateMode"] .. ":|r " .. L["AlternateModeDescription"] ..
                        "\n\n|cFFD6AE12" .. L["AdvancedMode"] .. ":|r " .. L["AdvancedModeDescription"]
    addHelpIcon(LabelAddonModesHelp, tooltipText)
-
-   --LabelCompactMode:SetText("\n|cFFD6AE12" .. L["CompactMode"] .. ":|r " .. L["CompactModeDescription"])
---LabelCompactMode:SetWidth(700)
---scrollFrameMainSettings:AddChild(LabelCompactMode)
---
---LabelStandardMode:SetText("|cFFD6AE12" .. L["StandardMode"] .. ":|r " .. L["StandardModeDescription"])
---LabelStandardMode:SetWidth(700)
---scrollFrameMainSettings:AddChild(LabelStandardMode)
---
---
---LabelAlternateMode:SetText("|cFFD6AE12" .. L["AlternateMode"] .. ":|r " .. L["AlternateModeDescription"])
---LabelAlternateMode:SetWidth(590)
---scrollFrameMainSettings:AddChild(LabelAlternateMode)
---
---LabelAdvancedMode:SetText("|cFFD6AE12" .. L["AdvancedMode"] .. ":|r " .. L["AdvancedModeDescription"])
---LabelAdvancedMode:SetWidth(590)
---scrollFrameMainSettings:AddChild(LabelAdvancedMode)
-
-
---heading1:SetRelativeWidth(1)
---scrollFrameMainSettings:AddChild(heading1)
-
---chkHideMainWindow:SetLabel(L["chkHideMainWindow"])
---chkHideMainWindow:SetCallback("OnValueChanged", function(widget, event, text) 
---    ChromieTimeTrackerDB.HideMainWindow = chkHideMainWindow:GetValue()
---    CTT_updateChromieTime()
---    CTT_showMainFrame()
---end)
---chkHideMainWindow:SetWidth(700)
---scrollFrameMainSettings:AddChild(chkHideMainWindow)
-
---CheckBox:SetLabel(L["HideWhenNotTimeTraveling"])
---CheckBox:SetCallback("OnValueChanged", function(widget, event, text) 
---    ChromieTimeTrackerDB.HideWhenNotTimeTraveling = CheckBox:GetValue()
---    CTT_updateChromieTime()
---    CTT_showMainFrame()
---end)
---CheckBox:SetWidth(700)
---scrollFrameMainSettings:AddChild(CheckBox)
-
---chkHideChatWelcomeMessage:SetLabel(L["chkHideChatWelcomeMessage"])
---chkHideChatWelcomeMessage:SetCallback("OnValueChanged", function(widget, event, text) 
---    ChromieTimeTrackerDB.HideChatWelcomeMessage = chkHideChatWelcomeMessage:GetValue()
---end)
---chkHideChatWelcomeMessage:SetWidth(700)
---scrollFrameMainSettings:AddChild(chkHideChatWelcomeMessage)
 
 AddLineSkip(scrollFrameMainSettings)
 
@@ -1015,11 +936,6 @@ scrollFrameMainSettings:AddChild(ddlDefaultMiddleClickOption)
 scrollFrameMainSettings:AddChild(LabelDefaultMiddleClickHelp)
 local tooltipText = L["MiddleClickOptionDescription"]
 addHelpIcon(LabelDefaultMiddleClickHelp, tooltipText)
-
---LabelMiddleClick:SetText(L["MiddleClickOptionDescription"])
---LabelMiddleClick:SetWidth(700)
---scrollFrameMainSettings:AddChild(LabelMiddleClick)
-
 
 chkLockMiddleClickOption:SetLabel(L["LockMiddleClickOption"])
 chkLockMiddleClickOption:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -1094,11 +1010,7 @@ scrollFrameMainSettings:AddChild(btnResetPosition)
     ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
     ddlChatWelcomeMessageVisibility:SetValue(ChromieTimeTrackerDB.WelcomeMessageVisibility)
     ddlMainWindowVisibility:SetValue(ChromieTimeTrackerDB.MainWindowVisibility)
-    --CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
-    --chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
-    --chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    --chkAlternateModeShowIconOnly:SetValue(ChromieTimeTrackerDB.AlternateModeShowIconOnly)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
     chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
     chkHideMinimapIcon:SetValue(ChromieTimeTrackerDB.HideMinimapIcon)
@@ -1122,7 +1034,6 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
         ChromieTimeTrackerDB.LockMiddleClickOption = false;
         ChromieTimeTrackerDB.HideMinimapIcon = false;
-        --ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce = false;
         ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
         ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
 
@@ -1196,9 +1107,6 @@ end)
 scrollFrameMainSettings:AddChild(btnResetSettings)
 
     dropdown:SetValue(ChromieTimeTrackerDB.Mode)
-    --CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
-    --chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
-    --chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
     ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
     chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
     ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
@@ -1276,7 +1184,7 @@ tree = {
     elseif group == "Ctx" then
         CTT_LoadContextMenuSettings()
     elseif group == "Cur" then
-        CTT_LoadCurrencyMenuSettings()
+        --CTT_LoadCurrencyMenuSettings()
     elseif group == "Enh" then
         CTT_LoadReportEnhancementSettings()
     elseif group == "Exp" then
@@ -1291,21 +1199,6 @@ settingsFrame:Hide()
 treeW:SelectByValue("S")
 
 CTT_LoadAbout()
-
-function loadSettings()
-    dropdown:SetValue(ChromieTimeTrackerDB.Mode)
-    --CheckBox:SetValue(ChromieTimeTrackerDB.HideWhenNotTimeTraveling)
-    --chkHideMainWindow:SetValue(ChromieTimeTrackerDB.HideMainWindow)
-    --chkHideChatWelcomeMessage:SetValue(ChromieTimeTrackerDB.HideChatWelcomeMessage)
-    ddlToastVisibility:SetValue(ChromieTimeTrackerDB.ToastVisibility)
-    chkLockDragDrop:SetValue(ChromieTimeTrackerDB.LockDragDrop)
-    ddlDefaultMiddleClickOption:SetValue(ChromieTimeTrackerDB.DefaultMiddleClickOption)
-    chkLockMiddleClickOption:SetValue(ChromieTimeTrackerDB.LockMiddleClickOption)
-    chkHideMinimapIcon:SetValue(ChromieTimeTrackerDB.HideMinimapIcon)
-    chkWelcomeWindowShowOnlyOnce:SetValue(ChromieTimeTrackerSharedDB.WelcomeWindowShowOnlyOnce)
-    chkHideWelcomeWindowInFutureVersionChanges:SetValue(ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges)
-    chkHideDeveloperCreditOnTooltips:SetValue(ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips)
-end
 
 function ChromieTimeTracker:ToggleSettingsFrame()
     if not settingsFrame:IsShown() then
