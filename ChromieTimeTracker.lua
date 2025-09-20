@@ -362,12 +362,6 @@ addonRootFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 addonRootFrame:SetSize(280, 195)
 addonRootFrame:SetFrameLevel(0)
 
---if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
---    addonRootFrame:Show()
---else
---    addonRootFrame:Hide()
---end
-
 if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
     addonRootFrame:Show()
 else
@@ -510,7 +504,6 @@ function CTT_updateChromieTime()
         iconFrame:SetSize(32,32)
         iconFrame:Show()
         if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-        --if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
             addonRootFrame:Show()
         else
             addonRootFrame:Hide()
@@ -957,13 +950,6 @@ local CTT_miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("ChromieTimeTr
 	icon = "Interface\\AddOns\\ChromieTimeTracker\\Chromie.png",
 	OnClick = function(self, btn)
         if btn == "LeftButton" then
-            --if addonRootFrame:IsShown() then
-            --    addonRootFrame:Hide()
-            --    ChromieTimeTrackerDB.HideMainWindow = true
-            --else
-            --    addonRootFrame:Show()
-            --    ChromieTimeTrackerDB.HideMainWindow = false
-            --end
             if addonRootFrame:IsShown() then
                 addonRootFrame:Hide()
                 ChromieTimeTrackerDB.MainWindowVisibility = 3
@@ -1017,14 +1003,10 @@ eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "PLAYER_LOGIN" then
         CTT_updateChromieTime()
-        --if(not ChromieTimeTrackerDB.HideChatWelcomeMessage) then
-        --    print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
-        --end
         if((ChromieTimeTrackerDB.WelcomeMessageVisibility == nil) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 1) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
             print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
         end
         if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-        --if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
             addonRootFrame:Show()
         else
             addonRootFrame:Hide()
@@ -1043,7 +1025,7 @@ eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
             if(PlayerInfo["Timeline"] ~= currentExpansionName) then
 
                 --Get player position to trigger validation only when near Chromie
-                _zone = C_Map.GetBestMapForUnit("player");
+                local _zone = C_Map.GetBestMapForUnit("player");
 
                 --Check if player zone id is a valid number
                 if type(_zone) ~= "number" then
@@ -1052,7 +1034,7 @@ eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
 
                 if(_zone ~= 0) then
 
-                    playerPosition = C_Map.GetPlayerMapPosition(_zone,"player");
+                    local playerPosition = C_Map.GetPlayerMapPosition(_zone,"player");
                     
                     if playerPosition == nil then
                         --Invalid map position (Inside instance)
@@ -1088,8 +1070,7 @@ end)
 --Funções Principais
 
 function CTT_showMainFrame()
-    if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-    --if (not ChromieTimeTrackerDB.HideMainWindow or ChromieTimeTrackerDB.HideMainWindow == nil) then
+    if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then    
         addonRootFrame:Show()
     else
         addonRootFrame:Hide()
@@ -2209,13 +2190,6 @@ function CTT_setupSlashCommands()
 
             print(L["RunCommandMessage_ResetAll"])
         else
-            --if addonRootFrame:IsShown() then
-            --    ChromieTimeTrackerDB.HideMainWindow = true
-            --    addonRootFrame:Hide()
-            --else
-            --    ChromieTimeTrackerDB.HideMainWindow = false
-            --    addonRootFrame:Show()
-            --end
             if not addonRootFrame:IsShown() then
                 addonRootFrame:Hide()
                 ChromieTimeTrackerDB.MainWindowVisibility = 3

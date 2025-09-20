@@ -155,7 +155,6 @@ function addHelpIcon(_LabelHelp, _TooltipText)
 
     _LabelHelp:SetText("  " .. CreateInlineIcon("glueannouncementpopup-icon-info"))
     _LabelHelp:SetWidth(22)
-    --scrollFrameMainSettings:AddChild(_LabelHelp)
     _LabelHelp:SetCallback("OnEnter", function(widget, event, text)
         GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
 		GameTooltip:SetText(

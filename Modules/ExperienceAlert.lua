@@ -34,7 +34,7 @@ local name, mct = ...
 local L = mct.L 
 
 local playerClass, englishClass = UnitClass("player")
-englishFaction, localizedFaction = UnitFactionGroup("player")
+local englishFaction, localizedFaction = UnitFactionGroup("player")
 
 local PlayerInfo = {}
 PlayerInfo["Name"] = ""
@@ -42,8 +42,8 @@ PlayerInfo["Class"] = englishClass
 PlayerInfo["Faction"] = englishFaction
 PlayerInfo["Timeline"] = ""
 
-zoneInfo = ""
-zoneColor = ""
+local zoneInfo = ""
+local zoneColor = ""
 
 if PlayerInfo["Faction"] == "Horde" then
     	zoneInfo = C_Map.GetMapInfo(85)
