@@ -440,17 +440,43 @@ function CTT_LoadReportEnhancementSettings()
         ChromieTimeTrackerDB.ShowCurrencyOnTooltips = chkShowCurrencyOnTooltips:GetValue()
     end)
     chkShowCurrencyOnTooltips:SetWidth(700)
+
+    local chkShowLegionInvasionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowLegionInvasionsOnReportWindow:SetLabel(L["chkShowLegionInvasionsOnReportWindow"])
+    chkShowLegionInvasionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow = chkShowLegionInvasionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 3) then
+                if ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow then
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Show();
+                    end
+                else
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Hide();
+                    end
+                end
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
+    chkShowLegionInvasionsOnReportWindow:SetWidth(700)
+
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnTooltips)
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowEmissaryMissionsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowLegionInvasionsOnReportWindow)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
     chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
     chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
+    chkShowLegionInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow)
     
 end
 
@@ -1071,6 +1097,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
         ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
         ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow = true;
 
         --Experience Alerts
         ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
