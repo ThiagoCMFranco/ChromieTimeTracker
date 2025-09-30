@@ -28,6 +28,7 @@ Check your Dragonflight and The War Within sumaries.
 
 ## Quality of Life Features
 Track Emissary Quests from Legion and Battle for Azeroth in your Class Hall and War Effort report windows.  
+Track Legion Invasions in the Broken Isles on Legion report window.
 Check your current Covenant Sanctum choice.  
 Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  

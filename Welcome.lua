@@ -106,6 +106,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
         ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
         ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
+        ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow= true;
 
         --Experience Alerts
         ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
