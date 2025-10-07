@@ -80,6 +80,8 @@
 
 		_reprocessa = false
 
+		garrisonUIInvasionsFrame:Hide()
+
 		if(_garrisonID == 3) then
             if (ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow or ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow == nil) then
 				garrisonUIInvasionsFrame:Show()
@@ -104,7 +106,9 @@
 				end
 				invasionsIconButton_1:SetScript("OnEnter", function(self)
                     GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-                    CTT_ShowIconTooltip(GameTooltip, L["Legion_Invasion"] .. leginvasion[2] ..  ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r "  .. math.floor(leginvasion[3]/60) .. " horas " .. math.floor(math.fmod(leginvasion[3],60)) .. " minutos.")
+					
+					CTT_ShowIconTooltip(GameTooltip, L["Legion_Invasion"] .. leginvasion[2] ..  "." .. getRemainingTimeString(leginvasion[3],true))
+                    --CTT_ShowIconTooltip(GameTooltip, L["Legion_Invasion"] .. leginvasion[2] ..  ".\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r "  .. math.floor(leginvasion[3]/60) .. " " .. L["EmissaryMissions_RemainingTime_Hours_P"] .. " " .. math.floor(math.fmod(leginvasion[3],60)) .. " " .. L["EmissaryMissions_RemainingTime_Minutes_P"])
                     GameTooltip:Show()
                 end)
     	        invasionsIconButton_1:SetScript("OnLeave", function(self)
@@ -118,8 +122,6 @@
 				invasionsIconButton_1:Hide()
 				invasionsIconButton_2:Hide()
 			end
-            else
-			garrisonUIInvasionsFrame:Hide()
 		end
     end
 
