@@ -19,6 +19,8 @@
 --along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --
 --------------------------------------------------------------------------------
+	local name, mct = ...
+	local L = mct.L 
 
 function CreateInlineIcon(atlasNameOrTexID, sizeX, sizeY, xOffset, yOffset)
 	sizeX = sizeX or 16;
@@ -173,3 +175,115 @@ function addHelpIcon(_LabelHelp, _TooltipText)
     end)
 
 end
+
+	function getRemainingTimeString(_remainingTime, _noTab)
+		local hours = math.floor(_remainingTime / 60)
+		local days =  math.floor(hours / 24)
+		if(days > 0) then
+			hours = math.fmod(hours,24)
+		end
+		local minutes = math.fmod(_remainingTime,60)
+	
+		local daysText = L["EmissaryMissions_RemainingTime_Days_P"]
+		local hoursText = L["EmissaryMissions_RemainingTime_Hours_P"]
+		local minutesText = L["EmissaryMissions_RemainingTime_Minutes_P"]
+	
+		if(days == 1) then
+			daysText = L["EmissaryMissions_RemainingTime_Days_S"]
+		end
+	
+		if(hours == 1) then
+			hoursText = L["EmissaryMissions_RemainingTime_Hours_S"]
+		end
+	
+		if(minutes == 1) then
+			minutesText = L["EmissaryMissions_RemainingTime_Minutes_S"]
+		end
+		
+		if _noTab then
+			return "\n|cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. days .. daysText .. hours .. hoursText .. math.floor(minutes) .. minutesText
+		else
+			return "\n  |cFFFFC90E" .. L["EmissaryMissions_RemainingTime"] .. "|r " .. days .. daysText .. hours .. hoursText .. math.floor(minutes) .. minutesText
+		end
+	end
+
+AllCompletedQuests = {}
+
+function IsQuestOnCompletedList(_questID)
+    
+
+    if(QuestsCompleted == nil or QuestsCompletedNeedReaload) then
+        QuestsCompleted = C_QuestLog.GetAllCompletedQuestIDs()
+        QuestsCompletedNeedReaload = false
+        
+        for _, quest in ipairs(QuestsCompleted) do
+            table.insert(AllCompletedQuests, quest, true)
+        end
+
+    end
+
+    if AllCompletedQuests[_questID] then
+        return true
+    else
+        return false
+    end
+end
+
+function CheckSumaryWindowIsUnlockedForExpansion(_ExpansionID, _questList, _characterDatabase, _sharedDatabase)
+    if(_ExpansionID == 9) then
+        --Check for Dragonfligh sumary.
+        if(_characterDatabase.IsDragonIslesUnlocked) then
+            return true
+        end
+        if(_sharedDatabase.IsDragonIslesUnlocked and _sharedDatabase.ShareWarbandUnlock) then
+            return true
+        end
+
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+            _characterDatabase.IsDragonIslesUnlocked = true
+            _sharedDatabase.IsDragonIslesUnlocked = true
+            return true
+        end
+
+        local questList = _questList[_ExpansionID]
+        
+        for _, questID in ipairs(questList) do
+            if IsQuestOnCompletedList(questID) then
+                _characterDatabase.IsDragonIslesUnlocked = true
+                _sharedDatabase.IsDragonIslesUnlocked = true
+                return true
+            end
+        end
+
+        return false
+    end
+
+    if(_ExpansionID == 10) then
+        --Check for The War Within sumary.
+        if(_characterDatabase.IsIsleOfDornUnlocked) then
+            return true
+        end
+        if(_sharedDatabase.IsIsleOfDornUnlocked and _sharedDatabase.ShareWarbandUnlock) then
+            return true
+        end
+
+        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+            _characterDatabase.IsIsleOfDornUnlocked = true
+            _sharedDatabase.IsIsleOfDornUnlocked = true
+            return true
+        end
+
+        local questList = _questList[_ExpansionID]
+        
+        for _, questID in ipairs(questList) do
+            if IsQuestOnCompletedList(questID) then
+                _characterDatabase.IsIsleOfDornUnlocked = true
+                _sharedDatabase.IsIsleOfDornUnlocked = true
+                return true
+            end
+        end
+
+        return false
+    end
+end
+

@@ -209,13 +209,13 @@ local function GeneratorFunction(owner, rootDescription)
             isUnlocked[4] = false
         end
     
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+        if(CheckSumaryWindowIsUnlockedForExpansion(9, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             isUnlocked[5] = true
         else
             isUnlocked[5] = false
         end
     
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+        if(CheckSumaryWindowIsUnlockedForExpansion(10, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             isUnlocked[6] = true
         else
             isUnlocked[6] = false
@@ -805,13 +805,13 @@ function CTT_LoadAvancedModeIcons()
                 isUnlocked[4] = false
             end
 
-            if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+            if(CheckSumaryWindowIsUnlockedForExpansion(9, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
                 isUnlocked[5] = true
             else
                 isUnlocked[5] = false
             end
 
-            if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+            if(CheckSumaryWindowIsUnlockedForExpansion(10, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
                 isUnlocked[6] = true
             else
                 isUnlocked[6] = false
@@ -1203,7 +1203,7 @@ end
 else
     if _garrisonID == "DF" then
         local funcionalidade = ""
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
+        if(CheckSumaryWindowIsUnlockedForExpansion(9, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             if(ExpansionLandingPage.Overlay.WarWithinLandingOverlay) then
                 ExpansionLandingPage.Overlay.WarWithinLandingOverlay.CloseButton:Click()
             end
@@ -1215,7 +1215,7 @@ else
         end
     elseif _garrisonID == "TWW" then
         local funcionalidade = ""
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
+        if(CheckSumaryWindowIsUnlockedForExpansion(10, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
                 ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
             end
