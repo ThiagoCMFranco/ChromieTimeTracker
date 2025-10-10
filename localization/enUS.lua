@@ -177,3 +177,5 @@ L["chkShowLegionInvasionsOnReportWindow"] = "Show legion invasions on report win
 L["chkShowBattleForAzerothInvasionsOnReportWindow"] = "Show Alliance strikes in Zandalar and Horde strikes in Kul'Tiraz on report windows"
 L["chkShowNzothInvasionsOnReportWindow"] = "Show N'Zoth invasions on report windows"
 L["chkShowCovenantInvasionsOnReportWindow"] = "Show covenant assaults to The Maw on report windows"
+L["chkShareWarbandUnlock"] = "Enable Warband Unlocked Content"
+L["ShareWarbandUnlockHelp"] = "Enabling this option will make the |cFFC90A67Dragon Isles|r and |cFFFF7F27Khaz Algar|r summaries accessible to all characters on the account if any character in the warband has met the unlock prerequisites."

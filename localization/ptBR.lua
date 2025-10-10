@@ -177,3 +177,5 @@ L["chkShowLegionInvasionsOnReportWindow"] = "Exibir invasões da legião nas jan
 L["chkShowBattleForAzerothInvasionsOnReportWindow"] = "Exibir ataques da Aliança em Zandalar e da Horda em Kul'Tiraz nas janelas de resumo"
 L["chkShowNzothInvasionsOnReportWindow"] = "Exibir invasões de N'Zoth nas janelas de resumo"
 L["chkShowCovenantInvasionsOnReportWindow"] = "Exibir ataques dos Pactos à Gorja nas janelas de resumo"
+L["chkShareWarbandUnlock"] = "Habilitar conteúdo desbloqueado pelo bando de guerra"
+L["ShareWarbandUnlockHelp"] = "Habilitar esta opção fará com que os resumos de |cFFC90A67Ilhas do Dragão|r e |cFFFF7F27Khaz Algar|r fiquem acessíveis para todos os personagens da conta se qualquer personagem do bando de guerra tiver cumprido os pré-requisitos de desbloqueio."

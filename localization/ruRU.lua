@@ -177,3 +177,5 @@ L["chkShowLegionInvasionsOnReportWindow"] = "Показывать вторжен
 L["chkShowBattleForAzerothInvasionsOnReportWindow"] = "Показывать вторжения Альянса в Зандаларе и вторжения Орды в Кул-Тирасе в окнах отчетов"
 L["chkShowNzothInvasionsOnReportWindow"] = "Показывать вторжения Н'Зота в окнах отчетов"
 L["chkShowCovenantInvasionsOnReportWindow"] = "Показывать нападения ковенантов на Утробу в окнах отчетов"
+L["chkShareWarbandUnlock"] = "Enable Warband Unlocked Content"
+L["ShareWarbandUnlockHelp"] = "Enabling this option will make the |cFFC90A67Dragon Isles|r and |cFFFF7F27Khaz Algar|r summaries accessible to all characters on the account if any character in the warband has met the unlock prerequisites."
