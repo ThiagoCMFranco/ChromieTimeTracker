@@ -36,6 +36,7 @@ local L = mct.L
 
 --Load constants from Data.lua
 local C_ExpansionColors = mct.C_ExpansionColors
+local C_RemixColors = mct.C_RemixColors
 local C_ExpansionGarrisonID = mct.C_ExpansionGarrisonID
 local C_ExpansionGarrisonMiddleClickOptions = mct.C_ExpansionGarrisonMiddleClickOptions
 local C_ExpansionSummaries = mct.C_ExpansionSummaries
@@ -63,7 +64,6 @@ PlayerInfo["Faction"] = englishFaction
 PlayerInfo["Timeline"] = ""
 
 CurrentGarrisonID = 0
-
 
 local isGarrisonUIFirstLoad_ResourcesWidget = true
 local isGarrisonUIFirstLoad_EmissaryMissionsWidget = true
@@ -469,6 +469,12 @@ function CTT_getChromieTime()
             end
         end
     end
+
+    local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+    if _LegionRemix then
+        currentExpansionName = "|c" .. C_RemixColors["Legion"] .. _LegionRemix.name .. "|r"
+    end
+
     return currentExpansionName
 end
 
@@ -1002,20 +1008,22 @@ eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
             ChromieTimeTrackerMinimapButton:Register("ChromieTimeTracker", CTT_miniButton, ChromieTimeTrackerSharedDB.minimap)
         end
     elseif event == "PLAYER_LOGIN" then
-        CTT_updateChromieTime()
-        if((ChromieTimeTrackerDB.WelcomeMessageVisibility == nil) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 1) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-            print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
-        end
-        if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-            addonRootFrame:Show()
-        else
-            addonRootFrame:Hide()
-        end
-        if(not ChromieTimeTrackerDB.HideToastWindow) then
-            if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel']) or (ChromieTimeTrackerDB.ToastVisibility == nil)) then
-                ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
+        C_Timer.After(0.1,function()
+            CTT_updateChromieTime()
+            if((ChromieTimeTrackerDB.WelcomeMessageVisibility == nil) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 1) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
+                print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
             end
-        end
+            if (ChromieTimeTrackerDB.MainWindowVisibility == 1 or ChromieTimeTrackerDB.MainWindowVisibility == nil or (ChromieTimeTrackerDB.MainWindowVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
+                addonRootFrame:Show()
+            else
+                addonRootFrame:Hide()
+            end
+            if(not ChromieTimeTrackerDB.HideToastWindow) then
+                if((ChromieTimeTrackerDB.ToastVisibility == 1) or (ChromieTimeTrackerDB.ToastVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel']) or (ChromieTimeTrackerDB.ToastVisibility == nil)) then
+                    ChromieTimeTrackerUtil:ShowToast(string.gsub(L["Timeline"], ":", ""),currentExpansionName,1)
+                end
+            end
+        end)
     end
     if event == "QUEST_LOG_UPDATE" then
         CTT_updateChromieTime()
@@ -1129,6 +1137,13 @@ local function CTT_ShowReportMissionExpirationTime(b, item)
 end
 
 function drawGarrisonReportCurrencyWidget(_garrisonID)
+
+    local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+
+    if _LegionRemix then
+        return;
+    end
+
     if(isGarrisonUIFirstLoad_ResourcesWidget) then
         isGarrisonUIFirstLoad_ResourcesWidget = false
 
@@ -1626,6 +1641,13 @@ end
 local emissaryMissionRewardLoadedOk = false
 
 function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
+
+    local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+
+    if _LegionRemix then
+        return;
+    end
+
     if(isGarrisonUIFirstLoad_EmissaryMissionsWidget) then
         isGarrisonUIFirstLoad_EmissaryMissionsWidget = false
 
@@ -2206,7 +2228,14 @@ function CTT_setupSlashCommands()
 --Correção de problemas da interface nativa da Blizzard. Correção baseada em códigos de outros addons que enfrentaram os mesmos problemas. - Início
 if (GARRISON_LANDING_COVIEW_PATCH_VERSION or 0) < 3 then
 	GARRISON_LANDING_COVIEW_PATCH_VERSION = 3
+
 	hooksecurefunc("ShowGarrisonLandingPage", function(_LandingPageId)
+
+        local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+        if _LegionRemix then
+            return;
+        end
+
 		if GARRISON_LANDING_COVIEW_PATCH_VERSION ~= 3 then
 			return
 		end

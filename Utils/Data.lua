@@ -22,6 +22,7 @@
 
 local _, mct = ...
 mct.C_ExpansionColors = {}
+mct.C_RemixColors = {}
 mct.C_ExpansionGarrisonID = {}
 mct.C_ExpansionGarrisonMiddleClickOptions = {}
 mct.C_ExpansionSummaries = {}
@@ -51,6 +52,11 @@ C_ExpansionColors[8] = "FF056AC4" --BfA
 C_ExpansionColors[9] = "FF888888" --SL
 C_ExpansionColors[10] = "FFC90A67" --DF
 C_ExpansionColors[11] = "FFFF7F27" --TWW
+
+local C_RemixColors = mct.C_RemixColors
+
+C_RemixColors["MoP"] = "FF00FF98" --MoP
+C_RemixColors["Legion"] = "FF00FF00" --Legion
 
 
 local C_ExpansionGarrisonID = mct.C_ExpansionGarrisonID
