@@ -194,6 +194,9 @@ mct.C_CurrencyId =
     ["Order_Resources"] = 1220,
     ["War_Resources"] = 1560,
     ["Reservoir_Anima"] = 1813,
+    ["Bronze"] = 3252,
+    ["Infinite_Knowledge"] = 3292,
+    ["Infinite_Power"] = 3268,
 }
 
 C_SpecialTrackPinCoordinates = 
@@ -233,4 +236,27 @@ C_SpecialTrackPinCoordinates =
 C_SUMARY_UNLOCK_QUEST_IDS = {
     [9] = {76326, 72973, 65806, 65849, 69911, 70122, 65452, 66114},
     [10] = {78536, 84967, 92031, 85005, 83096, 80082, 78671, 78393},
+}
+
+C_WORLD_BOSSES_QUEST_IDS = {
+    ["LEGION"] = {43985, 42779, 42269, 42270, 43513, 43512, 43192, 43448, 44287, 43193, 42819, 91790, 91791, 91789},
+}
+
+C_WORLD_BOSSES_QUESTS_DATA = {
+    [43985] = {uiMapID = 650, position = {x = 00, y = 00}},
+    [42779] = {uiMapID = 641, position = {x = 00, y = 00}},
+    [42269] = {uiMapID = 634, position = {x = 00, y = 00}},
+    [42270] = {uiMapID = 634, position = {x = 00, y = 00}},
+    [43513] = {uiMapID = 680, position = {x = 00, y = 00}},
+    [43512] = {uiMapID = 680, position = {x = 00, y = 00}},
+    [43192] = {uiMapID = 630, position = {x = 00, y = 00}},
+    [43448] = {uiMapID = 650, position = {x = 00, y = 00}},
+    [44287] = {uiMapID = 630, position = {x = 00, y = 00}},
+    [43193] = {uiMapID = 630, position = {x = 00, y = 00}},
+    [42819] = {uiMapID = 641, position = {x = 00, y = 00}},
+    [91790] = {uiMapID = 646, position = {x = 00, y = 00}},
+    [91791] = {uiMapID = 646, position = {x = 00, y = 00}},
+    [91789] = {uiMapID = 646, position = {x = 00, y = 00}},
+    [91792] = {uiMapID = 646, position = {x = 89.6, y = 33.0}},
+
 }

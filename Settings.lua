@@ -357,6 +357,158 @@ function CTT_LoadExperienceSettings()
     
 end
 
+function CTT_LoadRemixSettings()
+treeW:ReleaseChildren()
+
+    scrollContainerRemixSettings = AceGUI:Create("SimpleGroup")
+    scrollContainerRemixSettings:SetFullWidth(true)
+    scrollContainerRemixSettings:SetFullHeight(true)
+    scrollContainerRemixSettings:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerRemixSettings)
+    
+    scrollFrameRemixSettings = AceGUI:Create("ScrollFrame")
+    scrollFrameRemixSettings:SetLayout("Flow")
+    scrollContainerRemixSettings:AddChild(scrollFrameRemixSettings)
+
+    local chkShowHeroicWorldTier = AceGUI:Create("CheckBox")
+    chkShowHeroicWorldTier:SetLabel(L["chkShowHeroicWorldTier"])
+    chkShowHeroicWorldTier:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowHeroicWorldTier = chkShowHeroicWorldTier:GetValue()
+        CTT_updateChromieTime()
+    end)
+    chkShowHeroicWorldTier:SetWidth(700)
+
+    local chkHideHeroicWorldTierButton = AceGUI:Create("CheckBox")
+    chkHideHeroicWorldTierButton:SetLabel(L["chkHideHeroicWorldTierButton"])
+    chkHideHeroicWorldTierButton:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.HideHeroicWorldTierButton = chkHideHeroicWorldTierButton:GetValue()
+        CTT_updateChromieTime()
+    end)
+    chkHideHeroicWorldTierButton:SetWidth(700)
+
+    local lblRemixCUrrencyTitle = AceGUI:Create("Label")
+    lblRemixCUrrencyTitle:SetText("|cFFD6AE12" .. L["Remix_Legion_Currency"] .. "|r")
+    SetACE3WidgetFontSize(lblRemixCUrrencyTitle, 12)
+    lblRemixCUrrencyTitle:SetWidth(580)
+    
+
+    local chkShowBronze = AceGUI:Create("CheckBox")
+    chkShowBronze:SetLabel(L["chkShowBronze"])
+    chkShowBronze:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowBronze = chkShowBronze:GetValue()
+    end)
+    chkShowBronze:SetWidth(700)
+
+    local chkShowInfiniteKnowledge = AceGUI:Create("CheckBox")
+    chkShowInfiniteKnowledge:SetLabel(L["chkShowInfiniteKnowledge"])
+    chkShowInfiniteKnowledge:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowInfiniteKnowledge = chkShowInfiniteKnowledge:GetValue()
+    end)
+    chkShowInfiniteKnowledge:SetWidth(700)
+
+    local chkShowInfinitePower = AceGUI:Create("CheckBox")
+    chkShowInfinitePower:SetLabel(L["chkShowInfinitePower"])
+    chkShowInfinitePower:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowInfinitePower = chkShowInfinitePower:GetValue()
+    end)
+    chkShowInfinitePower:SetWidth(700)
+
+    local lblRemixBonusTitle = AceGUI:Create("Label")
+    lblRemixBonusTitle:SetText("|cFFD6AE12" .. L["Remix_Legion_Bonus"] .. "|r")
+    SetACE3WidgetFontSize(lblRemixBonusTitle, 12)
+    lblRemixBonusTitle:SetWidth(580)
+    
+
+    local chkShowVersatility = AceGUI:Create("CheckBox")
+    chkShowVersatility:SetLabel(L["chkShowVersatility"])
+    chkShowVersatility:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowVersatilityBonus = chkShowVersatility:GetValue()
+    end)
+    chkShowVersatility:SetWidth(700)
+
+    local chkShowExperience = AceGUI:Create("CheckBox")
+    chkShowExperience:SetLabel(L["chkShowExperience"])
+    chkShowExperience:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowExperienceBonus = chkShowExperience:GetValue()
+    end)
+    chkShowExperience:SetWidth(700)
+
+    local chkShowLegionInvasionTracker = AceGUI:Create("CheckBox")
+    chkShowLegionInvasionTracker:SetLabel(L["chkShowLegionInvasionTracker"])
+    chkShowLegionInvasionTracker:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowLegionInvasionTracker = chkShowLegionInvasionTracker:GetValue()
+    end)
+    chkShowLegionInvasionTracker:SetWidth(700)
+
+    local chkShowLegionEmissaryMissions = AceGUI:Create("CheckBox")
+    chkShowLegionEmissaryMissions:SetLabel(L["chkShowLegionEmissaryMissions"])
+    chkShowLegionEmissaryMissions:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowLegionEmissaryMissions = chkShowLegionEmissaryMissions:GetValue()
+    end)
+    chkShowLegionEmissaryMissions:SetWidth(700)
+
+    local chkShowEmissaryMissionsRewards = AceGUI:Create("CheckBox")
+    chkShowEmissaryMissionsRewards:SetLabel(L["chkShowEmissaryMissionsRewards"])
+    chkShowEmissaryMissionsRewards:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowEmissaryMissionsRewards = chkShowEmissaryMissionsRewards:GetValue()
+    end)
+    chkShowEmissaryMissionsRewards:SetWidth(700)
+
+    local chkShowWorldBosses = AceGUI:Create("CheckBox")
+    chkShowWorldBosses:SetLabel(L["chkShowWorldBosses"])
+    chkShowWorldBosses:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowWorldBosses = chkShowWorldBosses:GetValue()
+    end)
+    chkShowWorldBosses:SetWidth(700)
+
+    scrollFrameRemixSettings:AddChild(chkShowHeroicWorldTier)
+    scrollFrameRemixSettings:AddChild(chkHideHeroicWorldTierButton)
+    scrollFrameRemixSettings:AddChild(chkShowLegionInvasionTracker)
+    scrollFrameRemixSettings:AddChild(chkShowLegionEmissaryMissions)
+    scrollFrameRemixSettings:AddChild(chkShowEmissaryMissionsRewards)
+    scrollFrameRemixSettings:AddChild(chkShowWorldBosses)
+    
+
+    local headingRemix1 = AceGUI:Create("Heading")
+    headingRemix1:SetRelativeWidth(1)
+    scrollFrameRemixSettings:AddChild(headingRemix1)
+
+    scrollFrameRemixSettings:AddChild(lblRemixCUrrencyTitle)
+
+    scrollFrameRemixSettings:AddChild(chkShowBronze)
+    scrollFrameRemixSettings:AddChild(chkShowInfiniteKnowledge)
+    scrollFrameRemixSettings:AddChild(chkShowInfinitePower)
+
+    local headingRemix2 = AceGUI:Create("Heading")
+    headingRemix2:SetRelativeWidth(1)
+    scrollFrameRemixSettings:AddChild(headingRemix2)
+
+    scrollFrameRemixSettings:AddChild(lblRemixBonusTitle)
+
+    scrollFrameRemixSettings:AddChild(chkShowVersatility)
+    scrollFrameRemixSettings:AddChild(chkShowExperience)
+
+    local headingRemix3 = AceGUI:Create("Heading")
+    headingRemix3:SetRelativeWidth(1)
+    scrollFrameRemixSettings:AddChild(headingRemix3)
+
+    
+    
+    chkShowHeroicWorldTier:SetValue(ChromieTimeTrackerDB.ShowHeroicWorldTier)
+    chkHideHeroicWorldTierButton:SetValue(ChromieTimeTrackerDB.HideHeroicWorldTierButton)
+    chkShowBronze:SetValue(ChromieTimeTrackerDB.ShowBronze)
+    chkShowInfiniteKnowledge:SetValue(ChromieTimeTrackerDB.ShowInfiniteKnowledge)
+    chkShowInfinitePower:SetValue(ChromieTimeTrackerDB.ShowInfinitePower)
+    chkShowVersatility:SetValue(ChromieTimeTrackerDB.ShowVersatilityBonus)
+    chkShowExperience:SetValue(ChromieTimeTrackerDB.ShowExperienceBonus)
+    chkShowLegionInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionTracker)
+    chkShowLegionEmissaryMissions:SetValue(ChromieTimeTrackerDB.ShowLegionEmissaryMissions)
+    chkShowEmissaryMissionsRewards:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
+    chkShowWorldBosses:SetValue(ChromieTimeTrackerDB.ShowWorldBosses)
+
+end
+
 function CTT_LoadReportEnhancementSettings()
     treeW:ReleaseChildren()
 
@@ -1199,6 +1351,11 @@ tree = {
         text = L["Settings_Menu_Experience"],
         icon = "Interface\\Icons\\inv_misc_gear_01",
     },
+    {
+        value = "Rmx",
+        text = L["Settings_Menu_Remix"],
+        icon = "Interface\\Icons\\item_timemote_icon",
+    },
     { 
         value = "C", 
         text = L["Settings_Menu_Credit"],
@@ -1234,6 +1391,8 @@ tree = {
         CTT_LoadReportEnhancementSettings()
     elseif group == "Exp" then
         CTT_LoadExperienceSettings()
+    elseif group == "Rmx" then
+        CTT_LoadRemixSettings()
     else
         print(group)
     end
