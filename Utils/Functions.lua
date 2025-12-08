@@ -86,9 +86,9 @@ function getCurrencyById(_currencyId, _showCurrencyName)
 
     local iconString = CreateInlineIcon(_currency.iconFileID)
     if(_showCurrencyName) then
-        return _currency.name .. ": |cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
+        return _currency.name .. ": |cFFFFFFFF" .. formatNumberWithThousandsSeparator(_currency.quantity) .. "|r " .. iconString .. warband
     else
-        return "|cFFFFFFFF" .. _currency.quantity .. "|r " .. iconString .. warband
+        return "|cFFFFFFFF" .. formatNumberWithThousandsSeparator(_currency.quantity) .. "|r " .. iconString .. warband
     end
 end
 
@@ -287,3 +287,229 @@ function CheckSumaryWindowIsUnlockedForExpansion(_ExpansionID, _questList, _char
     end
 end
 
+function formatNumberWithThousandsSeparator(n)
+    local s = tostring(math.floor(n)) -- Convert to string and ensure integer part
+    local formatted = ""
+    local len = #s
+
+    for i = 1, len do
+        local char = s:sub(i, i)
+        formatted = formatted .. char
+        if (len - i) % 3 == 0 and i ~= len then
+            formatted = formatted .. "."
+        end
+    end
+    return formatted
+end
+
+function GetInfinitePowerBonuses(_Atribute)
+
+    local spellID = 1232454 -- Infinite Power
+    local atributeValue = 0
+
+    -- Verifica se aura ativa no jogador
+    local aura = C_UnitAuras.GetPlayerAuraBySpellID(spellID) 
+    if not aura then
+        return atributeValue
+    end
+
+    if(_Atribute == "Versatility") then        
+        return aura.points[5]
+    end  
+    if(_Atribute == "Experience") then
+        return aura.points[10]
+    end
+
+    return "Unset"
+end
+
+function generateBountyList(mapID)
+
+        local bountyList = C_QuestLog.GetBountiesForMapID(mapID)
+        local _bountyList = {}
+
+        if bountyList then
+            for _, bounty in ipairs(bountyList) do
+                local info = {}
+                local obj = C_QuestLog.GetQuestObjectives(bounty.questID)
+                
+                info.text =  C_QuestLog.GetTitleForQuestID(bounty.questID)
+                info.objective = obj[1].text
+                info.complete = C_QuestLog.IsComplete(bounty.questID)
+                info.icon = bounty.icon
+                info.value = bounty.questID
+                info.checked = info.value == value
+                info.remainingTimeMinutes = C_TaskQuest.GetQuestTimeLeftMinutes(bounty.questID)
+                local numQuestRewards = GetNumQuestLogRewards(bounty.questID)
+                local name, texture, numItems, currencyID
+                local hasCurrencyReward = false
+                local hasMoneyReward = false
+
+                local money = GetQuestLogRewardMoney(bounty.questID)
+                
+                if ( money > 0 ) then
+                        local gold = floor(money / (10000))
+                        info.rewardTexture = "Coin-Gold"
+                        info.rewardName = ""
+                        info.rewardNumItems = gold
+                        hasMoneyReward = true  
+                end
+
+                if not ( money > 0 ) then
+                for _, currencyInfo in ipairs(C_QuestLog.GetQuestRewardCurrencies(bounty.questID)) do
+                        info.rewardName = currencyInfo.name
+                        info.rewardTexture = currencyInfo.texture
+                        info.rewardNumItems = currencyInfo.totalRewardAmount    
+                        info.currencyID = currencyInfo.currencyID
+                        hasCurrencyReward = true              
+                end
+                end
+                
+                if numQuestRewards > 0 then
+                    info.rewardName, info.rewardTexture, info.rewardNumItems, info.rewardQuality, info.rewardIsUsable, info.rewardItemID = GetQuestLogRewardInfo(1, bounty.questID);
+                    local rewardList = {}
+                    
+                    for i = 1, numQuestRewards, 1 do
+                        local rewardInfo = {}
+                        rewardInfo.rewardName, rewardInfo.rewardTexture, rewardInfo.rewardNumItems, rewardInfo.rewardQuality, rewardInfo.rewardIsUsable, rewardInfo.rewardItemID = GetQuestLogRewardInfo(i, bounty.questID);
+                        table.insert(rewardList, rewardInfo)
+                    end
+                    
+                    if(hasMoneyReward) then
+                        local rewardGold = {}
+                        local rewardSilver = {}
+                        
+                        local gold = floor(money / (10000))
+                        rewardGold.rewardTexture = "Coin-Gold"
+                        rewardGold.rewardName = ""
+                        rewardGold.rewardNumItems = gold
+                        rewardGold.rewardType = "Gold"
+
+                        table.insert(rewardList, rewardGold)
+
+                        local silver = floor((money - (gold)*10000) / (100))
+                        rewardSilver.rewardTexture = "Coin-Silver"
+                        rewardSilver.rewardName = ""
+                        rewardSilver.rewardNumItems = silver
+                        rewardSilver.rewardType = "Silver"
+
+                        table.insert(rewardList, rewardSilver)
+                    end
+
+                    info.rewardList = rewardList
+                    
+                elseif hasMoneyReward then
+                    --already loaded, do not overwrite
+                elseif hasCurrencyReward then
+                    --already loaded, do not overwrite
+                else
+                    info.rewardName = ""
+                    info.rewardTexture = ""
+                    info.rewardNumItems = ""
+                    emissaryMissionRewardLoadedOk = false
+                end
+                table.insert(_bountyList,info)
+            end
+
+            if (table.getn(_bountyList) == 2) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
+            elseif (table.getn(_bountyList) == 1) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0))
+            elseif (table.getn(_bountyList) == 0) then
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0)) -- "Missão indisponível", "Retorne amanhã para uma nova missão"
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0)) -- "Missão indisponível", "Retorne em dois dias para uma nova missão"
+                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_3_Day"], 0)) -- "Missão indisponível", "Retorne em três dias para uma nova missão"
+            end
+
+        end
+
+        return _bountyList
+end
+
+
+function listEmissaryMissions(_showRewards)
+
+    local _bountyList = generateBountyList(627)
+
+    local emissaryMissionDetails = ""
+    local skip = false
+    local count = 0 
+
+    for _id, _emissaryMission in pairs(_bountyList) do 
+                
+                count = count + 1
+
+                if(_emissaryMission.complete) then
+                    emissaryMissionDetails = emissaryMissionDetails .. CreateInlineIcon("worldquest-tracker-checkmark")   
+                end
+
+                if(_emissaryMission.complete or _emissaryMission.text == L["EmissaryMissions_Inactive"]) then
+                    
+                else
+                    if(_emissaryMission.remainingTimeMinutes < 360) then
+                        emissaryMissionDetails = emissaryMissionDetails .. CreateInlineIcon("questlog-questtypeicon-clockorange")  
+                    end
+                end
+
+                if(count > 1) then
+                    emissaryMissionDetails = emissaryMissionDetails .. "\n\n"
+                end
+
+                if(_emissaryMission.remainingTimeMinutes == 0) then
+                    emissaryMissionDetails = emissaryMissionDetails .. _emissaryMission.text .. "\n" .. _emissaryMission.objective
+                    skip = true
+                end
+
+                if not skip then
+                if(_emissaryMission.text ~= nil and _emissaryMission.objective ~= nil and _emissaryMission.rewardName ~= nil and _emissaryMission.rewardNumItems ~= nil and _emissaryMission.rewardTexture ~= nil and _emissaryMission.remainingTimeMinutes ~= nil) then
+                    if(days == 0) then
+                        emissaryMissionDetails = emissaryMissionDetails .. _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. getRemainingTimeString(_emissaryMission.remainingTimeMinutes,true)
+                    else
+                        emissaryMissionDetails = emissaryMissionDetails .. _emissaryMission.text .. "\n|cFFFFC90E" .. L["EmissaryMissions_Objective"] .. "|r " .. _emissaryMission.objective .. getRemainingTimeString(_emissaryMission.remainingTimeMinutes,true)
+
+                        if (_showRewards) then
+                            emissaryMissionDetails = emissaryMissionDetails .. "\n|cFFFFC90E" .. L["EmissaryMissions_Reward"] .. "|r"
+                            if _emissaryMission.rewardList then
+                                for id, _emissaryMissionRewards in pairs(_emissaryMission.rewardList) do
+                                    if(_emissaryMissionRewards.rewardName)then
+                                        if(_emissaryMissionRewards.rewardType ~= "Silver") then
+                                            emissaryMissionDetails = emissaryMissionDetails .. "\n" .. "   " 
+                                        end
+                                        emissaryMissionDetails = emissaryMissionDetails .. CreateInlineIcon(_emissaryMissionRewards.rewardTexture) .. " " .. _emissaryMissionRewards.rewardNumItems .. " " .. _emissaryMissionRewards.rewardName
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                end
+
+            end
+                            
+            return L["EmissaryMissions_Title"] .. "|cFFFFFFFF" .. "\n" .. emissaryMissionDetails .. "|r"
+end
+
+function CTT_VerifyQuestCompleted(p_questID)
+
+    local isCompleted = false
+    local title = nil
+    local isAvailable = false
+    local zone = {}
+    if type(tonumber(p_questID)) == "number" then
+        isCompleted = C_QuestLog.IsQuestFlaggedCompleted(p_questID)
+	    title = C_QuestLog.GetTitleForQuestID(p_questID)
+        isAvailable = C_TaskQuest.IsActive(p_questID)
+        zone = C_Map.GetMapInfo(C_WORLD_BOSSES_QUESTS_DATA[p_questID].uiMapID)
+    else
+        isCompleted = false
+        title = ""
+        isAvailable = false
+        zone = {}
+    end
+
+    
+
+    return {title,isCompleted,isAvailable,zone.name}
+
+end

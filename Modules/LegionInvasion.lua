@@ -46,6 +46,7 @@
             end
         end
 		return {"", "", 0}
+		--return {zoneIDsLEGION[1], zoneNamesLEGION[1], 600/60}
     end
 
 	
@@ -54,6 +55,13 @@
 	_reprocessa = false
 
     function drawGarrisonInvasionWidget(_garrisonID)
+
+		--Tratamento para não exibir o componente durante o evento Remix: Legion pois a funcionalidade é indisponível durante o evento.
+		local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+    	if _LegionRemix then
+			return
+		end
+
 	    if(isGarrisonUIFirstLoad_InvasionWidget) then
 	        isGarrisonUIFirstLoad_InvasionWidget = false
 			garrisonUIInvasionsFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIInvasionsFrame", GarrisonLandingPageReport, "")
@@ -128,3 +136,15 @@
     hooksecurefunc("ShowGarrisonLandingPage", function(_LandingPageId)
 		drawGarrisonInvasionWidget(_LandingPageId)
 	end)
+
+	function LegionInvasionTooltipLine(_showIcon)
+		local leginvasion = FindInvasionLegion()
+		if leginvasion[2] ~= "" then
+			if(_showIcon) then
+				return CreateInlineIcon(InvasionIcons["Legion"],18,18) .. L["Legion_Invasion"] .. leginvasion[2] ..  ".|cFFFFFFFF" .. getRemainingTimeString(leginvasion[3],true) .. "|r"
+			else
+				return L["Legion_Invasion"] .. leginvasion[2] ..  ".|cFFFFFFFF" .. getRemainingTimeString(leginvasion[3],true) .. "|r"
+			end
+		end
+		return ""
+	end

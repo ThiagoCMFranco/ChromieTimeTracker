@@ -471,8 +471,24 @@ function CTT_getChromieTime()
     end
 
     local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+    local _HeroicWorldTier = C_UnitAuras.GetPlayerAuraBySpellID(1238465)
+
     if _LegionRemix then
         currentExpansionName = "|c" .. C_RemixColors["Legion"] .. _LegionRemix.name .. "|r"
+        if _HeroicWorldTier and (ChromieTimeTrackerDB.ShowHeroicWorldTier) then
+            if(ChromieTimeTrackerDB.InlineIconPosition == 'RIGHT') then
+                currentExpansionName =  currentExpansionName .. " " .. CreateInlineIcon(7266188,15,15)
+            else
+                currentExpansionName = CreateInlineIcon(7266188,15,15) .. " " .. currentExpansionName
+            end
+        end
+
+        if ChromieTimeTrackerDB.HideHeroicWorldTierButton then
+            UIWidgetBelowMinimapContainerFrame:Hide()
+        else
+            UIWidgetBelowMinimapContainerFrame:Show()
+        end
+
     end
 
     return currentExpansionName
@@ -1295,7 +1311,7 @@ function CTT_ShowToolTip(tooltip, mode)
     end
 
     local TimelineCurrency = ""
-    if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0) then
+    if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0 or C_ExpansionGarrisonID[CurrentGarrisonID] == nil) then
         if C_ExpansionGarrisonID[CurrentGarrisonID] == 2 then
             TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(C_CurrencyId["Garrison_Oil"], true)
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 3 then
@@ -1306,6 +1322,64 @@ function CTT_ShowToolTip(tooltip, mode)
             TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Reservoir_Anima"], true)
         end
     else
+        --Exibição de dados específicos do Legion Remix
+        local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
+        local _LegionRemixExtraData = ""
+        if _LegionRemix then
+            if(ChromieTimeTrackerDB.ShowBronze or ChromieTimeTrackerDB.ShowInfiniteKnowledge or ChromieTimeTrackerDB.ShowInfinitePower) then
+                _LegionRemixExtraData = "\n\nMoedas"
+            end
+            if(ChromieTimeTrackerDB.ShowBronze) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. getCurrencyById(C_CurrencyId["Bronze"], true)
+            end
+            if(ChromieTimeTrackerDB.ShowInfiniteKnowledge) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. getCurrencyById(C_CurrencyId["Infinite_Knowledge"], true)
+            end
+            if(ChromieTimeTrackerDB.ShowInfinitePower) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. getCurrencyById(C_CurrencyId["Infinite_Power"], true)
+            end
+
+            if (ChromieTimeTrackerDB.ShowVersatilityBonus or ChromieTimeTrackerDB.ShowExperienceBonus) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\nBônus"    
+            end
+            if (ChromieTimeTrackerDB.ShowVersatilityBonus) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\nVersatilidade: |cFFFFFFFF+" .. GetInfinitePowerBonuses("Versatility") .. "%|r"
+            end
+            if (ChromieTimeTrackerDB.ShowExperienceBonus) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\nBônus de Experiência: |cFFFFFFFF+" .. GetInfinitePowerBonuses("Experience") .. "%|r"
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionInvasionTracker) then
+                local LegionInvasionLine = LegionInvasionTooltipLine(true)
+
+                if(LegionInvasionLine ~= "") then
+                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. LegionInvasionLine
+                end
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionEmissaryMissions) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. listEmissaryMissions(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
+            end
+
+            if (ChromieTimeTrackerDB.ShowWorldBosses) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. "Chefes Mundiais"
+                
+                for _, TaskQuestId in pairs(C_WORLD_BOSSES_QUEST_IDS["LEGION"]) do
+                    myDebugVar = CTT_VerifyQuestCompleted(TaskQuestId)
+                    if(myDebugVar[3]) then
+                        if(myDebugVar[2]) then
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFF00FF00" .. CreateInlineIcon("vignettekillboss", 20, 20) .. myDebugVar[1] .. "|r" .. " - " .. myDebugVar[4]
+                        else
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFFFFFFFF" .. CreateInlineIcon("vignettekillboss", 20, 20) .. myDebugVar[1] .. "|r" .. " - " .. myDebugVar[4]
+                        end
+                    end
+                end
+            end
+
+            TimelineCurrency = TimelineCurrency .. _LegionRemixExtraData
+
+        end
+
         --Adicionar funcionalidade de exibir recursos específicos quando não estiver em nenhuma linha temporal.
     end
 
@@ -1793,70 +1867,7 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
         local bountyList = C_QuestLog.GetBountiesForMapID(mapID)
         local _bountyList = {}
 
-        if bountyList then
-            for _, bounty in ipairs(bountyList) do
-                local info = {}
-                local obj = C_QuestLog.GetQuestObjectives(bounty.questID)
-                
-                info.text =  C_QuestLog.GetTitleForQuestID(bounty.questID)
-                info.objective = obj[1].text
-                info.complete = C_QuestLog.IsComplete(bounty.questID)
-                info.icon = bounty.icon
-                info.value = bounty.questID
-                info.checked = info.value == value
-                info.remainingTimeMinutes = C_TaskQuest.GetQuestTimeLeftMinutes(bounty.questID)
-                local numQuestRewards = GetNumQuestLogRewards(bounty.questID)
-                local name, texture, numItems, currencyID
-                local hasCurrencyReward = false
-                local hasMoneyReward = false
-
-                local money = GetQuestLogRewardMoney(bounty.questID)
-                
-                if ( money > 0 ) then
-                        local gold = floor(money / (10000))
-                        info.rewardTexture = "Coin-Gold"
-                        info.rewardName = ""
-                        info.rewardNumItems = gold
-                        hasMoneyReward = true  
-                end
-
-                if not ( money > 0 ) then
-                for _, currencyInfo in ipairs(C_QuestLog.GetQuestRewardCurrencies(bounty.questID)) do
-                        info.rewardName = currencyInfo.name
-                        info.rewardTexture = currencyInfo.texture
-                        info.rewardNumItems = currencyInfo.totalRewardAmount    
-                        info.currencyID = currencyInfo.currencyID
-                        hasCurrencyReward = true              
-                end
-                end
-                
-                if numQuestRewards > 0 then
-                    info.rewardName, info.rewardTexture, info.rewardNumItems, info.rewardQuality, info.rewardIsUsable, info.rewardItemID = GetQuestLogRewardInfo(1, bounty.questID);
-                elseif hasMoneyReward then
-                    --already loaded, do not overwrite
-                elseif hasCurrencyReward then
-                    --already loaded, do not overwrite
-                else
-                    info.rewardName = ""
-                    info.rewardTexture = ""
-                    info.rewardNumItems = ""
-                    emissaryMissionRewardLoadedOk = false
-                end
-                table.insert(_bountyList,info)
-            end
-
-            if (table.getn(_bountyList) == 2) then
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
-            elseif (table.getn(_bountyList) == 1) then
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0))
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0))
-            elseif (table.getn(_bountyList) == 0) then
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_1_Day"], 0)) -- "Missão indisponível", "Retorne amanhã para uma nova missão"
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_2_Day"], 0)) -- "Missão indisponível", "Retorne em dois dias para uma nova missão"
-                table.insert(_bountyList,addDummyEmissaryQuest(L["EmissaryMissions_Inactive"], L["EmissaryMissions_RespawnTime_3_Day"], 0)) -- "Missão indisponível", "Retorne em três dias para uma nova missão"
-            end
-
-        end
+        _bountyList = generateBountyList(mapID)
 
             for _id, _emissaryMission in pairs(_bountyList) do 
                 if _id == 1 then          
