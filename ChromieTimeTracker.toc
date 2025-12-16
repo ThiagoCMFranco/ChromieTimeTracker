@@ -15,7 +15,7 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 2.9.0
+## Version: 2.9.1
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables: ChromieTimeTrackerSharedDB
