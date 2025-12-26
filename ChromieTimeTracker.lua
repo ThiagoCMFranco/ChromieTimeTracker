@@ -1323,6 +1323,11 @@ function CTT_ShowToolTip(tooltip, mode)
         end
     else
         --Exibição de dados específicos do Legion Remix
+        
+        --Melhorar este bloco para versão 2.9.3:
+            -- Extrair blocos em funções para LegionUtils.lua
+            -- Expandir conteúdo para Legion não Remix
+
         local _LegionRemix = C_UnitAuras.GetPlayerAuraBySpellID(1213439)
         local _LegionRemixExtraData = ""
         if _LegionRemix then
@@ -1349,11 +1354,28 @@ function CTT_ShowToolTip(tooltip, mode)
                 _LegionRemixExtraData = _LegionRemixExtraData .. "\nBônus de Experiência: |cFFFFFFFF+" .. GetInfinitePowerBonuses("Experience") .. "%|r"
             end
 
+            local showInvasionHeader = true
+
             if (ChromieTimeTrackerDB.ShowLegionInvasionTracker) then
                 local LegionInvasionLine = LegionInvasionTooltipLine(true)
 
                 if(LegionInvasionLine ~= "") then
-                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. LegionInvasionLine
+                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"] .. "\n" .. LegionInvasionLine
+                    showInvasionHeader = false
+                end
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker) then
+                local LegionArgusInvasionLine = LegionArgusInvasionTooltipLine(true)
+
+                if (showInvasionHeader) then
+                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"]
+                else
+                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
+                end
+
+                if(LegionArgusInvasionLine ~= "") then
+                    _LegionRemixExtraData = _LegionRemixExtraData .. LegionArgusInvasionLine
                 end
             end
 

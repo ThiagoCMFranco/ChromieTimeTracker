@@ -6,6 +6,7 @@
 
 	local InvasionIcons = {
 		["Legion"] = "legioninvasion-map-icon-portal-large",
+		["Legion_Argus"] = "poi-rift1",
 		["None"] = ""
 	}
     
@@ -147,4 +148,50 @@
 			end
 		end
 		return ""
+	end
+
+	function LegionArgusInvasionTooltipLine(_showIcon)
+		leginvasion = FindArgusInvasionLegion()
+		if leginvasion[1] ~= "" then
+			if(_showIcon) then
+				local InvasionLine = ""
+				for _, legInvasionData in ipairs(leginvasion) do
+				    InvasionLine = InvasionLine .. "\n|cFFFFFFFF" .. CreateInlineIcon(InvasionIcons["Legion_Argus"],18,18) .. " " ..  legInvasionData[3] ..  " - "  .. legInvasionData[2] .. ".|r|cFFFFFFFF" .. getRemainingTimeString(legInvasionData[4],true) .. "|r"
+				end
+				return InvasionLine
+			else
+				for _, legInvasionData in ipairs(leginvasion) do
+				    InvasionLine = InvasionLine .. "\n|cFFFFFFFF" .. legInvasionData[3] ..  " |cFFFFFFFF- "  .. legInvasionData[2] .. ".|r|cFFFFFFFF" .. getRemainingTimeString(legInvasionData[4],true) .. "|r"
+				end
+			end
+		end
+		return ""
+	end
+
+	FindArgusInvasionLegion = function()
+	    local ArgusIvasionTable = {}
+
+	    for mapID in pairs(C_LEGION_INVASION_POINTS) do
+	        local poiIDs = C_AreaPoiInfo.GetAreaPOIForMap(mapID)
+	        if poiIDs then
+	            for _, poiID in ipairs(poiIDs) do
+	                local poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(mapID, poiID)
+	                if poiInfo and poiInfo.name and (poiInfo.name:find("Invas") or poiInfo.name:find("Invasion")) then
+	                    local seconds = C_AreaPoiInfo.GetAreaPOISecondsLeft(poiID)
+						local remainingTimeMinutes = 0
+						if(seconds ~= nil) then
+	                    	remainingTimeMinutes = seconds/60 or ""
+						end
+	                    local description = poiInfo.description
+
+						local item = {poiInfo.name, C_Map.GetMapInfo(mapID).name, description, remainingTimeMinutes}
+
+						table.insert(ArgusIvasionTable, item)
+	                end
+	            end
+	        end
+	    end
+
+		return ArgusIvasionTable
+
 	end
