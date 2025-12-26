@@ -260,3 +260,9 @@ C_WORLD_BOSSES_QUESTS_DATA = {
     [91792] = {uiMapID = 646, position = {x = 89.6, y = 33.0}},
 
 }
+
+C_LEGION_INVASION_POINTS = {
+    [830] = "Krokuun",
+    [885] = "Ermos Antoranos",
+    [882] = "Eredath"
+}
