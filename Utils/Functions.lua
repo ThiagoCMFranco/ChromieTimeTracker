@@ -486,8 +486,14 @@ function listEmissaryMissions(_showRewards)
                 end
 
             end
+
+            if(count > 0) then
+                return "\n" .. L["EmissaryMissions_Title"] .. "|cFFFFFFFF" .. "\n" .. emissaryMissionDetails .. "|r"    
+            else
+                return ""
+            end
                             
-            return L["EmissaryMissions_Title"] .. "|cFFFFFFFF" .. "\n" .. emissaryMissionDetails .. "|r"
+            
 end
 
 function CTT_VerifyQuestCompleted(p_questID)

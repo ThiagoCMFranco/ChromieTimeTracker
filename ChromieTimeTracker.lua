@@ -318,7 +318,7 @@ local function GeneratorFunction(owner, rootDescription)
 	end
 	if(PlayerInfo["Faction"] == "Horde") then
         rootDescription:CreateButton(L["ContextMenuPinsChromie"], function(data)
-        C_SpecialTrackPinCoordinates["Alliance_Chromie"].name = L["ContextMenuPinsChromie"]
+        C_SpecialTrackPinCoordinates["Horde_Chromie"].name = L["ContextMenuPinsChromie"]
 	    CTT_addPin(C_SpecialTrackPinCoordinates["Horde_Chromie"], ChromieTimeTrackerDB.DefaultTrackerAddon)
         end);
 	end
@@ -1324,7 +1324,7 @@ function CTT_ShowToolTip(tooltip, mode)
     else
         --Exibição de dados específicos do Legion Remix
         
-        --Melhorar este bloco para versão 2.9.3:
+        --Melhorar este bloco para versão futura:
             -- Extrair blocos em funções para LegionUtils.lua
             -- Expandir conteúdo para Legion não Remix
 
@@ -1332,7 +1332,7 @@ function CTT_ShowToolTip(tooltip, mode)
         local _LegionRemixExtraData = ""
         if _LegionRemix then
             if(ChromieTimeTrackerDB.ShowBronze or ChromieTimeTrackerDB.ShowInfiniteKnowledge or ChromieTimeTrackerDB.ShowInfinitePower) then
-                _LegionRemixExtraData = "\n\nMoedas"
+                _LegionRemixExtraData = "\n\n" .. L["Settings_Menu_Currency"]
             end
             if(ChromieTimeTrackerDB.ShowBronze) then
                 _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. getCurrencyById(C_CurrencyId["Bronze"], true)
@@ -1345,13 +1345,13 @@ function CTT_ShowToolTip(tooltip, mode)
             end
 
             if (ChromieTimeTrackerDB.ShowVersatilityBonus or ChromieTimeTrackerDB.ShowExperienceBonus) then
-                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\nBônus"    
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Bonus_Title"]  
             end
             if (ChromieTimeTrackerDB.ShowVersatilityBonus) then
-                _LegionRemixExtraData = _LegionRemixExtraData .. "\nVersatilidade: |cFFFFFFFF+" .. GetInfinitePowerBonuses("Versatility") .. "%|r"
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. L["Versatility_Title"] .. ": |cFFFFFFFF+" .. GetInfinitePowerBonuses("Versatility") .. "%|r"
             end
             if (ChromieTimeTrackerDB.ShowExperienceBonus) then
-                _LegionRemixExtraData = _LegionRemixExtraData .. "\nBônus de Experiência: |cFFFFFFFF+" .. GetInfinitePowerBonuses("Experience") .. "%|r"
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. L["Experience_Title"] .. ": |cFFFFFFFF+" .. GetInfinitePowerBonuses("Experience") .. "%|r"
             end
 
             local showInvasionHeader = true
@@ -1368,31 +1368,35 @@ function CTT_ShowToolTip(tooltip, mode)
             if (ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker) then
                 local LegionArgusInvasionLine = LegionArgusInvasionTooltipLine(true)
 
-                if (showInvasionHeader) then
-                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"]
-                else
-                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
-                end
-
                 if(LegionArgusInvasionLine ~= "") then
+                    if (showInvasionHeader) then
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"]
+                    else
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
+                    end
                     _LegionRemixExtraData = _LegionRemixExtraData .. LegionArgusInvasionLine
                 end
             end
 
             if (ChromieTimeTrackerDB.ShowLegionEmissaryMissions) then
-                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. listEmissaryMissions(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. listEmissaryMissions(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
             end
 
             if (ChromieTimeTrackerDB.ShowWorldBosses) then
-                _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. "Chefes Mundiais"
+
+                local showWorldBossesHeader = true
                 
                 for _, TaskQuestId in pairs(C_WORLD_BOSSES_QUEST_IDS["LEGION"]) do
-                    myDebugVar = CTT_VerifyQuestCompleted(TaskQuestId)
-                    if(myDebugVar[3]) then
-                        if(myDebugVar[2]) then
-                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFF00FF00" .. CreateInlineIcon("vignettekillboss", 20, 20) .. myDebugVar[1] .. "|r" .. " - " .. myDebugVar[4]
+                    local _LegionWorldBossQuestData = CTT_VerifyQuestCompleted(TaskQuestId)
+                    if(_LegionWorldBossQuestData[3]) then
+                        if(showWorldBossesHeader) then
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["World_Bosses_Header"]    
+                            showWorldBossesHeader = false
+                        end
+                        if(_LegionWorldBossQuestData[2]) then
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFF00FF00" .. CreateInlineIcon("vignettekillboss", 20, 20) .. _LegionWorldBossQuestData[1] .. "|r" .. " - " .. _LegionWorldBossQuestData[4]
                         else
-                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFFFFFFFF" .. CreateInlineIcon("vignettekillboss", 20, 20) .. myDebugVar[1] .. "|r" .. " - " .. myDebugVar[4]
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFFFFFFFF" .. CreateInlineIcon("vignettekillboss", 20, 20) .. _LegionWorldBossQuestData[1] .. "|r" .. " - " .. _LegionWorldBossQuestData[4]
                         end
                     end
                 end
