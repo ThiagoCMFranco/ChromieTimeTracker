@@ -195,3 +195,7 @@ L["chkShowWorldBosses"] = "Exibir Chefes Mundiais na caixa de informações do b
 L["Remix_Legion_Currency"] = "Rastrear moedas de Remix: Legion"
 L["Remix_Legion_Bonus"] = "Rastrear bônus de Remix: Legion"
 L["Legion_Invasion_Header"] = "Invasões"
+L["World_Bosses_Header"] = "Chefes Mundiais"
+L["Bonus_Title"] = "Bônus"
+L["Versatility_Title"] = "Versatilidade"
+L["Experience_Title"] = "Bônus de Experiência"

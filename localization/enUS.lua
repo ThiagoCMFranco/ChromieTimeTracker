@@ -195,3 +195,7 @@ L["chkShowWorldBosses"] = "Display World Bossses in the minimap button's informa
 L["Remix_Legion_Currency"] = "Track currencies from Remix: Legion"
 L["Remix_Legion_Bonus"] = "Track bonuses from Remix: Legion"
 L["Legion_Invasion_Header"] = "Invasions"
+L["World_Bosses_Header"] = "World Bosses"
+L["Bonus_Title"] = "Bonus"
+L["Versatility_Title"] = "Versatility"
+L["Experience_Title"] = "Experience Bonus"
