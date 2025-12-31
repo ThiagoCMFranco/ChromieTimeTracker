@@ -1420,3 +1420,22 @@ function ChromieTimeTracker:ToggleSettingsFrame()
         settingsFrame:Hide()
     end
 end
+
+--Cria atalho para as configurações na janela nativa de opções de addons.
+local ChromieTimeTrackerMainPanel = CreateFrame("Frame", "ChromieTimewTrackerNativeMainSettings", UIParent)
+ChromieTimeTrackerMainPanel.name = L["AddonName"] .. " - " .. L["Settings"]
+
+local MainCategory, layout = Settings.RegisterCanvasLayoutCategory(ChromieTimeTrackerMainPanel, ChromieTimeTrackerMainPanel.name)
+Settings.RegisterAddOnCategory(MainCategory)
+
+local title = ChromieTimeTrackerMainPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+title:SetPoint("TOPLEFT", 16, -16)
+title:SetText(L["AddonName"])
+
+local btnAbrirConfiguracoes = CreateFrame("Button", "OpenAce3Window", ChromieTimeTrackerMainPanel, "GameMenuButtonTemplate")
+btnAbrirConfiguracoes:SetPoint("TOPLEFT", 16, -40)
+btnAbrirConfiguracoes:SetSize(280, 30)
+btnAbrirConfiguracoes:SetText(L["buttonOpenSettings"])
+btnAbrirConfiguracoes:SetScript("OnClick", function()
+    ChromieTimeTracker:ToggleSettingsFrame()
+end)
