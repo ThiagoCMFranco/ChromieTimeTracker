@@ -434,48 +434,8 @@ treeW:ReleaseChildren()
     end)
     chkShowExperience:SetWidth(700)
 
-    local chkShowLegionInvasionTracker = AceGUI:Create("CheckBox")
-    chkShowLegionInvasionTracker:SetLabel(L["chkShowLegionInvasionTracker"])
-    chkShowLegionInvasionTracker:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowLegionInvasionTracker = chkShowLegionInvasionTracker:GetValue()
-    end)
-    chkShowLegionInvasionTracker:SetWidth(700)
-
-    local chkShowLegionArgusInvasionTracker = AceGUI:Create("CheckBox")
-    chkShowLegionArgusInvasionTracker:SetLabel(L["chkShowLegionArgusInvasionTracker"])
-    chkShowLegionArgusInvasionTracker:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker = chkShowLegionArgusInvasionTracker:GetValue()
-    end)
-    chkShowLegionArgusInvasionTracker:SetWidth(700)
-
-    local chkShowLegionEmissaryMissions = AceGUI:Create("CheckBox")
-    chkShowLegionEmissaryMissions:SetLabel(L["chkShowLegionEmissaryMissions"])
-    chkShowLegionEmissaryMissions:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowLegionEmissaryMissions = chkShowLegionEmissaryMissions:GetValue()
-    end)
-    chkShowLegionEmissaryMissions:SetWidth(700)
-
-    local chkShowEmissaryMissionsRewards = AceGUI:Create("CheckBox")
-    chkShowEmissaryMissionsRewards:SetLabel(L["chkShowEmissaryMissionsRewards"])
-    chkShowEmissaryMissionsRewards:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowEmissaryMissionsRewards = chkShowEmissaryMissionsRewards:GetValue()
-    end)
-    chkShowEmissaryMissionsRewards:SetWidth(700)
-
-    local chkShowWorldBosses = AceGUI:Create("CheckBox")
-    chkShowWorldBosses:SetLabel(L["chkShowWorldBosses"])
-    chkShowWorldBosses:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowWorldBosses = chkShowWorldBosses:GetValue()
-    end)
-    chkShowWorldBosses:SetWidth(700)
-
     scrollFrameRemixSettings:AddChild(chkShowHeroicWorldTier)
     scrollFrameRemixSettings:AddChild(chkHideHeroicWorldTierButton)
-    scrollFrameRemixSettings:AddChild(chkShowLegionInvasionTracker)
-    scrollFrameRemixSettings:AddChild(chkShowLegionArgusInvasionTracker)    
-    scrollFrameRemixSettings:AddChild(chkShowLegionEmissaryMissions)
-    scrollFrameRemixSettings:AddChild(chkShowEmissaryMissionsRewards)
-    scrollFrameRemixSettings:AddChild(chkShowWorldBosses)
     
 
     local headingRemix1 = AceGUI:Create("Heading")
@@ -510,11 +470,6 @@ treeW:ReleaseChildren()
     chkShowInfinitePower:SetValue(ChromieTimeTrackerDB.ShowInfinitePower)
     chkShowVersatility:SetValue(ChromieTimeTrackerDB.ShowVersatilityBonus)
     chkShowExperience:SetValue(ChromieTimeTrackerDB.ShowExperienceBonus)
-    chkShowLegionInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionTracker)
-    chkShowLegionArgusInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker)
-    chkShowLegionEmissaryMissions:SetValue(ChromieTimeTrackerDB.ShowLegionEmissaryMissions)
-    chkShowEmissaryMissionsRewards:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
-    chkShowWorldBosses:SetValue(ChromieTimeTrackerDB.ShowWorldBosses)
 
 end
 
@@ -625,12 +580,80 @@ function CTT_LoadReportEnhancementSettings()
         end)
     chkShowLegionInvasionsOnReportWindow:SetWidth(700)
 
+    local tabsEnhancements = {
+        {value = "tabEnhLegion", text = EXPANSION_NAME6}
+    }
+
+    local function SelectGroup(container, event, group)
+        container:ReleaseChildren() -- Limpa o conteúdo anterior ao trocar de aba
+
+        if group == "tabEnhLegion" then
+            local chkShowLegionInvasionTracker = AceGUI:Create("CheckBox")
+            chkShowLegionInvasionTracker:SetLabel(L["chkShowLegionInvasionTracker"])
+            chkShowLegionInvasionTracker:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowLegionInvasionTracker = chkShowLegionInvasionTracker:GetValue()
+            end)
+            chkShowLegionInvasionTracker:SetWidth(700)
+        
+            local chkShowLegionArgusInvasionTracker = AceGUI:Create("CheckBox")
+            chkShowLegionArgusInvasionTracker:SetLabel(L["chkShowLegionArgusInvasionTracker"])
+            chkShowLegionArgusInvasionTracker:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker = chkShowLegionArgusInvasionTracker:GetValue()
+            end)
+            chkShowLegionArgusInvasionTracker:SetWidth(700)
+        
+            local chkShowLegionEmissaryMissions = AceGUI:Create("CheckBox")
+            chkShowLegionEmissaryMissions:SetLabel(L["chkShowLegionEmissaryMissions"])
+            chkShowLegionEmissaryMissions:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowLegionEmissaryMissions = chkShowLegionEmissaryMissions:GetValue()
+            end)
+            chkShowLegionEmissaryMissions:SetWidth(700)
+        
+            local chkShowEmissaryMissionsRewards = AceGUI:Create("CheckBox")
+            chkShowEmissaryMissionsRewards:SetLabel(L["chkShowEmissaryMissionsRewards"])
+            chkShowEmissaryMissionsRewards:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowEmissaryMissionsRewards = chkShowEmissaryMissionsRewards:GetValue()
+            end)
+            chkShowEmissaryMissionsRewards:SetWidth(700)
+        
+            local chkShowWorldBosses = AceGUI:Create("CheckBox")
+            chkShowWorldBosses:SetLabel(L["chkShowWorldBosses"])
+            chkShowWorldBosses:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowWorldBosses = chkShowWorldBosses:GetValue()
+            end)
+            chkShowWorldBosses:SetWidth(700)
+            
+            container:AddChild(chkShowLegionInvasionTracker)
+            container:AddChild(chkShowLegionArgusInvasionTracker)    
+            container:AddChild(chkShowLegionEmissaryMissions)
+            container:AddChild(chkShowEmissaryMissionsRewards)
+            container:AddChild(chkShowWorldBosses)
+
+            chkShowLegionInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionTracker)
+            chkShowLegionArgusInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker)
+            chkShowLegionEmissaryMissions:SetValue(ChromieTimeTrackerDB.ShowLegionEmissaryMissions)
+            chkShowEmissaryMissionsRewards:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
+            chkShowWorldBosses:SetValue(ChromieTimeTrackerDB.ShowWorldBosses)
+
+        end
+    end
+
+    local tabGroup = AceGUI:Create("TabGroup")
+    tabGroup:SetLayout("Flow")
+    tabGroup:SetTabs(tabsEnhancements)
+    tabGroup:SetCallback("OnGroupSelected", SelectGroup) -- Registra a troca de abas
+    tabGroup:SelectTab("tabEnhLegion") -- Seleciona a aba padrão ao abrir
+    tabGroup:SetFullWidth(true)
+    tabGroup:SetFullHeight(true)
+
+
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnTooltips)
     scrollFrameReportEnhancementSettings:AddChild(chkShowCurrencyOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowReportTabsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowEmissaryMissionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowLegionInvasionsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(tabGroup)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
@@ -638,6 +661,7 @@ function CTT_LoadReportEnhancementSettings()
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
     chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
     chkShowLegionInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow)
+    
     
 end
 
