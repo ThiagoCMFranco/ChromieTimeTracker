@@ -1285,19 +1285,11 @@ function CTT_ShowIconTooltip(tooltip, text)
     tooltip:AddLine("|cFFFFFFFF" .. text .. "|r", nil, nil, nil, nil)
 end
 
-function CTT_SetupTooltip(_tooltip, _LClickAction, _MClickAction, _TimelineCurrency)
+function CTT_SetupTooltip(_tooltip, _LClickAction, _MClickAction, _TimelineData)
     if (ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips) then
-        if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
-            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineCurrency .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
-        else
-            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
-        end
+        _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineData .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "", nil, nil, nil, nil)
     else
-        if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
-            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineCurrency .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        else
-            _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r.\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
-        end
+        _tooltip:AddLine(L["AddonName"] .. "\n\n|cFFFFFFFF" .. CTT_getChromieTime() .. "|r." .. _TimelineData .. "\n\n" .. _LClickAction .. "\n" .. _MClickAction .. "\n" .. L["RClickAction"] .. "\n\n".. L["DevelopmentTeamCredit"] .."", nil, nil, nil, nil)
     end
 end
 
@@ -1313,13 +1305,75 @@ function CTT_ShowToolTip(tooltip, mode)
     local TimelineCurrency = ""
     if not (C_ExpansionGarrisonID[CurrentGarrisonID] == 0 or C_ExpansionGarrisonID[CurrentGarrisonID] == nil) then
         if C_ExpansionGarrisonID[CurrentGarrisonID] == 2 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(C_CurrencyId["Garrison_Oil"], true)
+            if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+                TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Garrison_Resources"], true) .. "\n" .. getCurrencyById(C_CurrencyId["Garrison_Oil"], true)
+            end
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 3 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Order_Resources"], true)
+
+            if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+                TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Order_Resources"], true) 
+            end
+
+            local _LegionRemixExtraData = ""
+
+            local showInvasionHeader = true
+
+            if (ChromieTimeTrackerDB.ShowLegionInvasionTracker) then
+                local LegionInvasionLine = LegionInvasionTooltipLine(true)
+
+                if(LegionInvasionLine ~= "") then
+                    _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"] .. "\n" .. LegionInvasionLine
+                    showInvasionHeader = false
+                end
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker) then
+                local LegionArgusInvasionLine = LegionArgusInvasionTooltipLine(true)
+
+                if(LegionArgusInvasionLine ~= "") then
+                    if (showInvasionHeader) then
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"]
+                    else
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
+                    end
+                    _LegionRemixExtraData = _LegionRemixExtraData .. LegionArgusInvasionLine
+                end
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionEmissaryMissions) then
+                _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. listEmissaryMissions(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
+            end
+
+            if (ChromieTimeTrackerDB.ShowWorldBosses) then
+
+                local showWorldBossesHeader = true
+                
+                for _, TaskQuestId in pairs(C_WORLD_BOSSES_QUEST_IDS["LEGION"]) do
+                    local _LegionWorldBossQuestData = CTT_VerifyQuestCompleted(TaskQuestId)
+                    if(_LegionWorldBossQuestData[3]) then
+                        if(showWorldBossesHeader) then
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["World_Bosses_Header"]    
+                            showWorldBossesHeader = false
+                        end
+                        if(_LegionWorldBossQuestData[2]) then
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFF00FF00" .. CreateInlineIcon("vignettekillboss", 20, 20) .. _LegionWorldBossQuestData[1] .. "|r" .. " - " .. _LegionWorldBossQuestData[4]
+                        else
+                            _LegionRemixExtraData = _LegionRemixExtraData .. "\n|cFFFFFFFF" .. CreateInlineIcon("vignettekillboss", 20, 20) .. _LegionWorldBossQuestData[1] .. "|r" .. " - " .. _LegionWorldBossQuestData[4]
+                        end
+                    end
+                end
+            end
+
+            TimelineCurrency = TimelineCurrency .. _LegionRemixExtraData
+
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 9 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["War_Resources"], true)
+            if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+                TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["War_Resources"], true)
+            end
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 111 then
-            TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Reservoir_Anima"], true)
+            if (ChromieTimeTrackerDB.ShowCurrencyOnTooltips) then
+                TimelineCurrency = "\n\n" .. getCurrencyById(C_CurrencyId["Reservoir_Anima"], true)
+            end
         end
     else
         --Exibição de dados específicos do Legion Remix

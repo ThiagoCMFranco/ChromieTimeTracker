@@ -6,7 +6,6 @@
 
 	local InvasionIcons = {
 		["Legion"] = "legioninvasion-map-icon-portal-large",
-		["Legion_Argus"] = "poi-rift1",
 		["None"] = ""
 	}
     
@@ -156,7 +155,7 @@
 			if(_showIcon) then
 				local InvasionLine = ""
 				for _, legInvasionData in ipairs(leginvasion) do
-				    InvasionLine = InvasionLine .. "\n|cFFFFFFFF" .. CreateInlineIcon(InvasionIcons["Legion_Argus"],18,18) .. " " ..  legInvasionData[3] ..  " - "  .. legInvasionData[2] .. ".|r|cFFFFFFFF" .. getRemainingTimeString(legInvasionData[4],true) .. "|r"
+				    InvasionLine = InvasionLine .. "\n|cFFFFFFFF" .. CreateInlineIcon(legInvasionData[5],18,18) .. " " ..  legInvasionData[3] ..  " - "  .. legInvasionData[2] .. ".|r|cFFFFFFFF" .. getRemainingTimeString(legInvasionData[4],true) .. "|r"
 				end
 				return InvasionLine
 			else
@@ -176,7 +175,7 @@
 	        if poiIDs then
 	            for _, poiID in ipairs(poiIDs) do
 	                local poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(mapID, poiID)
-	                if poiInfo and poiInfo.name and (poiInfo.name:find("Invas") or poiInfo.name:find("Invasion")) then
+	                if poiInfo and poiInfo.name and poiInfo.atlasName:find("rift") then
 	                    local seconds = C_AreaPoiInfo.GetAreaPOISecondsLeft(poiID)
 						local remainingTimeMinutes = 0
 						if(seconds ~= nil) then
@@ -184,7 +183,7 @@
 						end
 	                    local description = poiInfo.description
 
-						local item = {poiInfo.name, C_Map.GetMapInfo(mapID).name, description, remainingTimeMinutes}
+						local item = {poiInfo.name, C_Map.GetMapInfo(mapID).name, description, remainingTimeMinutes, poiInfo.atlasName}
 
 						table.insert(ArgusIvasionTable, item)
 	                end

@@ -31,12 +31,14 @@ local function CheckUpdate(remoteVersion, sender)
     local remote = tonumber(remoteVersion)
     if remote and remote > C_CTT_VERSION_UID then
         if not hasWarned then
-            print("|cFF00FF00["..AddonName.."]|r - |cFFFF0000" .. formatarNumeroVersao(C_CTT_VERSION_UID) .. "|r: " .. L["NewVersionMessage"] .. "|cFF00FF00".. formatarNumeroVersao(latestRef) .."|r")
+            print("|cFF00FF00["..AddonName.."]|r[|cFFFF0000" .. formatarNumeroVersao(C_CTT_VERSION_UID) .. "|r]: " .. L["NewVersionMessage"] .. "|cFF00FF00".. formatarNumeroVersao(remote) .."|r.")
             hasWarned = true
         end
         -- Atualizar a referência de versão mais recente
         InitializeSharedDB()
-        ChromieTimeTrackerSharedDB.LatestVersionUID = remote
+        if (remote > ChromieTimeTrackerSharedDB.LatestVersionUID) then
+            ChromieTimeTrackerSharedDB.LatestVersionUID = remote
+        end
     end
 end
 
@@ -46,7 +48,7 @@ local function CheckUpdateFromSharedDB()
     
     if latestRef and tonumber(latestRef) > C_CTT_VERSION_UID then
         if not hasWarned then
-            print("|cFF00FF00["..AddonName.."]|r - |cFFFF0000" .. formatarNumeroVersao(C_CTT_VERSION_UID) .. "|r: " .. L["NewVersionMessage"] .. "|cFF00FF00".. formatarNumeroVersao(latestRef) .."|r")
+            print("|cFF00FF00["..AddonName.."]|r[|cFFFF0000" .. formatarNumeroVersao(C_CTT_VERSION_UID) .. "|r]: " .. L["NewVersionMessage"] .. "|cFF00FF00".. formatarNumeroVersao(latestRef) .."|r.")
             hasWarned = true
         end
     end
@@ -67,7 +69,15 @@ local function QueryVersion(manual)
         sent = true
     end
 
-    local groupChannel = IsInRaid() and "RAID" or (IsInGroup() and "PARTY" or nil)
+    local groupChannel
+    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        groupChannel = "INSTANCE_CHAT"
+    elseif IsInRaid() then
+        groupChannel = "RAID"
+    elseif IsInGroup() then
+        groupChannel = "PARTY"
+    end
+
     if groupChannel then
         C_ChatInfo.SendAddonMessage(Prefix, "QUERY_VERSION", groupChannel)
         sent = true
