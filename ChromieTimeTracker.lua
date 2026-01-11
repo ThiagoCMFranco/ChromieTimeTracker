@@ -46,6 +46,7 @@ local C_WarCampaignTextures = mct.C_WarCampaignTextures
 local C_CovenantChoicesTextures = mct.C_CovenantChoicesTextures
 local C_LandingPagesTextures = mct.C_LandingPagesTextures
 local C_ClassTabTextures = mct.C_ClassTabTextures
+local C_PandariaTabTextures = mct.C_PandariaTabTextures
 local C_GarrisonTabTextures = mct.C_GarrisonTabTextures
 local C_WarCampaignTabTextures = mct.C_WarCampaignTabTextures
 local C_CovenantChoicesTabTextures = mct.C_CovenantChoicesTabTextures
@@ -167,6 +168,7 @@ end)
 local addonRootFrame = CreateFrame("Frame", "ChromieTimeTrackerRootFrame", UIParent, "")
 local mainFrame = CreateFrame("Frame", "ChromieTimeTrackerMainFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
 local iconFrame = CreateFrame("Frame", "ChromieTimeTrackerMainIconFrame", ChromieTimeTrackerRootFrame, "TooltipBorderedFrameTemplate")
+local MoPReportIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMoPReportIconFrame", ChromieTimeTrackerRootFrame, "")
 local garrisonIconFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonIconFrame", ChromieTimeTrackerRootFrame, "")
 local classHallIconFrame = CreateFrame("Frame", "ChromieTimeTrackerClassHallIconFrame", ChromieTimeTrackerRootFrame, "")
 local missionsIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMissionsIconFrame", ChromieTimeTrackerRootFrame, "")
@@ -222,7 +224,8 @@ local function GeneratorFunction(owner, rootDescription)
         end
     end
     
-    if (ChromieTimeTrackerDB.ContextMenuShowGarrison and isUnlocked[1]) or
+    if (ChromieTimeTrackerDB.ContextMenuShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport) or
+       (ChromieTimeTrackerDB.ContextMenuShowGarrison and isUnlocked[1]) or
        (ChromieTimeTrackerDB.ContextMenuShowClassHall and isUnlocked[2]) or 
        (ChromieTimeTrackerDB.ContextMenuShowWarEffort and isUnlocked[3]) or 
        (ChromieTimeTrackerDB.ContextMenuShowCovenant and isUnlocked[4]) or 
@@ -232,6 +235,19 @@ local function GeneratorFunction(owner, rootDescription)
         rootDescription:CreateTitle(L["ContextMenuTitle"]);
     end
     
+    if ChromieTimeTrackerDB.ContextMenuShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport then
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            rootDescription:CreateButton(L["MiddleClickOption_Mists"], function(data)
+                    CTT_CheckExpansionContentAccess("MoPReport")
+            end);
+            hideSeparator = false
+        end
+    end
     if ChromieTimeTrackerDB.ContextMenuShowGarrison and (isUnlocked[1]) then
         rootDescription:CreateButton(L["MiddleClickOption_Warlords"], function(data)
             
@@ -504,6 +520,7 @@ function CTT_updateChromieTime()
         mainFrame:Show()
         addonRootFrame:SetSize(180, 24)
         iconFrame:Hide()
+        MoPReportIconFrame:Hide()
         garrisonIconFrame:Hide()
         classHallIconFrame:Hide()
         missionsIconFrame:Hide()
@@ -515,6 +532,7 @@ function CTT_updateChromieTime()
         mainFrame:Show()
         addonRootFrame:SetSize(280, 35)
         iconFrame:Hide()
+        MoPReportIconFrame:Hide()
         garrisonIconFrame:Hide()
         classHallIconFrame:Hide()
         missionsIconFrame:Hide()
@@ -532,6 +550,7 @@ function CTT_updateChromieTime()
         end
         mainFrame:Hide()
         addonRootFrame:SetSize(32, 32)
+        MoPReportIconFrame:Hide()
         garrisonIconFrame:Hide()
         classHallIconFrame:Hide()
         missionsIconFrame:Hide()
@@ -543,6 +562,7 @@ function CTT_updateChromieTime()
         addonRootFrame:SetSize(280, 35)
         iconFrame:Hide()
         mainFrame:Show()
+        MoPReportIconFrame:Hide()
         garrisonIconFrame:Hide()
         classHallIconFrame:Hide()
         missionsIconFrame:Hide()
@@ -840,6 +860,16 @@ function CTT_LoadAvancedModeIcons()
             end
     end
 
+    --Adicionar validaççao para exibir ícone do modo avançado para MoPReport
+
+    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+    if ChromieTimeTrackerDB.AdvShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportLoaded and MoPReportHasIntegrationSuport then
+        iconsCount = iconsCount + 1;
+    end
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
         iconsCount = iconsCount + 1;
     end
@@ -897,6 +927,12 @@ function CTT_LoadAvancedModeIcons()
 
     local position = 0;
     
+    if ChromieTimeTrackerDB.AdvShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportLoaded then
+        CTT_setupGarrisonIconFrame(MoPReportIconFrame,iconSize,"MoPReport",(left + (step * position)),top,C_PandariaTabTextures[PlayerInfo["Faction"] .. "_Map"], "Atlas", L["MiddleClickOption_Mists"])
+        position = position + 1;
+    else
+        MoPReportIconFrame:Hide();
+    end
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
         CTT_setupGarrisonIconFrame(garrisonIconFrame,iconSize,2,(left + (step * position)),top,C_GarrisonTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Warlords"])
         position = position + 1;
@@ -1256,6 +1292,17 @@ else
             requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
             ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         end
+    elseif _garrisonID == "MoPReport" and ChromieTimeTrackerDB.IntegrationMoPReport then
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:ShowMainWindow()
+        else
+            ChromieTimeTrackerUtil:FlashMessage(L["DependencyMissing"], 5, 1.5)
+        end
     else
         ChromieTimeTrackerUtil:FlashMessage(L["ConfigurationMissing"], 5, 1.5)
     end
@@ -1477,6 +1524,8 @@ function CTT_ShowToolTip(tooltip, mode)
             MClickAction = L["MClickAction_DragonIsles"]
         elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
             MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "MoPReport" then
+            MClickAction = L["MClickAction_Mists"]
         else
             MClickAction = L["MClickAction"]
         end
@@ -1499,6 +1548,8 @@ else
             MClickAction = L["MClickAction_DragonIsles"]
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "TWW" then
             MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "MoPReport" then
+            MClickAction = L["MClickAction_Mists"]
         else
             MClickAction = L["MClickAction"]
         end
@@ -1551,7 +1602,45 @@ local function SelectGarrison(self)
                 ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
             end
         end
+        --Validar para fechar janelas integradas
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            if(MoPReportIntegration:getMainWindow():IsShown()) then
+                MoPReportIntegration:getMainWindow():Hide();
+            end
+        end
     end
+
+    if(self.pageID == "TWW" or self.pageID == "DF") then
+        HideUIPanel(GarrisonLandingPage);
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            if(MoPReportIntegration:getMainWindow():IsShown()) then
+                MoPReportIntegration:getMainWindow():Hide();
+            end
+        end
+    end
+
+    if(self.pageID == "MoPReport") then
+        if ExpansionLandingPage.overlayFrame and ExpansionLandingPage.overlayFrame:IsShown() then
+            if(ExpansionLandingPage.Overlay.WarWithinLandingOverlay) then
+                ExpansionLandingPage.Overlay.WarWithinLandingOverlay.CloseButton:Click()
+            end
+            if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
+                ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
+            end
+        end
+        HideUIPanel(GarrisonLandingPage);
+    end
+
     CTT_CheckExpansionContentAccess(self.pageID)
 end
 
@@ -1563,15 +1652,32 @@ E:SetScript('OnEvent', function(self, event, addon)
         local _CovData = {}
         _CovData = getCovenantData()
 
-        for _, _garrisonTab in next, {
+        local garrisonData = {
+            {"MoPReport", EXPANSION_NAME4, C_PandariaTabTextures[PlayerInfo["Faction"]]},
             {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
-			{111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+            {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
             {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
-	        {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
-        } do
-            garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonLandingPage, 'UIButtonTemplate')
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+        }
+        
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport or not MoPReportHasIntegrationSuport then
+            for i = #garrisonData, 1, -1 do
+                if garrisonData[i][1] == "MoPReport" then
+                    table.remove(garrisonData, i)
+                    break
+                end
+            end
+        end
+        
+        for _, _garrisonTab in ipairs(garrisonData) do
+            local garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonLandingPage, 'UIButtonTemplate')
             garrisonTabFrame:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
             garrisonTabFrame:SetSize(30,30)
             garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
@@ -1580,8 +1686,8 @@ E:SetScript('OnEvent', function(self, event, addon)
             garrisonTabFrame.tabIndex = #garrisonTabs + 1
             garrisonTabFrame.pageID = _garrisonTab[1]
             garrisonTabFrame.tooltip = _garrisonTab[2]
-
-            garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, GarrisonLandingPage, '')
+        
+            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, GarrisonLandingPage, '')
             garrisonTabFrameHover:SetPoint('TOPRIGHT', 25, -(40 * (#garrisonTabs + 1)))
             garrisonTabFrameHover:SetSize(30,30)
             garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
@@ -1651,15 +1757,32 @@ E:SetScript('OnEvent', function(self, event, addon)
         local _CovData = {}
         _CovData = getCovenantData()
 
-        for _, _garrisonTab in next, {
+        local garrisonData = {
+            {"MoPReport", EXPANSION_NAME4, C_PandariaTabTextures[PlayerInfo["Faction"]]},
             {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
-	        {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
- 	        {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
-	        {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
-        } do
-            garrisonTabFrame = CreateFrame('CheckButton', nil, ExpansionLandingPage, 'UIButtonTemplate')
+            {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+        }
+                
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport or not MoPReportHasIntegrationSuport then
+            for i = #garrisonData, 1, -1 do
+                if garrisonData[i][1] == "MoPReport" then
+                    table.remove(garrisonData, i)
+                    break
+                end
+            end
+        end
+        
+        for _, _garrisonTab in ipairs(garrisonData) do
+            local garrisonTabFrame = CreateFrame('CheckButton', nil, ExpansionLandingPage, 'UIButtonTemplate')
             garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
             garrisonTabFrame:SetSize(30,30)
             garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
@@ -1668,20 +1791,19 @@ E:SetScript('OnEvent', function(self, event, addon)
             garrisonTabFrame.tabIndex = #expansionTabs + 1
             garrisonTabFrame.pageID = _garrisonTab[1]
             garrisonTabFrame.tooltip = _garrisonTab[2]
-
-            garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, ExpansionLandingPage, '')
+        
+            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, ExpansionLandingPage, '')
             garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
-            garrisonTabFrameHover:SetSize(30,30)
+            garrisonTabFrameHover:SetSize(30, 30)
             garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
             garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
             garrisonTabFrameHover:SetFrameLevel(10)
-            --garrisonTabFrameHover:Hide()
             garrisonTabFrameHover.pageID = _garrisonTab[1]
             garrisonTabFrameHover.tooltip = _garrisonTab[2]
             
             table.insert(expansionTabs, garrisonTabFrame)
             table.insert(expansionTabsHover, garrisonTabFrameHover)
-        end     
+        end
         
         for _, _garTab in pairs(expansionTabs) do
             if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
@@ -1717,6 +1839,120 @@ E:SetScript('OnEvent', function(self, event, addon)
             _garTabHover:Hide()
         end
 
+        end)
+
+        self:UnregisterEvent(event)
+    
+end)
+
+
+integratedAddonsTabs = {}
+integratedAddonsTabsHover = {}
+
+local E = CreateFrame('Frame')
+E:RegisterEvent('ADDON_LOADED')
+E:SetScript('OnEvent', function(self, event, addon)
+
+    --Delay feature loading for 5 seconds to make sure garrison information and images were fully loaded on Blizzard variables.
+    C_Timer.After(5,function()
+
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport or not MoPReportHasIntegrationSuport then
+            self:UnregisterEvent(event)
+            return
+        end
+
+        if (MoPReportLoaded) then
+        local l_Covenant = "Not_Selected"
+        local _CovData = {}
+        _CovData = getCovenantData()
+
+        
+        local garrisonData = {
+            {"MoPReport", EXPANSION_NAME4, C_PandariaTabTextures[PlayerInfo["Faction"]]},
+            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
+            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
+            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
+            {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+        }
+         
+        if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport then
+            for i = #garrisonData, 1, -1 do
+                if garrisonData[i][1] == "MoPReport" then
+                    table.remove(garrisonData, i)
+                    break
+                end
+            end
+        end
+        
+        integratedAddonsLandingPage = MoPReportIntegration:getAnchorFrame()
+        
+        for _, _garrisonTab in ipairs(garrisonData) do
+            local garrisonTabFrame = CreateFrame('CheckButton', nil, integratedAddonsLandingPage, 'UIButtonTemplate')
+
+            garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#integratedAddonsTabs + 1)))
+            garrisonTabFrame:SetSize(30,30)
+            garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
+            garrisonTabFrame:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrame:Show()
+            garrisonTabFrame.tabIndex = #integratedAddonsTabs + 1
+            garrisonTabFrame.pageID = _garrisonTab[1]
+            garrisonTabFrame.tooltip = _garrisonTab[2]
+        
+            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, integratedAddonsLandingPage, '')
+            garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#integratedAddonsTabs + 1)))
+            garrisonTabFrameHover:SetSize(30, 30)
+            garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
+            garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrameHover:SetFrameLevel(10)
+            garrisonTabFrameHover.pageID = _garrisonTab[1]
+            garrisonTabFrameHover.tooltip = _garrisonTab[2]
+            
+            table.insert(integratedAddonsTabs, garrisonTabFrame)
+            table.insert(integratedAddonsTabsHover, garrisonTabFrameHover)
+        end
+        
+        for _, _garTab in pairs(integratedAddonsTabs) do
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTab:SetScript("OnEnter", function(self)
+                    integratedAddonsTabsHover[_garTab.tabIndex]:Show()
+                end)
+                _garTab:Show();
+            else
+                _garTab:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(integratedAddonsTabsHover) do
+
+            if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                _garTabHover:SetScript("OnEnter", function(self)
+                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                    CTT_ShowIconTooltip(GameTooltip, _garTabHover.tooltip)
+                    GameTooltip:Show()
+                end)
+
+                _garTabHover:SetScript("OnLeave", function(self)
+                    GameTooltip:Hide()
+                    _garTabHover:Hide()
+                end)
+                _garTabHover:Show();
+            else
+                _garTabHover:Hide();
+            end
+        end
+
+        for _, _garTabHover in pairs(integratedAddonsTabsHover) do
+            _garTabHover:Hide()
+        end
+    
+        end
         end)
 
         self:UnregisterEvent(event)

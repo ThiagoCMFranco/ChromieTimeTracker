@@ -32,6 +32,7 @@ mct.C_WarCampaignTextures = {}
 mct.C_CovenantChoicesTextures = {}
 mct.C_LandingPagesTextures = {}
 mct.C_ClassTabTextures = {}
+mct.C_PandariaTabTextures = {}
 mct.C_GarrisonTabTextures = {}
 mct.C_WarCampaignTabTextures = {}
 mct.C_CovenantChoicesTabTextures = {}
@@ -64,7 +65,7 @@ local C_ExpansionGarrisonID = mct.C_ExpansionGarrisonID
 C_ExpansionGarrisonID[2] = 0 --BC
 C_ExpansionGarrisonID[3] = 0 --WotLK
 C_ExpansionGarrisonID[4] = 0 --Cata
-C_ExpansionGarrisonID[5] = 0 --MoP
+C_ExpansionGarrisonID[5] = "MoPReport" --MoP
 C_ExpansionGarrisonID[6] = 2 --WoD
 C_ExpansionGarrisonID[7] = 3 --Legion
 C_ExpansionGarrisonID[8] = 9 --BfA
@@ -74,6 +75,7 @@ C_ExpansionGarrisonID[11] = "TWW" --TWW
 
 local C_ExpansionGarrisonMiddleClickOptions = mct.C_ExpansionGarrisonMiddleClickOptions
 
+C_ExpansionGarrisonMiddleClickOptions["MoPReport"] = 5 --MoP
 C_ExpansionGarrisonMiddleClickOptions[1] = 6 --WoD
 C_ExpansionGarrisonMiddleClickOptions[2] = 7 --Legion
 C_ExpansionGarrisonMiddleClickOptions[3] = 8 --Missions
@@ -83,6 +85,7 @@ C_ExpansionGarrisonMiddleClickOptions[6] = 11 --Khaz Algar
 
 local C_ExpansionSummaries = mct.C_ExpansionSummaries
 
+C_ExpansionSummaries["MoPReport"] = L["MiddleClickOption_Mists"] --MoP
 C_ExpansionSummaries[1] = L["MiddleClickOption_Warlords"] --WoD
 C_ExpansionSummaries[2] = L["MiddleClickOption_Legion"] --Legion
 C_ExpansionSummaries[3] = L["MiddleClickOption_Missions"] --Missions
@@ -150,6 +153,14 @@ mct.C_ClassTabTextures =
   ["EVOKER"] = "Interface\\Icons\\Classicon_evoker",
 }
 
+mct.C_PandariaTabTextures =
+{
+  ["Alliance"] = "Interface\\Icons\\inv_misc_tournaments_tabard_human",
+  ["Horde"] = "Interface\\Icons\\inv_misc_tournaments_tabard_orc",
+  ["Alliance_Map"] = "AllianceSymbol",
+  ["Horde_Map"] = "HordeSymbol",
+}
+
 mct.C_GarrisonTabTextures =
 {
   ["Alliance"] = "Interface\\Icons\\achievement_garrison_tier01_alliance",
@@ -179,6 +190,7 @@ mct.C_LandingPagesTabTextures =
 
 mct.C_ButtonFrames =
 {
+    ["MoPReport"] = "ChromieTimeTrackerMoPReportIconFrame",
     [2] = "ChromieTimeTrackerGarrisonIconFrame",
     [3] = "ChromieTimeTrackerClassHallIconFrame",
     [9] = "ChromieTimeTrackerMissionsIconFrame",

@@ -31,7 +31,7 @@ local modes = {L["CompactMode"], L["StandardMode"], L["AlternateMode"], L["Advan
 local visibilityOptions = {L["Visibility_Always_Show"], L["Visibility_Hide_Current_Timeline"], L["Visibility_Never_Show"]}
 local buttonAlignments = {L["alignLeft"],L["alignCenter"],L["alignRight"]}
 local buttonPositions = {L["positionAbove"], L["positionBelow"]}
-local MiddleClickOptions = {L["MiddleClickOption_Warlords"], L["MiddleClickOption_Legion"],L["MiddleClickOption_Missions"],string.format(L["MiddleClickOption_Covenant"], "-"),L["MiddleClickOption_DragonIsles"],L["MiddleClickOption_KhazAlgar"]}
+
 
 local AceGUI = LibStub("AceGUI-3.0")
 
@@ -110,6 +110,83 @@ function CTT_LoadAbout()
     SetACE3WidgetFontSize(LabelAboutLocalizationDisclaimer, 13)
     LabelAboutLocalizationDisclaimer:SetWidth(620)
     scrollFrameAbout:AddChild(LabelAboutLocalizationDisclaimer)
+end
+
+function CTT_LoadIntegrationSettings()
+    treeW:ReleaseChildren()
+
+    scrollContainerIntegration = AceGUI:Create("SimpleGroup")
+    scrollContainerIntegration:SetFullWidth(true)
+    scrollContainerIntegration:SetFullHeight(true)
+    scrollContainerIntegration:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerIntegration)
+    
+    scrollFrameIntegration = AceGUI:Create("ScrollFrame")
+    scrollFrameIntegration:SetLayout("Flow")
+    scrollContainerIntegration:AddChild(scrollFrameIntegration)
+
+    local LabelIntegration_Title = AceGUI:Create("Label")
+    LabelIntegration_Title:SetText("|cFFFFC90E" .. L["Integration_Title"] .. "|r")
+    SetACE3WidgetFontSize(LabelIntegration_Title, 20)
+    LabelIntegration_Title:SetWidth(640)
+    scrollFrameIntegration:AddChild(LabelIntegration_Title)
+
+    local LabelIntegration = AceGUI:Create("Label")
+    LabelIntegration:SetText(L["Integration_Description"])
+    SetACE3WidgetFontSize(LabelIntegration, 13)
+    LabelIntegration:SetWidth(620)
+    scrollFrameIntegration:AddChild(LabelIntegration)
+
+    local chkIntegrationMoPReport = AceGUI:Create("CheckBox")
+    chkIntegrationMoPReport:SetLabel(L["chkIntegrationMoPReport"])
+    chkIntegrationMoPReport:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.IntegrationMoPReport = chkIntegrationMoPReport:GetValue()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkIntegrationMoPReport:SetWidth(700)
+    scrollFrameIntegration:AddChild(chkIntegrationMoPReport)
+
+    chkIntegrationMoPReport:SetValue(ChromieTimeTrackerDB.IntegrationMoPReport)
+    
+end
+
+function CTT_LoadMoPReportIntegrationPanel()
+    treeW:ReleaseChildren()
+
+    scrollContainerMoPReportIntegration = AceGUI:Create("SimpleGroup")
+    scrollContainerMoPReportIntegration:SetFullWidth(true)
+    scrollContainerMoPReportIntegration:SetFullHeight(true)
+    scrollContainerMoPReportIntegration:SetLayout("Fill")
+    
+    treeW:AddChild(scrollContainerMoPReportIntegration)
+    
+    scrollFrameMoPReportIntegration = AceGUI:Create("ScrollFrame")
+    scrollFrameMoPReportIntegration:SetLayout("Flow")
+    scrollContainerMoPReportIntegration:AddChild(scrollFrameMoPReportIntegration)
+
+    local LabelMoPReportIntegration_Title = AceGUI:Create("Label")
+    local message = ""
+
+    if ChromieTimeTrackerDB.IntegrationMoPReport then
+        message = L["MoPReportIntegration_NotFound"] .. L["MoPReportIntegration"]
+    else
+        message = L["MoPReportIntegration_Off"] .. L["MoPReportIntegration"]
+    end
+
+    LabelMoPReportIntegration_Title:SetText("|cFFFFC90E" .. L["MoPReportIntegration_Title"] .. "|r")
+    SetACE3WidgetFontSize(LabelMoPReportIntegration_Title, 20)
+    LabelMoPReportIntegration_Title:SetWidth(640)
+    scrollFrameMoPReportIntegration:AddChild(LabelMoPReportIntegration_Title)
+
+    local LabelMoPReportIntegration = AceGUI:Create("Label")
+    LabelMoPReportIntegration:SetText(message)
+    SetACE3WidgetFontSize(LabelMoPReportIntegration, 13)
+    LabelMoPReportIntegration:SetWidth(620)
+    scrollFrameMoPReportIntegration:AddChild(LabelMoPReportIntegration)
+    
 end
 
 function CTT_LoadAlternateModeSettings()
@@ -683,6 +760,7 @@ function CTT_LoadAdvancedModeSettings()
 local ddlButtonPosition = AceGUI:Create("Dropdown")
 local ddlButtonAlignment = AceGUI:Create("Dropdown")
 local lblSelectAdvancedModeOptions = AceGUI:Create("Label")
+local chkAdvShowMoPReport = AceGUI:Create("CheckBox")
 local chkAdvShowGarrison = AceGUI:Create("CheckBox")
 local chkAdvShowClassHall = AceGUI:Create("CheckBox")
 local chkAdvShowWarEffort = AceGUI:Create("CheckBox")
@@ -725,6 +803,27 @@ lblSelectAdvancedModeOptions:SetText("\n" .. L["lblSelectAdvancedModeOptions"])
 SetACE3WidgetFontSize(lblSelectAdvancedModeOptions, 12)
 lblSelectAdvancedModeOptions:SetWidth(580)
 scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
+
+    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
+        chkAdvShowMoPReport:SetLabel(L["MiddleClickOption_Mists"])
+        chkAdvShowMoPReport:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.AdvShowMoPReport = chkAdvShowMoPReport:GetValue()
+            CTT_updateChromieTime()
+            CTT_showMainFrame()
+            if (ChromieTimeTrackerDB.Mode == 4) then
+                CTT_LoadAvancedModeIcons()
+            end
+        end)
+        chkAdvShowMoPReport:SetWidth(700)
+        scrollFrameAdvancedMode:AddChild(chkAdvShowMoPReport)
+
+        chkAdvShowMoPReport:SetValue(ChromieTimeTrackerDB.AdvShowMoPReport)
+    end
     
     chkAdvShowGarrison:SetLabel(L["MiddleClickOption_Warlords"])
     chkAdvShowGarrison:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -870,6 +969,7 @@ function CTT_LoadContextMenuSettings()
 
 --ContextMenu Options
 local lblSelectContextMenuOptions = AceGUI:Create("Label")
+local chkContextMenuShowMoPReport = AceGUI:Create("CheckBox")
 local chkContextMenuShowGarrison = AceGUI:Create("CheckBox")
 local chkContextMenuShowClassHall = AceGUI:Create("CheckBox")
 local chkContextMenuShowWarEffort = AceGUI:Create("CheckBox")
@@ -884,6 +984,27 @@ lblSelectContextMenuOptions:SetText("\n" .. L["lblSelectContextMenuOptions"])
 SetACE3WidgetFontSize(lblSelectContextMenuOptions, 12)
 lblSelectContextMenuOptions:SetWidth(580)
 scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
+
+    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
+        chkContextMenuShowMoPReport:SetLabel(L["MiddleClickOption_Mists"])
+        chkContextMenuShowMoPReport:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ContextMenuShowMoPReport = chkContextMenuShowMoPReport:GetValue()
+            CTT_updateChromieTime()
+            CTT_showMainFrame()
+            if (ChromieTimeTrackerDB.Mode == 4) then
+                CTT_LoadAvancedModeIcons()
+            end
+        end)
+        chkContextMenuShowMoPReport:SetWidth(700)
+        scrollFrameContewxtMenu:AddChild(chkContextMenuShowMoPReport)
+
+        chkContextMenuShowMoPReport:SetValue(ChromieTimeTrackerDB.ContextMenuShowMoPReport)
+    end
     
     chkContextMenuShowGarrison:SetLabel(L["MiddleClickOption_Warlords"])
     chkContextMenuShowGarrison:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -1150,6 +1271,16 @@ scrollFrameMainSettings:AddChild(chkShareWarbandUnlock)
 scrollFrameMainSettings:AddChild(LabelShareWarbandUnlockHelp)
 addHelpIcon(LabelShareWarbandUnlockHelp, L["ShareWarbandUnlockHelp"])
 
+local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-"), [5] = L["MiddleClickOption_DragonIsles"], [6] = L["MiddleClickOption_KhazAlgar"]}
+local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
+    MiddleClickOptions["MoPReport"] = L["MiddleClickOption_Mists"]
+end
+
 ddlDefaultMiddleClickOption:SetList(MiddleClickOptions)
 ddlDefaultMiddleClickOption:SetLabel(L["lblDefaultMiddleClickOption"])
 ddlDefaultMiddleClickOption:SetWidth(280)
@@ -1180,6 +1311,7 @@ scrollFrameMainSettings:AddChild(heading3)
 chkHideMinimapIcon:SetLabel(L["chkHideMinimapIcon"])
 chkHideMinimapIcon:SetCallback("OnValueChanged", function(widget, event, text) 
     ChromieTimeTrackerDB.HideMinimapIcon = chkHideMinimapIcon:GetValue()
+    ChromieTimeTrackerSharedDB.minimap.hide = ChromieTimeTrackerDB.HideMinimapIcon
     CTT_ToggleMinimapButton(chkHideMinimapIcon:GetValue())
 end)
 chkHideMinimapIcon:SetWidth(575)
@@ -1390,6 +1522,17 @@ tree = {
         icon = "Interface\\Icons\\item_timemote_icon",
     },
     { 
+        value = "Int", 
+        text = L["Settings_Menu_Integrations"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+        children = {
+            { 
+              value = "MoPReportIntegration", 
+              text = "Mists of Pandaria",
+            },
+        }
+    },
+    { 
         value = "C", 
         text = L["Settings_Menu_Credit"],
         icon = "Interface\\Icons\\inv_misc_coin_02",
@@ -1426,6 +1569,19 @@ tree = {
         CTT_LoadExperienceSettings()
     elseif group == "Rmx" then
         CTT_LoadRemixSettings()
+    elseif group == "Int" then
+        CTT_LoadIntegrationSettings()
+    elseif string.find(group, "MoPReportIntegration") then
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+            MoPReportHasIntegrationSuport = false
+        end
+        if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:MoPReport_LoadSettings(treeW)
+        else
+            CTT_LoadMoPReportIntegrationPanel()
+        end
     else
         print(group)
     end
