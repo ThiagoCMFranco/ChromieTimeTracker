@@ -36,6 +36,10 @@ Shortcut buttons to other reports.
 Alert to remember to eliminate experience gain before reaching the level limit to time travel.  
 Track points of interest like Chromie and Experience Eliminators.  
 
+## Integrations
+Integrate with other addons to add extra features to Chromie Time Tracker:
+- Mists of Pandaria Report (MoPReport): add a new summery screen, shortcuts and information for Mists of Pandaria content.
+
 
 ## Controls, Configurations, Commands and Usability Features
 Use the following slash commands to control the addon if you don't want to keep an icon on your minimap.  
