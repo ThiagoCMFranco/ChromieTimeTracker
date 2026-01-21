@@ -519,3 +519,18 @@ function CTT_VerifyQuestCompleted(p_questID)
     return {title,isCompleted,isAvailable,zone.name}
 
 end
+
+function SetPortraitTextureCustom(textureObject, asset)
+    textureObject:SetTexture(asset)
+
+    if not textureObject.circleMask then
+        local parent = textureObject:GetParent()
+        local mask = parent:CreateMaskTexture()
+        
+        mask:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+        mask:SetAllPoints(textureObject)
+        
+        textureObject:AddMaskTexture(mask)
+        textureObject.circleMask = mask
+    end
+end
