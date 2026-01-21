@@ -211,3 +211,4 @@ L["MoPReportIntegration_Off"] = "\n|cFFFF0000Интеграция отключе
 L["MoPReportIntegration_NotFound"] = "\n|cFFFF0000Аддон не найден.|r"
 L["MoPReportIntegration"] = "\n\nУстановите аддон Mists of Pandaria Report (MoPReport) и включите интеграцию, чтобы добавить новый экран сводки, кнопки быстрого доступа и различную полезную информацию из контента Mists of Pandaria в функциональность Chromie Time Tracker.\n\nАддон Mists of Pandaria Report (MoPReport) можно найти там же, где и Chromie Time Tracker."
 L["chkIntegrationMoPReport"] = "Включить интеграцию с Mists of Pandaria Report (MoPReport)"
+L["Broken_by_Blizzard"] = "|cFF00FF00" .. L["AddonName"] .. ":|r " .. "This functionality is broken due to changes made by Blizzard. "

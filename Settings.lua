@@ -806,8 +806,12 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
 
     local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
-        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+        if MoPReportIntegration == nil then
             MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
         end
         if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
         chkAdvShowMoPReport:SetLabel(L["MiddleClickOption_Mists"])
@@ -883,7 +887,7 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowDragonIsles:SetWidth(700)
-    scrollFrameAdvancedMode:AddChild(chkAdvShowDragonIsles)
+    --scrollFrameAdvancedMode:AddChild(chkAdvShowDragonIsles)
 
     chkAdvShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkAdvShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -895,7 +899,7 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowKhazAlgar:SetWidth(700)
-    scrollFrameAdvancedMode:AddChild(chkAdvShowKhazAlgar)
+    --scrollFrameAdvancedMode:AddChild(chkAdvShowKhazAlgar)
 
     heading5:SetRelativeWidth(1)
     scrollFrameAdvancedMode:AddChild(heading5)
@@ -987,8 +991,12 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
 
     local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
-        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+        if MoPReportIntegration == nil then
             MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
         end
         if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
         chkContextMenuShowMoPReport:SetLabel(L["MiddleClickOption_Mists"])
@@ -1064,7 +1072,7 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowDragonIsles:SetWidth(700)
-    scrollFrameContewxtMenu:AddChild(chkContextMenuShowDragonIsles)
+    --scrollFrameContewxtMenu:AddChild(chkContextMenuShowDragonIsles)
 
     chkContextMenuShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkContextMenuShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -1076,7 +1084,7 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowKhazAlgar:SetWidth(700)
-    scrollFrameContewxtMenu:AddChild(chkContextMenuShowKhazAlgar)
+    --scrollFrameContewxtMenu:AddChild(chkContextMenuShowKhazAlgar)
 
     heading5:SetRelativeWidth(1)
     scrollFrameContewxtMenu:AddChild(heading5)
@@ -1266,16 +1274,21 @@ ChromieTimeTrackerSharedDB.ShareWarbandUnlock = chkShareWarbandUnlock:GetValue()
     end
 end)
 chkShareWarbandUnlock:SetWidth(600)
-scrollFrameMainSettings:AddChild(chkShareWarbandUnlock)
+--scrollFrameMainSettings:AddChild(chkShareWarbandUnlock)
 
-scrollFrameMainSettings:AddChild(LabelShareWarbandUnlockHelp)
-addHelpIcon(LabelShareWarbandUnlockHelp, L["ShareWarbandUnlockHelp"])
+--scrollFrameMainSettings:AddChild(LabelShareWarbandUnlockHelp)
+--addHelpIcon(LabelShareWarbandUnlockHelp, L["ShareWarbandUnlockHelp"])
 
-local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-"), [5] = L["MiddleClickOption_DragonIsles"], [6] = L["MiddleClickOption_KhazAlgar"]}
+--local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-"), [5] = L["MiddleClickOption_DragonIsles"], [6] = L["MiddleClickOption_KhazAlgar"]}
+local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-")}
 local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
-        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+        if MoPReportIntegration == nil then
             MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
         end
         if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
     MiddleClickOptions["MoPReport"] = L["MiddleClickOption_Mists"]
@@ -1574,8 +1587,12 @@ tree = {
     elseif string.find(group, "MoPReportIntegration") then
         local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
-        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+        if MoPReportIntegration == nil then
             MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
         end
         if (MoPReportLoaded and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportHasIntegrationSuport) then
             MoPReportIntegration:MoPReport_LoadSettings(treeW)
