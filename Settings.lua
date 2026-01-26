@@ -767,6 +767,7 @@ local chkAdvShowWarEffort = AceGUI:Create("CheckBox")
 local chkAdvShowCovenant = AceGUI:Create("CheckBox")
 local chkAdvShowDragonIsles = AceGUI:Create("CheckBox")
 local chkAdvShowKhazAlgar = AceGUI:Create("CheckBox")
+local chkAdvShowMidnight = AceGUI:Create("CheckBox")
 local chkAdvShowUnlockedOnly = AceGUI:Create("CheckBox")
 local chkAdvHideTimelineBox = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
@@ -887,7 +888,7 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowDragonIsles:SetWidth(700)
-    --scrollFrameAdvancedMode:AddChild(chkAdvShowDragonIsles)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowDragonIsles)
 
     chkAdvShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkAdvShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -899,8 +900,20 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
         end
     end)
     chkAdvShowKhazAlgar:SetWidth(700)
-    --scrollFrameAdvancedMode:AddChild(chkAdvShowKhazAlgar)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowKhazAlgar)
 
+    chkAdvShowMidnight:SetLabel(L["MiddleClickOption_Midnight"])
+    chkAdvShowMidnight:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.AdvShowMidnight = chkAdvShowMidnight:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkAdvShowMidnight:SetWidth(700)
+    scrollFrameAdvancedMode:AddChild(chkAdvShowMidnight)
+  
     heading5:SetRelativeWidth(1)
     scrollFrameAdvancedMode:AddChild(heading5)
 
@@ -936,6 +949,7 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
     chkAdvShowCovenant:SetValue(ChromieTimeTrackerDB.AdvShowCovenant)
     chkAdvShowDragonIsles:SetValue(ChromieTimeTrackerDB.AdvShowDragonIsles)
     chkAdvShowKhazAlgar:SetValue(ChromieTimeTrackerDB.AdvShowKhazAlgar)
+    chkAdvShowMidnight:SetValue(ChromieTimeTrackerDB.AdvShowMidnight)    
     chkAdvShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.AdvShowUnlockedOnly)
     chkAdvHideTimelineBox:SetValue(ChromieTimeTrackerDB.AdvHideTimelineBox)
 end
@@ -980,6 +994,7 @@ local chkContextMenuShowWarEffort = AceGUI:Create("CheckBox")
 local chkContextMenuShowCovenant = AceGUI:Create("CheckBox")
 local chkContextMenuShowDragonIsles = AceGUI:Create("CheckBox")
 local chkContextMenuShowKhazAlgar = AceGUI:Create("CheckBox")
+local chkContextMenuShowMidnight = AceGUI:Create("CheckBox")
 local chkContextMenuShowUnlockedOnly = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
 local heading6 = AceGUI:Create("Heading")
@@ -1072,7 +1087,7 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowDragonIsles:SetWidth(700)
-    --scrollFrameContewxtMenu:AddChild(chkContextMenuShowDragonIsles)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowDragonIsles)
 
     chkContextMenuShowKhazAlgar:SetLabel(L["MiddleClickOption_KhazAlgar"])
     chkContextMenuShowKhazAlgar:SetCallback("OnValueChanged", function(widget, event, text) 
@@ -1084,7 +1099,19 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
         end
     end)
     chkContextMenuShowKhazAlgar:SetWidth(700)
-    --scrollFrameContewxtMenu:AddChild(chkContextMenuShowKhazAlgar)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowKhazAlgar)
+
+    chkContextMenuShowMidnight:SetLabel(L["MiddleClickOption_Midnight"])
+    chkContextMenuShowMidnight:SetCallback("OnValueChanged", function(widget, event, text) 
+    ChromieTimeTrackerDB.ContextMenuShowMidnight = chkContextMenuShowMidnight:GetValue()
+        CTT_updateChromieTime()
+        CTT_showMainFrame()
+        if (ChromieTimeTrackerDB.Mode == 4) then
+            CTT_LoadAvancedModeIcons()
+        end
+    end)
+    chkContextMenuShowMidnight:SetWidth(700)
+    scrollFrameContewxtMenu:AddChild(chkContextMenuShowMidnight)
 
     heading5:SetRelativeWidth(1)
     scrollFrameContewxtMenu:AddChild(heading5)
@@ -1143,6 +1170,7 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     chkContextMenuShowCovenant:SetValue(ChromieTimeTrackerDB.ContextMenuShowCovenant)
     chkContextMenuShowDragonIsles:SetValue(ChromieTimeTrackerDB.ContextMenuShowDragonIsles)
     chkContextMenuShowKhazAlgar:SetValue(ChromieTimeTrackerDB.ContextMenuShowKhazAlgar)
+    chkContextMenuShowMidnight:SetValue(ChromieTimeTrackerDB.ContextMenuShowMidnight)
     chkContextMenuShowUnlockedOnly:SetValue(ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly)
     chkShowPinChromie:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinChromie)
     chkShowPinExperienceLock:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock)
@@ -1274,13 +1302,12 @@ ChromieTimeTrackerSharedDB.ShareWarbandUnlock = chkShareWarbandUnlock:GetValue()
     end
 end)
 chkShareWarbandUnlock:SetWidth(600)
---scrollFrameMainSettings:AddChild(chkShareWarbandUnlock)
+scrollFrameMainSettings:AddChild(chkShareWarbandUnlock)
 
---scrollFrameMainSettings:AddChild(LabelShareWarbandUnlockHelp)
---addHelpIcon(LabelShareWarbandUnlockHelp, L["ShareWarbandUnlockHelp"])
+scrollFrameMainSettings:AddChild(LabelShareWarbandUnlockHelp)
+addHelpIcon(LabelShareWarbandUnlockHelp, L["ShareWarbandUnlockHelp"])
 
---local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-"), [5] = L["MiddleClickOption_DragonIsles"], [6] = L["MiddleClickOption_KhazAlgar"]}
-local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-")}
+local MiddleClickOptions = {[1] = L["MiddleClickOption_Warlords"], [2] = L["MiddleClickOption_Legion"], [3] = L["MiddleClickOption_Missions"], [4] = string.format(L["MiddleClickOption_Covenant"], "-"), [5] = L["MiddleClickOption_DragonIsles"], [6] = L["MiddleClickOption_KhazAlgar"],  [7] = L["MiddleClickOption_Midnight"]}
 local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
         if MoPReportIntegration == nil then
@@ -1418,6 +1445,7 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
         ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
         ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+        ChromieTimeTrackerDB.ContextMenuShowMidnight = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
         ChromieTimeTrackerDB.DefaultTrackerAddon = 1;

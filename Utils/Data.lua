@@ -53,6 +53,8 @@ C_ExpansionColors[8] = "FF056AC4" --BfA
 C_ExpansionColors[9] = "FF888888" --SL
 C_ExpansionColors[10] = "FFC90A67" --DF
 C_ExpansionColors[11] = "FFFF7F27" --TWW
+C_ExpansionColors[12] = "FF5C1FEA" --Midnight
+
 
 local C_RemixColors = mct.C_RemixColors
 
@@ -72,6 +74,7 @@ C_ExpansionGarrisonID[8] = 9 --BfA
 C_ExpansionGarrisonID[9] = 111 --SL
 C_ExpansionGarrisonID[10] = "DF" --DF
 C_ExpansionGarrisonID[11] = "TWW" --TWW
+C_ExpansionGarrisonID[12] = "MN" --TWW
 
 local C_ExpansionGarrisonMiddleClickOptions = mct.C_ExpansionGarrisonMiddleClickOptions
 
@@ -82,6 +85,7 @@ C_ExpansionGarrisonMiddleClickOptions[3] = 8 --Missions
 C_ExpansionGarrisonMiddleClickOptions[4] = 9 --Covenant
 C_ExpansionGarrisonMiddleClickOptions[5] = 10 --Dragon Isles
 C_ExpansionGarrisonMiddleClickOptions[6] = 11 --Khaz Algar
+C_ExpansionGarrisonMiddleClickOptions[7] = 12 --Khaz Algar
 
 local C_ExpansionSummaries = mct.C_ExpansionSummaries
 
@@ -92,6 +96,7 @@ C_ExpansionSummaries[3] = L["MiddleClickOption_Missions"] --Missions
 C_ExpansionSummaries[4] = L["MiddleClickOption_Covenant"] --Covenant
 C_ExpansionSummaries[5] = L["MiddleClickOption_DragonIsles"] --Dragon Isles
 C_ExpansionSummaries[6] = L["MiddleClickOption_KhazAlgar"] --Khaz Algar
+C_ExpansionSummaries[7] = L["MiddleClickOption_Midnight"] --Midnight
 
 mct.C_ClassTextures =
 {
@@ -134,6 +139,7 @@ mct.C_LandingPagesTextures =
 {
     ["DragonIsles"] = "dragonflight-landingbutton-up",
     ["KhazAlgar"] = "warwithin-landingbutton-up",
+    ["Midnight"] = "UI-EventPoi-stormarionassault",
 }
 
 mct.C_ClassTabTextures =
@@ -186,6 +192,7 @@ mct.C_LandingPagesTabTextures =
 {
     ["DragonIsles"] = "Interface\\Icons\\spell_arcane_teleportvaldrakken",
     ["KhazAlgar"] = "Interface\\Icons\\inv_achievement_alliedrace_earthen",
+    ["Midnight"] = "Interface\\Icons\\inv_ability_voidweaverpriest_entropicrift",
 }
 
 mct.C_ButtonFrames =
@@ -197,6 +204,7 @@ mct.C_ButtonFrames =
     [111] = "ChromieTimeTrackerCovenantIconFrame",
     ["DF"] = "ChromieTimeTrackerDragonIslesIconFrame",
     ["TWW"] = "ChromieTimeTrackerKhazAlgarIconFrame",
+    ["MN"] = "ChromieTimeTrackerMidnightIconFrame",
 }
 
 mct.C_CurrencyId =
@@ -248,6 +256,7 @@ C_SpecialTrackPinCoordinates =
 C_SUMARY_UNLOCK_QUEST_IDS = {
     [9] = {76326, 72973, 65806, 65849, 69911, 70122, 65452, 66114},
     [10] = {78536, 84967, 92031, 85005, 83096, 80082, 78671, 78393},
+    [11] = {},
 }
 
 C_WORLD_BOSSES_QUEST_IDS = {

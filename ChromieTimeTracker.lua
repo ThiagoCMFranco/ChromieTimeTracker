@@ -110,6 +110,7 @@ function CTT_SetupFirstAccess(arg)
         ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
         ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
         ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+        ChromieTimeTrackerDB.ContextMenuShowMidnight = true;
         ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
         ChromieTimeTrackerDB.DefaultTrackerAddon = 1;
@@ -175,13 +176,15 @@ local missionsIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMissionsIconFr
 local covenantIconFrame = CreateFrame("Frame", "ChromieTimeTrackerCovenantIconFrame", ChromieTimeTrackerRootFrame, "")
 local dragonIslesIconFrame = CreateFrame("Frame", "ChromieTimeTrackerDragonIslesIconFrame", ChromieTimeTrackerRootFrame, "")
 local khazAlgarIconFrame = CreateFrame("Frame", "ChromieTimeTrackerKhazAlgarIconFrame", ChromieTimeTrackerRootFrame, "")
+local midnightIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMidnightIconFrame", ChromieTimeTrackerRootFrame, "")
+
 
 
 --contextMenu
 
 local function GeneratorFunction(owner, rootDescription)
 
-    isUnlocked = {true, true, true, true, true, true}
+    isUnlocked = {true, true, true, true, true, true, true}
 
     local hideSeparator = true
 
@@ -222,6 +225,12 @@ local function GeneratorFunction(owner, rootDescription)
         else
             isUnlocked[6] = false
         end
+
+        if(CheckSumaryWindowIsUnlockedForExpansion(11, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
+            isUnlocked[7] = true
+        else
+            isUnlocked[7] = false
+        end
     end
     
     if (ChromieTimeTrackerDB.ContextMenuShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport) or
@@ -230,7 +239,8 @@ local function GeneratorFunction(owner, rootDescription)
        (ChromieTimeTrackerDB.ContextMenuShowWarEffort and isUnlocked[3]) or 
        (ChromieTimeTrackerDB.ContextMenuShowCovenant and isUnlocked[4]) or 
        (ChromieTimeTrackerDB.ContextMenuShowDragonIsles and isUnlocked[5]) or 
-       (ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and isUnlocked[6])
+       (ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and isUnlocked[6]) or 
+       (ChromieTimeTrackerDB.ContextMenuShowMidnight and isUnlocked[7])
     then
         rootDescription:CreateTitle(L["ContextMenuTitle"]);
     end
@@ -303,20 +313,27 @@ local function GeneratorFunction(owner, rootDescription)
         end);
         hideSeparator = false
     end
-    --if ChromieTimeTrackerDB.ContextMenuShowDragonIsles and (isUnlocked[5]) then
---
-    --    rootDescription:CreateButton(L["MiddleClickOption_DragonIsles"], function(data)
-    --        CTT_CheckExpansionContentAccess("DF")
-    --    end);
-    --    hideSeparator = false
-    --end
-    --if ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and (isUnlocked[6]) then
---
-    --    rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
-    --        CTT_CheckExpansionContentAccess("TWW")
-    --    end);
-    --    hideSeparator = false
-    --end
+    if ChromieTimeTrackerDB.ContextMenuShowDragonIsles and (isUnlocked[5]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_DragonIsles"], function(data)
+            CTT_CheckExpansionContentAccess("DF")
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowKhazAlgar and (isUnlocked[6]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_KhazAlgar"], function(data)
+            CTT_CheckExpansionContentAccess("TWW")
+        end);
+        hideSeparator = false
+    end
+    if ChromieTimeTrackerDB.ContextMenuShowMidnight and (isUnlocked[7]) then
+
+        rootDescription:CreateButton(L["MiddleClickOption_Midnight"], function(data)
+            CTT_CheckExpansionContentAccess("MN")
+        end);
+        hideSeparator = false
+    end
 
     --GeneratorFunction
 
@@ -531,6 +548,7 @@ function CTT_updateChromieTime()
         covenantIconFrame:Hide()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
+        midnightIconFrame:Hide()
     elseif ChromieTimeTrackerDB.Mode == 2 then
         mainFrame:SetSize(280, 35)
         mainFrame:Show()
@@ -543,6 +561,7 @@ function CTT_updateChromieTime()
         covenantIconFrame:Hide()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
+        midnightIconFrame:Hide()
     elseif ChromieTimeTrackerDB.Mode == 3 then
         if ChromieTimeTrackerDB.AlternateModeShowIconOnly then
         iconFrame:SetSize(32,32)
@@ -561,6 +580,7 @@ function CTT_updateChromieTime()
         covenantIconFrame:Hide()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
+        midnightIconFrame:Hide()
         else 
         mainFrame:SetSize(280, 35)
         addonRootFrame:SetSize(280, 35)
@@ -573,6 +593,7 @@ function CTT_updateChromieTime()
         covenantIconFrame:Hide()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
+        midnightIconFrame:Hide()
         end
     elseif ChromieTimeTrackerDB.Mode == 4 then
         mainFrame:SetSize(280, 35)
@@ -727,8 +748,22 @@ function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _off
     end)
     _garrisonIconFrame:SetScript("OnMouseDown", function(self, btn)
         if btn == 'LeftButton' then 
+
+            local _ExpansionId
+            if(_garrisonID == "DF") then 
+                _ExpansionId = 9
+            end
+            if(_garrisonID == "TWW") then 
+                _ExpansionId = 10
+            end
+            if(_garrisonID == "MN") then 
+                _ExpansionId = 11
+            end
+
             if(GarrisonLandingPage and GarrisonLandingPage:IsShown() and _garrisonID == GarrisonLandingPage.garrTypeID) then
                 HideUIPanel(GarrisonLandingPage);
+            elseif (EncounterJournal ~= nil and EncounterJournal:IsShown() and _ExpansionId == EncounterJournal.JourneysFrame.expansionFilter) then
+                EncounterJournalCloseButton:Click()
             else
                 CTT_CheckExpansionContentAccess(_garrisonID)
             end
@@ -823,7 +858,7 @@ function CTT_LoadAvancedModeIcons()
 
     local iconsCount = 0
 
-    isUnlocked = {true, true, true, true, true, true}
+    isUnlocked = {true, true, true, true, true, true, true}
 
     if(ChromieTimeTrackerDB.AdvShowUnlockedOnly) then
         
@@ -862,6 +897,12 @@ function CTT_LoadAvancedModeIcons()
             else
                 isUnlocked[6] = false
             end
+
+            if(CheckSumaryWindowIsUnlockedForExpansion(11, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
+                isUnlocked[7] = true
+            else
+                isUnlocked[7] = false
+            end
     end
 
     --Adicionar validaççao para exibir ícone do modo avançado para MoPReport
@@ -894,12 +935,15 @@ function CTT_LoadAvancedModeIcons()
     if ChromieTimeTrackerDB.AdvShowCovenant and (isUnlocked[4]) then
         iconsCount = iconsCount + 1;
     end
-    --if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-    --    iconsCount = iconsCount + 1;
-    --end
-    --if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-    --    iconsCount = iconsCount + 1;
-    --end
+    if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
+        iconsCount = iconsCount + 1;
+    end
+    if ChromieTimeTrackerDB.AdvShowMidnight and (isUnlocked[7]) then
+        iconsCount = iconsCount + 1;
+    end
 
     local alignments = {}
     alignments[1] = "LEFT"
@@ -975,18 +1019,24 @@ function CTT_LoadAvancedModeIcons()
     else
         covenantIconFrame:Hide();
     end
-    --if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-    --    CTT_setupGarrisonIconFrame(dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,C_LandingPagesTextures["DragonIsles"], "Atlas", L["MiddleClickOption_DragonIsles"])
-    --    position = position + 1;
-    --else
-    --    dragonIslesIconFrame:Hide();
-    --end
-    --if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-    --    CTT_setupGarrisonIconFrame(khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,C_LandingPagesTextures["KhazAlgar"], "Atlas", L["MiddleClickOption_KhazAlgar"])
-    --    position = position + 1;
-    --else
-    --    khazAlgarIconFrame:Hide();
-    --end
+    if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
+        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,C_LandingPagesTextures["DragonIsles"], "Atlas", L["MiddleClickOption_DragonIsles"])
+        position = position + 1;
+    else
+        dragonIslesIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
+        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,C_LandingPagesTextures["KhazAlgar"], "Atlas", L["MiddleClickOption_KhazAlgar"])
+        position = position + 1;
+    else
+        khazAlgarIconFrame:Hide();
+    end
+    if ChromieTimeTrackerDB.AdvShowMidnight and (isUnlocked[7]) then
+        CTT_setupGarrisonIconFrame(midnightIconFrame,iconSize,"MN",(left + (step * position)),top,C_LandingPagesTextures["Midnight"], "Atlas", L["MiddleClickOption_Midnight"])
+        position = position + 1;
+    else
+        midnightIconFrame:Hide();
+    end
 
 end
 
@@ -1236,6 +1286,19 @@ end
 function CTT_CheckExpansionContentAccess(_garrisonID)
     
  if _garrisonID == 111 then
+    EncounterJournalCloseButton:Click()
+    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:getMainWindow():Hide()
+        end
     if C_Covenants.GetActiveCovenantID() ~= 0 and C_Covenants.GetActiveCovenantID() ~= nil then
         HideUIPanel(GarrisonLandingPage);
         ShowGarrisonLandingPage(_garrisonID)
@@ -1246,6 +1309,20 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
         ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
     end
 elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
+    EncounterJournalCloseButton:Click()
+    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:getMainWindow():Hide()
+        end
+    --Fechar MopReport Aqui
  if not not (C_Garrison.GetGarrisonInfo(_garrisonID)) then
     HideUIPanel(GarrisonLandingPage);
     ShowGarrisonLandingPage(_garrisonID)
@@ -1278,6 +1355,18 @@ end
 else
     if _garrisonID == "DF" then
         local funcionalidade = ""
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:getMainWindow():Hide()
+        end
         if(CheckSumaryWindowIsUnlockedForExpansion(9, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             --if(ExpansionLandingPage.Overlay.WarWithinLandingOverlay) then
             --    ExpansionLandingPage.Overlay.WarWithinLandingOverlay.CloseButton:Click()
@@ -1290,6 +1379,18 @@ else
         end
     elseif _garrisonID == "TWW" then
         local funcionalidade = ""
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:getMainWindow():Hide()
+        end
         if(CheckSumaryWindowIsUnlockedForExpansion(10, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
             --if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
             --    ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
@@ -1300,7 +1401,33 @@ else
             requisito = L["UndiscoveredContentUnlockRequirement_KhazAlgar"]
             ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         end
+    elseif _garrisonID == "MN" then
+        local funcionalidade = ""
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            MoPReportIntegration:getMainWindow():Hide()
+        end
+        if(CheckSumaryWindowIsUnlockedForExpansion(11, C_SUMARY_UNLOCK_QUEST_IDS, ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)) then
+            --if(ExpansionLandingPage.Overlay.DragonflightLandingOverlay) then
+            --    ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
+            --end
+            CTT_OpenExpansionLandingPage(_garrisonID);
+        else
+            funcionalidade = L["UndiscoveredContent_Midnight"]
+            requisito = L["UndiscoveredContentUnlockRequirement_Midnight"]
+            ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
+        end
     elseif _garrisonID == "MoPReport" and ChromieTimeTrackerDB.IntegrationMoPReport then
+        EncounterJournalCloseButton:Click()
+        HideUIPanel(GarrisonLandingPage);
         local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
         if MoPReportIntegration == nil then
@@ -1532,10 +1659,12 @@ function CTT_ShowToolTip(tooltip, mode)
             MClickAction = L["MClickAction_Missions"]            
         elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == 111 then
             MClickAction = L["MClickAction_Covenant"]            
-        --elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "DF" then
-        --    MClickAction = L["MClickAction_DragonIsles"]
-        --elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
-        --    MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "DF" then
+            MClickAction = L["MClickAction_DragonIsles"]
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "TWW" then
+            MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[C_ExpansionGarrisonMiddleClickOptions[ChromieTimeTrackerDB.DefaultMiddleClickOption]] == "MN" then
+            MClickAction = L["MClickAction_Midnight"]
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "MoPReport" then
             MClickAction = L["MClickAction_Mists"]
         else
@@ -1556,10 +1685,12 @@ else
             MClickAction = L["MClickAction_Missions"]
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == 111 then
             MClickAction = L["MClickAction_Covenant"]
-        --elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "DF" then
-        --    MClickAction = L["MClickAction_DragonIsles"]
-        --elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "TWW" then
-        --    MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "DF" then
+            MClickAction = L["MClickAction_DragonIsles"]
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "TWW" then
+            MClickAction = L["MClickAction_KhazAlgar"]
+        elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "MN" then
+            MClickAction = L["MClickAction_Midnight"]
         elseif C_ExpansionGarrisonID[CurrentGarrisonID] == "MoPReport" then
             MClickAction = L["MClickAction_Mists"]
         else
@@ -1580,26 +1711,7 @@ end
 end
 
 function CTT_OpenExpansionLandingPage(_expansion)
- 
-    --local overlay = CreateFromMixins(DragonflightLandingOverlayMixin)
---
-    --if(_expansion == "DF") then
-    --    overlay = CreateFromMixins(DragonflightLandingOverlayMixin)
-    --elseif (_expansion == "TWW") then
-    --    overlay = CreateFromMixins(WarWithinLandingOverlayMixin)
-    --end
---
-    --if ExpansionLandingPage.overlayFrame then
-    --    ExpansionLandingPage.overlayFrame:Hide();
-    --end
---
-    --ExpansionLandingPage.overlayFrame = overlay.CreateOverlay(ExpansionLandingPage.Overlay);
-    --ExpansionLandingPage.overlayFrame:Show();
---
-    --ToggleExpansionLandingPage();
-
-    print(L["Broken_by_Blizzard"] .. "[12.0.0]")
-
+    OpenEncounterJournal_Journey(_expansion)
 end
 
 --Add garrison buttons to GarrisonLandingPage - Início
@@ -1633,23 +1745,23 @@ local function SelectGarrison(self)
         end
     end
 
-    --if(self.pageID == "TWW" or self.pageID == "DF") then
-    --    HideUIPanel(GarrisonLandingPage);
-    --    local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
-    --    local MoPReportHasIntegrationSuport = true
-    --    if MoPReportIntegration == nil then
-    --        MoPReportHasIntegrationSuport = false
-    --    else
-    --        if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
-    --            MoPReportHasIntegrationSuport = false
-    --        end
-    --    end
-    --    if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
-    --        if(MoPReportIntegration:getMainWindow():IsShown()) then
-    --            MoPReportIntegration:getMainWindow():Hide();
-    --        end
-    --    end
-    --end
+    if(self.pageID == "TWW" or self.pageID == "DF" or self.pageID == "MN") then
+        HideUIPanel(GarrisonLandingPage);
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            if(MoPReportIntegration:getMainWindow():IsShown()) then
+                MoPReportIntegration:getMainWindow():Hide();
+            end
+        end
+    end
 
     if(self.pageID == "MoPReport") then
         --if ExpansionLandingPage.overlayFrame and ExpansionLandingPage.overlayFrame:IsShown() then
@@ -1660,6 +1772,22 @@ local function SelectGarrison(self)
         --        ExpansionLandingPage.Overlay.DragonflightLandingOverlay.CloseButton:Click()
         --    end
         --end
+
+                local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = true
+        if MoPReportIntegration == nil then
+            MoPReportHasIntegrationSuport = false
+        else
+            if MoPReportIntegration.MoPReport_hasIntegrationSuport == nil then
+                MoPReportHasIntegrationSuport = false
+            end
+        end
+        if (MoPReportLoaded and MoPReportHasIntegrationSuport) then
+            if(MoPReportIntegration:getMainWindow():IsShown()) then
+                MoPReportIntegration:getMainWindow():Hide();
+            end
+        end
+
         HideUIPanel(GarrisonLandingPage);
     end
 
@@ -1680,8 +1808,9 @@ E:SetScript('OnEvent', function(self, event, addon)
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
             {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
-            --{"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
-            --{"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"MN", EXPANSION_NAME11, C_LandingPagesTabTextures["Midnight"]},
         }
         
         local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
@@ -1789,10 +1918,15 @@ E:SetScript('OnEvent', function(self, event, addon)
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
             {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
-            --{"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
-            --{"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"MN", EXPANSION_NAME11, C_LandingPagesTabTextures["Midnight"]},
         }
-                
+
+        if(EncounterJournal == nil) then
+            EncounterJournal_LoadUI()
+        end
+        
         local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
         if MoPReportIntegration == nil then
@@ -1812,8 +1946,8 @@ E:SetScript('OnEvent', function(self, event, addon)
         end
         
         for _, _garrisonTab in ipairs(garrisonData) do
-            local garrisonTabFrame = CreateFrame('CheckButton', nil, ExpansionLandingPage, 'UIButtonTemplate')
-            garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
+            local garrisonTabFrame = CreateFrame('CheckButton', nil, EncounterJournalJourneysFrame, 'UIButtonTemplate')
+            garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1) - 76))
             garrisonTabFrame:SetSize(30,30)
             garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
             garrisonTabFrame:SetScript('OnClick', SelectGarrison)
@@ -1822,8 +1956,8 @@ E:SetScript('OnEvent', function(self, event, addon)
             garrisonTabFrame.pageID = _garrisonTab[1]
             garrisonTabFrame.tooltip = _garrisonTab[2]
         
-            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, ExpansionLandingPage, '')
-            garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1)))
+            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, EncounterJournalJourneysFrame, '')
+            garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#expansionTabs + 1) - 76))
             garrisonTabFrameHover:SetSize(30, 30)
             garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
             garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
@@ -1912,8 +2046,9 @@ E:SetScript('OnEvent', function(self, event, addon)
             {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
             {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
             {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
-            --{"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
-            --{"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"MN", EXPANSION_NAME11, C_LandingPagesTabTextures["Midnight"]},
         }
          
         if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport then
@@ -1993,32 +2128,23 @@ E:SetScript('OnEvent', function(self, event, addon)
     
 end)
 
---hooksecurefunc("CTT_OpenExpansionLandingPage", function(_LandingPageId)
---        if(_LandingPageId == "TWW") then
---            for _index, _garTab in pairs(expansionTabs) do
---                _garTab:SetPoint('TOPRIGHT', -10, - 30 -(40 * (_index)))
---            end
---            
---            for _index, _garTabHover in pairs(expansionTabsHover) do
---                _garTabHover:SetPoint('TOPRIGHT', -10, - 30 - (40 * (_index)))
---            end
---        end
---
---        if(_LandingPageId == "DF") then
---            for _index, _garTab in pairs(expansionTabs) do
---                _garTab:SetPoint('TOPRIGHT', 38, -(40 * (_index)))
---            end
---
---            for _index, _garTabHover in pairs(expansionTabsHover) do
---                _garTabHover:SetPoint('TOPRIGHT', 38, -(40 * (_index)))
---            end
---        end
---
---        if(GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
---            GarrisonLandingPage_Toggle()
---        end
---
---    end)
+hooksecurefunc("CTT_OpenExpansionLandingPage", function(_LandingPageId)
+
+        if(_LandingPageId == "DF" or _LandingPageId == "TWW" or _LandingPageId == "MN") then
+            for _index, _garTab in pairs(expansionTabs) do
+                _garTab:SetPoint('TOPRIGHT', 38, -(40 * (_index) - 76))
+            end
+
+            for _index, _garTabHover in pairs(expansionTabsHover) do
+                _garTabHover:SetPoint('TOPRIGHT', 38, -(40 * (_index) - 76))
+            end
+        end
+
+        if(GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+            GarrisonLandingPage_Toggle()
+        end
+
+    end)
 
 --Add garrison and expansions buttons to GarrisonLandingPage and Expansiob Landing Pages - Fim
 --Add Emissary Missions to GarrisonLandingPage - Início
@@ -2489,8 +2615,8 @@ function CTT_setupSlashCommands()
         if(arg == "config") then
             ChromieTimeTracker:ToggleSettingsFrame()
             
-        --elseif(arg == "DF" or arg == "TWW") then
-        --    CTT_OpenExpansionLandingPage(arg)
+        elseif(arg == "DF" or arg == "TWW" or arg == "MN") then
+            CTT_OpenExpansionLandingPage(arg)
         elseif(arg == "2" or arg == "3" or arg == "9" or arg == "111") then
             HideUIPanel(GarrisonLandingPage);
             ShowGarrisonLandingPage(tonumber(arg))
@@ -2544,6 +2670,7 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.AdvShowCovenant = true;
             ChromieTimeTrackerDB.AdvShowDragonIsles = true;
             ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+            ChromieTimeTrackerDB.AdvShowMidnight = true;
             ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
             ChromieTimeTrackerDB.AdvButtonsAlignment = "CENTER";
 
@@ -2553,6 +2680,7 @@ function CTT_setupSlashCommands()
             ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
             ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
             ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+            ChromieTimeTrackerDB.ContextMenuShowMidnight = true;
             ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
 
             ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
