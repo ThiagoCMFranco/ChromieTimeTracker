@@ -239,12 +239,6 @@ function CheckSumaryWindowIsUnlockedForExpansion(_ExpansionID, _questList, _char
             return true
         end
 
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(9)) then
-            _characterDatabase.IsDragonIslesUnlocked = true
-            _sharedDatabase.IsDragonIslesUnlocked = true
-            return true
-        end
-
         local questList = _questList[_ExpansionID]
         
         for _, questID in ipairs(questList) do
@@ -267,12 +261,6 @@ function CheckSumaryWindowIsUnlockedForExpansion(_ExpansionID, _questList, _char
             return true
         end
 
-        if(C_PlayerInfo.IsExpansionLandingPageUnlockedForPlayer(10)) then
-            _characterDatabase.IsIsleOfDornUnlocked = true
-            _sharedDatabase.IsIsleOfDornUnlocked = true
-            return true
-        end
-
         local questList = _questList[_ExpansionID]
         
         for _, questID in ipairs(questList) do
@@ -284,6 +272,31 @@ function CheckSumaryWindowIsUnlockedForExpansion(_ExpansionID, _questList, _char
         end
 
         return false
+    end
+
+    if(_ExpansionID == 11) then
+        --Check for The Midnight sumary.
+
+        if(_characterDatabase.IsMidnightUnlocked) then
+            return true
+        end
+        if(_sharedDatabase.IsMidnightUnlocked and _sharedDatabase.ShareWarbandUnlock) then
+            return true
+        end
+
+        local questList = _questList[_ExpansionID]
+        
+        for _, questID in ipairs(questList) do
+            if IsQuestOnCompletedList(questID) then
+                _characterDatabase.IsMidnightUnlocked = true
+                _sharedDatabase.IsMidnightUnlocked = true
+                return true
+            end
+        end
+        
+        --Retornar sempre true, enquanto não for possível identificar os códigos das missões de desbloqueio
+        --Passar a retornar falso a partir de quando os itens de C_SUMARY_UNLOCK_QUEST_IDS[11] estiverem preenchidos
+        return true
     end
 end
 
@@ -533,4 +546,67 @@ function SetPortraitTextureCustom(textureObject, asset)
         textureObject:AddMaskTexture(mask)
         textureObject.circleMask = mask
     end
+end
+
+function OpenEncounterJournal_Journey(p_ExpansionId)
+
+    if EncounterJournal == nil then
+        EncounterJournal_LoadUI()        
+    end
+
+local extraDecrement = false
+
+if(p_ExpansionId == "DF") then 
+    p_ExpansionId = 9
+end
+if(p_ExpansionId == "TWW") then 
+    p_ExpansionId = 10
+end
+if(p_ExpansionId == "MN") then 
+    p_ExpansionId = 11
+end
+
+if(p_ExpansionId == 9) then
+    --2507 - DF - Expedição da Escama do Dragão
+    EncounterJournal_OpenToJourney(2507);
+elseif(p_ExpansionId == 10) then
+    --2590 - TWW - Conselho de Dornogal
+    EncounterJournal_OpenToJourney(2590);
+elseif(p_ExpansionId == 11) then
+    --2699 - MN - A Singularidade
+    EncounterJournal_OpenToJourney(2699);
+else
+    
+end
+
+if(EncounterJournal.JourneysFrame.currentSeason) then
+    extraDecrement = true
+end
+
+local _selected = EncounterJournal.JourneysFrame.expansionFilter
+
+local safetyBreak = 0
+
+while ((_selected ~= p_ExpansionId or extraDecrement) and safetyBreak < 20) do
+    if _selected < p_ExpansionId then
+        EncounterJournalInstanceSelect.ExpansionDropdown:Increment()
+        _selected = _selected + 1
+    else
+        if(extraDecrement) then
+            EncounterJournalInstanceSelect.ExpansionDropdown:Decrement()
+            extraDecrement = false
+        end
+        EncounterJournalInstanceSelect.ExpansionDropdown:Decrement()
+        _selected = _selected - 1
+    end
+    
+    safetyBreak = safetyBreak + 1
+end
+
+EncounterJournal.JourneysFrame.expansionFilter = _selected
+EncounterJournalNavBarHomeButton.data.OnClick();
+
+ToggleEncounterJournal()
+ToggleEncounterJournal()
+
 end
