@@ -15,7 +15,7 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 3.0.0
+## Version: 3.1.0
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables: ChromieTimeTrackerSharedDB
@@ -51,3 +51,4 @@ Settings.lua
 Welcome.lua
 Modules\ExperienceAlert.lua
 Modules\LegionInvasion.lua
+Modules\BattleForAzerothInvasions.lua

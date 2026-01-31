@@ -657,6 +657,52 @@ function CTT_LoadReportEnhancementSettings()
         end)
     chkShowLegionInvasionsOnReportWindow:SetWidth(700)
 
+    local chkShowBattleForAzerothInvasionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowBattleForAzerothInvasionsOnReportWindow:SetLabel(L["chkShowBattleForAzerothInvasionsOnReportWindow"])
+    chkShowBattleForAzerothInvasionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowBattleForAzerothInvasionsOnReportWindow = chkShowBattleForAzerothInvasionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 9) then
+                if ChromieTimeTrackerDB.ShowBattleForAzerothInvasionsOnReportWindow then
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Show();
+                    end
+                else
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Hide();
+                    end
+                end
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
+    chkShowBattleForAzerothInvasionsOnReportWindow:SetWidth(700)
+
+    local chkShowNzothInvasionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowNzothInvasionsOnReportWindow:SetLabel(L["chkShowNzothInvasionsOnReportWindow"])
+    chkShowNzothInvasionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowNzothInvasionsOnReportWindow = chkShowNzothInvasionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 9) then
+                if ChromieTimeTrackerDB.ShowNzothInvasionsOnReportWindow then
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Show();
+                    end
+                else
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Hide();
+                    end
+                end
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
+    chkShowNzothInvasionsOnReportWindow:SetWidth(700)
+
     local tabsEnhancements = {
         {value = "tabEnhLegion", text = EXPANSION_NAME6}
     }
@@ -730,6 +776,8 @@ function CTT_LoadReportEnhancementSettings()
     scrollFrameReportEnhancementSettings:AddChild(chkShowMissionExpirationTimeOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowEmissaryMissionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowLegionInvasionsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowBattleForAzerothInvasionsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowNzothInvasionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(tabGroup)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
@@ -738,6 +786,8 @@ function CTT_LoadReportEnhancementSettings()
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
     chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
     chkShowLegionInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow)
+    chkShowBattleForAzerothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowBattleForAzerothInvasionsOnReportWindow)
+    chkShowNzothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowNzothInvasionsOnReportWindow)
     
     
 end
