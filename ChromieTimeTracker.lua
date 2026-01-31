@@ -1286,7 +1286,9 @@ end
 function CTT_CheckExpansionContentAccess(_garrisonID)
     
  if _garrisonID == 111 then
-    EncounterJournalCloseButton:Click()
+    if(EncounterJournal)then
+        EncounterJournalCloseButton:Click()
+    end
     local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
         if MoPReportIntegration == nil then
@@ -1309,7 +1311,9 @@ function CTT_CheckExpansionContentAccess(_garrisonID)
         ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. L["UndiscoveredContent_Covenant"] .. requisito, 5, 1.5)
     end
 elseif _garrisonID == 2 or _garrisonID == 3 or _garrisonID == 9 then
-    EncounterJournalCloseButton:Click()
+    if(EncounterJournal)then
+        EncounterJournalCloseButton:Click()
+    end
     local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true
         if MoPReportIntegration == nil then
@@ -1426,7 +1430,9 @@ else
             ChromieTimeTrackerUtil:FlashMessage(L["UndiscoveredContent"]  .. funcionalidade .. requisito , 5, 1.5)
         end
     elseif _garrisonID == "MoPReport" and ChromieTimeTrackerDB.IntegrationMoPReport then
-        EncounterJournalCloseButton:Click()
+        if(EncounterJournal)then
+            EncounterJournalCloseButton:Click()
+        end
         HideUIPanel(GarrisonLandingPage);
         local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
         local MoPReportHasIntegrationSuport = true

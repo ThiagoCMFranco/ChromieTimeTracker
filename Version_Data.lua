@@ -20,5 +20,5 @@
 --
 --------------------------------------------------------------------------------
 
-C_CTT_VERSION_UID = 3000000
-C_CTT_VERSION_SEMANTIC_NUMBER = "3.0.0"
+C_CTT_VERSION_UID = 3001000
+C_CTT_VERSION_SEMANTIC_NUMBER = "3.1.0"
