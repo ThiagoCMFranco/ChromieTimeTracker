@@ -1,4 +1,4 @@
-## Interface: 120000
+## Interface: 120000, 120001
 ## Title: Chromie Time Tracker
 ## Title-ptBR: Rastreador de Linha Temporal da Crona
 ## Notes: Easily track your current Timewalking Campaign (Chromie Time).
@@ -15,7 +15,7 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 3.1.0
+## Version: 3.1.1
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables: ChromieTimeTrackerSharedDB
