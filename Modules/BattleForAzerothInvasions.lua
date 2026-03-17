@@ -178,12 +178,7 @@
 		_reprocessa = false
 
 		if(_garrisonID == 9) then
-			garrisonUIInvasionsFrame:Show()
-		else
-			garrisonUIInvasionsFrame:Hide()
-		end
-
-		if(_garrisonID == 9) then
+					garrisonUIInvasionsFrame:Show()
 					local bfainvasion = FindInvasionBFA()
 					local tooltip = ""
 

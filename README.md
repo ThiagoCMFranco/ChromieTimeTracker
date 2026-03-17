@@ -2,15 +2,15 @@
 
 This is a World of Warcraft addon.
 
-Easily track your current Timewalking Campaign (Chromie Time).  
+Track your Timewalking Campaign and coordinate with friends. Access expansion summaries from WoD to Midnight. Manage Garrison, Class Hall & Covenant reports, track emissary quests, invasions, resources and more. A full modern and legacy content companion!  
 
-Game Addon Categories: Tooltip, Roleplay, Garrison, Quests & Leveling.  
+Game Addon Categories: Tooltip, Roleplay, Garrison, Action Bars, Quests & Leveling.  
 
 A full featured companion tool for Timewalk Campaigns. Remember which timeline you were playing after a long time away or even help you sichronize your timeline with your friends without having to ask Chromie.  
 
 Swap between diferent layout modes and place it bellow your chat window, near the minimap, near your character nameplate or anywhere you like.  
 
-Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to The War Within that is usually hidden and replaced by new content after every major update.  
+Access your timeline summary using the game own inferface. This feature allows access to the original summary window of each expansion from Warlords of Draenor to Midnight that is usually hidden and replaced by new content after every major update.  
 
 Even after reaching the level breakpoint that you can't time travel anymore, you can still use the addon to track resources, access reports and sumaries, remember you Covenant Sanctum choice, easily track Emissary Quests by expansion and many more quality of life features.
 
@@ -24,11 +24,13 @@ Full Support:
 ## Main Features
 Track your current Timewalking Campaign.  
 Check your Garrison, Class Hall, War Campaign and Covenant Sanctum Reports.  
-Check your Dragonflight and The War Within sumaries.  
+Check your Dragonflight, The War Within and Midnight journals.  
 
 ## Quality of Life Features
 Track Emissary Quests from Legion and Battle for Azeroth in your Class Hall and War Effort report windows.  
 Track Legion Invasions in the Broken Isles on Legion report window.
+Track Alliance attacks on Zandalar and Horde attacks on Kul Tiras in the Battle for Azeroth Missions report window.
+Track Black Empire Strikes and Horrific Visions in the Battle for Azeroth Missions report window.
 Check your current Covenant Sanctum choice.  
 Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  
@@ -84,5 +86,5 @@ You can check the addon changelog and development roadmap on our GitHub project 
 Find our community at https://discord.gg/M7wQQFRjaq  
 
 Help us with a donation using the methods availiable on our Discord Channel on Help Us Chat.  
-Donations: PagSeguro/PagBank (https://pag.ae/7_BDYY22Q) or PayPal.  
-Only for Donations from Brazil: Pix.
+Donations: PagSeguro/PagBank (https://pag.ae/81u_gUZeo) or PayPal.  
+Only for Donations from Brazil: Pix.  
