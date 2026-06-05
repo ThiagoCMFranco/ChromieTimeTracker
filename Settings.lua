@@ -29,6 +29,7 @@ local C_LanguageContributors = {}
 
 local modes = {L["CompactMode"], L["StandardMode"], L["AlternateMode"], L["AdvancedMode"]}
 local visibilityOptions = {L["Visibility_Always_Show"], L["Visibility_Hide_Current_Timeline"], L["Visibility_Never_Show"]}
+local buttonStyles = {L["styleInline"],L["styleRadial"]}
 local buttonAlignments = {L["alignLeft"],L["alignCenter"],L["alignRight"]}
 local buttonPositions = {L["positionAbove"], L["positionBelow"]}
 
@@ -266,12 +267,12 @@ function CTT_LoadExperienceSettings()
 
     local txtExperienceAlertLevelPopup = AceGUI:Create("Slider")
     txtExperienceAlertLevelPopup:SetLabel(L["Experience_AlertMinLevelLabel"])
-    txtExperienceAlertLevelPopup:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelPopup:SetSliderValues(1,79,1)
     txtExperienceAlertLevelPopup:SetCallback("OnMouseUp", function(widget, event, text) 
         ChromieTimeTrackerDB.ExperienceAlertLevelPopup = tonumber(txtExperienceAlertLevelPopup:GetValue())
         if ChromieTimeTrackerDB.ExperienceAlertLevelPopup == nil then
-            ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65
-            txtExperienceAlertLevelPopup:SetValue(65)
+            ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 75
+            txtExperienceAlertLevelPopup:SetValue(75)
         end
     end)
     scrollFrameExperience:AddChild(txtExperienceAlertLevelPopup)
@@ -318,12 +319,12 @@ function CTT_LoadExperienceSettings()
 
     local txtExperienceAlertLevelFlash = AceGUI:Create("Slider")
     txtExperienceAlertLevelFlash:SetLabel(L["Experience_AlertMinLevelLabel"])
-    txtExperienceAlertLevelFlash:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelFlash:SetSliderValues(1,79,1)
     txtExperienceAlertLevelFlash:SetCallback("OnMouseUp", function(widget, event, text) 
         ChromieTimeTrackerDB.ExperienceAlertLevelFlash = tonumber(txtExperienceAlertLevelFlash:GetValue())
         if ChromieTimeTrackerDB.ExperienceAlertLevelFlash == nil then
-            ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65
-            txtExperienceAlertLevelFlash:SetValue(65)
+            ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 75
+            txtExperienceAlertLevelFlash:SetValue(75)
         end
     end)
     scrollFrameExperience:AddChild(txtExperienceAlertLevelFlash)
@@ -385,12 +386,12 @@ function CTT_LoadExperienceSettings()
 
     local txtExperienceAlertLevelChat = AceGUI:Create("Slider")
     txtExperienceAlertLevelChat:SetLabel(L["Experience_AlertMinLevelLabel"])
-    txtExperienceAlertLevelChat:SetSliderValues(1,69,1)
+    txtExperienceAlertLevelChat:SetSliderValues(1,79,1)
     txtExperienceAlertLevelChat:SetCallback("OnMouseUp", function(widget, event, text) 
         ChromieTimeTrackerDB.ExperienceAlertLevelChat = tonumber(txtExperienceAlertLevelChat:GetValue())
         if ChromieTimeTrackerDB.ExperienceAlertLevelChat == nil then
-            ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65
-            txtExperienceAlertLevelChat:SetValue(65)
+            ChromieTimeTrackerDB.ExperienceAlertLevelChat = 75
+            txtExperienceAlertLevelChat:SetValue(75)
         end
     end)
     scrollFrameExperience:AddChild(txtExperienceAlertLevelChat)
@@ -703,6 +704,29 @@ function CTT_LoadReportEnhancementSettings()
         end)
     chkShowNzothInvasionsOnReportWindow:SetWidth(700)
 
+    local chkShowCovenantInvasionsOnReportWindow = AceGUI:Create("CheckBox")
+    chkShowCovenantInvasionsOnReportWindow:SetLabel(L["chkShowCovenantInvasionsOnReportWindow"])
+    chkShowCovenantInvasionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ShowCovenantInvasionsOnReportWindow = chkShowCovenantInvasionsOnReportWindow:GetValue()
+        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+        local _garrisonId = GarrisonLandingPage.garrTypeID
+        if(_garrisonId == 111) then
+                if ChromieTimeTrackerDB.ShowCovenantInvasionsOnReportWindow then
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Show();
+                    end
+                else
+                    if (garrisonUIInvasionsFrame) then
+                        garrisonUIInvasionsFrame:Hide();
+                    end
+                end
+                    HideUIPanel(GarrisonLandingPage);
+                    ShowGarrisonLandingPage(_garrisonId)
+                end
+            end
+        end)
+    chkShowCovenantInvasionsOnReportWindow:SetWidth(700)
+
     local tabsEnhancements = {
         {value = "tabEnhLegion", text = EXPANSION_NAME6}
     }
@@ -778,6 +802,7 @@ function CTT_LoadReportEnhancementSettings()
     scrollFrameReportEnhancementSettings:AddChild(chkShowLegionInvasionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowBattleForAzerothInvasionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(chkShowNzothInvasionsOnReportWindow)
+    scrollFrameReportEnhancementSettings:AddChild(chkShowCovenantInvasionsOnReportWindow)
     scrollFrameReportEnhancementSettings:AddChild(tabGroup)
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
@@ -788,6 +813,7 @@ function CTT_LoadReportEnhancementSettings()
     chkShowLegionInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow)
     chkShowBattleForAzerothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowBattleForAzerothInvasionsOnReportWindow)
     chkShowNzothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowNzothInvasionsOnReportWindow)
+    chkShowCovenantInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCovenantInvasionsOnReportWindow)
     
     
 end
@@ -807,6 +833,7 @@ function CTT_LoadAdvancedModeSettings()
     scrollContainerAdvancedMode:AddChild(scrollFrameAdvancedMode)
 
 --Advanced Mode Options
+local ddlButtonStyle = AceGUI:Create("Dropdown")
 local ddlButtonPosition = AceGUI:Create("Dropdown")
 local ddlButtonAlignment = AceGUI:Create("Dropdown")
 local lblSelectAdvancedModeOptions = AceGUI:Create("Label")
@@ -821,6 +848,20 @@ local chkAdvShowMidnight = AceGUI:Create("CheckBox")
 local chkAdvShowUnlockedOnly = AceGUI:Create("CheckBox")
 local chkAdvHideTimelineBox = AceGUI:Create("CheckBox")
 local heading5 = AceGUI:Create("Heading")
+
+ddlButtonStyle:SetList(buttonStyles)
+ddlButtonStyle:SetLabel(L["ddlButtonStyle"])
+ddlButtonStyle:SetWidth(200)
+ddlButtonStyle:SetCallback("OnValueChanged", function(widget, event, text)
+    textStore = text
+    ChromieTimeTrackerDB.AdvButtonStyle = ddlButtonStyle.value
+    CTT_updateChromieTime()
+    CTT_showMainFrame()
+    if (ChromieTimeTrackerDB.Mode == 4) then
+        CTT_LoadAvancedModeIcons()
+    end
+end)
+scrollFrameAdvancedMode:AddChild(ddlButtonStyle)
 
 ddlButtonPosition:SetList(buttonPositions)
 ddlButtonPosition:SetLabel(L["ddlButtonPosition"])
@@ -991,6 +1032,7 @@ scrollFrameAdvancedMode:AddChild(lblSelectAdvancedModeOptions)
     chkAdvHideTimelineBox:SetWidth(700)
     scrollFrameAdvancedMode:AddChild(chkAdvHideTimelineBox)
 
+    ddlButtonStyle:SetValue(ChromieTimeTrackerDB.AdvButtonStyle)
     ddlButtonPosition:SetValue(ChromieTimeTrackerDB.AdvButtonsPosition)
     ddlButtonAlignment:SetValue(ChromieTimeTrackerDB.AdvButtonsAlignment)
     chkAdvShowGarrison:SetValue(ChromieTimeTrackerDB.AdvShowGarrison)
@@ -1527,17 +1569,17 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
 
         --Experience Alerts
         ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65;
+        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 75;
         ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = false;
         ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = false;
 
         ChromieTimeTrackerDB.ShowExperienceAlertFlash = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65;
+        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 75;
         ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = false;
         ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = false;
 
         ChromieTimeTrackerDB.ShowExperienceAlertChat = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65;
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 75;
         ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = false;
         ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = false;
 

@@ -55,22 +55,22 @@ if PlayerInfo["Faction"] == "Alliance" then
         zoneColor = "FF3282F6"
 end
 
-C_Expansion_ChromieTime_Drop_Level = 70
+C_Expansion_ChromieTime_Drop_Level = 80
 pLevel = UnitLevel("player")
 
     
 function lockLevelAlert(_level, _event)
 
     if ChromieTimeTrackerDB.ExperienceAlertLevelFlash == nil then
-        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 65
+        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 75
     end
 
     if ChromieTimeTrackerDB.ExperienceAlertLevelPopup == nil then
-        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 65
+        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 75
     end
 
     if ChromieTimeTrackerDB.ExperienceAlertLevelChat == nil then
-        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 65
+        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 75
     end
 
     local _EliminatedExperienceAura = C_UnitAuras.GetPlayerAuraBySpellID(306715)
