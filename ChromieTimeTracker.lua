@@ -182,7 +182,7 @@ local midnightIconFrame = CreateFrame("Frame", "ChromieTimeTrackerMidnightIconFr
 
 --contextMenu
 
-local function GeneratorFunction(owner, rootDescription)
+function GeneratorFunction(owner, rootDescription)
 
     isUnlocked = {true, true, true, true, true, true, true}
 
@@ -549,6 +549,7 @@ function CTT_updateChromieTime()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
         midnightIconFrame:Hide()
+        UpdateRingMenu("BELOW","CENTER",false)
     elseif ChromieTimeTrackerDB.Mode == 2 then
         mainFrame:SetSize(280, 35)
         mainFrame:Show()
@@ -562,6 +563,7 @@ function CTT_updateChromieTime()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
         midnightIconFrame:Hide()
+        UpdateRingMenu("BELOW","CENTER",false)
     elseif ChromieTimeTrackerDB.Mode == 3 then
         if ChromieTimeTrackerDB.AlternateModeShowIconOnly then
         iconFrame:SetSize(32,32)
@@ -581,6 +583,7 @@ function CTT_updateChromieTime()
         dragonIslesIconFrame:Hide()
         khazAlgarIconFrame:Hide()
         midnightIconFrame:Hide()
+        UpdateRingMenu("BELOW","CENTER",false)
         else 
         mainFrame:SetSize(280, 35)
         addonRootFrame:SetSize(280, 35)
@@ -605,6 +608,7 @@ function CTT_updateChromieTime()
         else
             mainFrame:Show()
         end
+        ToggleRing(false, false)
         CTT_LoadAvancedModeIcons()
     else
         mainFrame:SetSize(280, 35)
@@ -729,10 +733,10 @@ end
 
 CTT_setupIconFrame()
 
-function CTT_setupGarrisonIconFrame(_garrisonIconFrame, _size, _garrisonID, _offsetX, _offsetY, _iconName, _iconType, _TooltipText)
+function CTT_setupGarrisonIconFrame(_parentFrame, _garrisonIconFrame, _size, _garrisonID, _offsetX, _offsetY, _iconName, _iconType, _TooltipText)
 
     _garrisonIconFrame:ClearAllPoints()
-    _garrisonIconFrame:SetPoint("TOPLEFT", ChromieTimeTrackerRootFrame, "TOPLEFT", _offsetX, _offsetY)
+    _garrisonIconFrame:SetPoint("TOPLEFT", _parentFrame, "TOPLEFT", _offsetX, _offsetY)
     
     _garrisonIconFrame:SetFrameLevel(2)
     _garrisonIconFrame:EnableMouse(true)
@@ -977,23 +981,40 @@ function CTT_LoadAvancedModeIcons()
         top = iconSize + 2
     end
 
+    if ChromieTimeTrackerDB.AdvButtonStyle == 2 then
+        UpdateRingMenu(position, alignment, true);
+    else
+        UpdateRingMenu(position, alignment, false);
+    end
+
+    if ChromieTimeTrackerDB.AdvButtonStyle == 2 then
+        MoPReportIconFrame:Hide();
+        garrisonIconFrame:Hide();
+        classHallIconFrame:Hide();
+        missionsIconFrame:Hide();
+        covenantIconFrame:Hide();
+        dragonIslesIconFrame:Hide();
+        khazAlgarIconFrame:Hide();
+        midnightIconFrame:Hide();
+    else
+
     local position = 0;
     
     if ChromieTimeTrackerDB.AdvShowMoPReport and ChromieTimeTrackerDB.IntegrationMoPReport and MoPReportLoaded then
-        CTT_setupGarrisonIconFrame(MoPReportIconFrame,iconSize,"MoPReport",(left + (step * position)),top,C_PandariaTabTextures[PlayerInfo["Faction"] .. "_Map"], "Atlas", L["MiddleClickOption_Mists"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, MoPReportIconFrame,iconSize,"MoPReport",(left + (step * position)),top,C_PandariaTabTextures[PlayerInfo["Faction"] .. "_Map"], "Atlas", L["MiddleClickOption_Mists"])
         position = position + 1;
     else
         MoPReportIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowGarrison and (isUnlocked[1]) then
-        CTT_setupGarrisonIconFrame(garrisonIconFrame,iconSize,2,(left + (step * position)),top,C_GarrisonTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Warlords"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, garrisonIconFrame,iconSize,2,(left + (step * position)),top,C_GarrisonTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Warlords"])
         position = position + 1;
     else
         garrisonIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowClassHall and (isUnlocked[2]) then
         if PlayerInfo["Class"]~= "EVOKER" then
-            CTT_setupGarrisonIconFrame(classHallIconFrame,iconSize,3,(left + (step * position)),top,C_ClassTextures[PlayerInfo["Class"]], "Atlas", L["MiddleClickOption_Legion"])
+            CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, classHallIconFrame,iconSize,3,(left + (step * position)),top,C_ClassTextures[PlayerInfo["Class"]], "Atlas", L["MiddleClickOption_Legion"])
             position = position + 1;
         else
             --Since Evoker was launched after Legion there is no class hall for them.
@@ -1003,7 +1024,7 @@ function CTT_LoadAvancedModeIcons()
         classHallIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowWarEffort and (isUnlocked[3]) then
-        CTT_setupGarrisonIconFrame(missionsIconFrame,iconSize,9,(left + (step * position)),top,C_WarCampaignTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Missions"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, missionsIconFrame,iconSize,9,(left + (step * position)),top,C_WarCampaignTextures[PlayerInfo["Faction"]], "Atlas", L["MiddleClickOption_Missions"])
         position = position + 1;
     else
         missionsIconFrame:Hide();
@@ -1014,29 +1035,31 @@ function CTT_LoadAvancedModeIcons()
         local _CovData = {}
         _CovData = getCovenantData()
 
-        CTT_setupGarrisonIconFrame(covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[_CovData[1]], "Atlas", string.format(L["MiddleClickOption_Covenant"], _CovData[3]))
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, covenantIconFrame,iconSize,111,(left + (step * position)),top,C_CovenantChoicesTextures[_CovData[1]], "Atlas", string.format(L["MiddleClickOption_Covenant"], _CovData[3]))
         position = position + 1;
     else
         covenantIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowDragonIsles and (isUnlocked[5]) then
-        CTT_setupGarrisonIconFrame(dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,C_LandingPagesTextures["DragonIsles"], "Atlas", L["MiddleClickOption_DragonIsles"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, dragonIslesIconFrame,iconSize,"DF",(left + (step * position)),top,C_LandingPagesTextures["DragonIsles"], "Atlas", L["MiddleClickOption_DragonIsles"])
         position = position + 1;
     else
         dragonIslesIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowKhazAlgar and (isUnlocked[6]) then
-        CTT_setupGarrisonIconFrame(khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,C_LandingPagesTextures["KhazAlgar"], "Atlas", L["MiddleClickOption_KhazAlgar"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, khazAlgarIconFrame,iconSize,"TWW",(left + (step * position)),top,C_LandingPagesTextures["KhazAlgar"], "Atlas", L["MiddleClickOption_KhazAlgar"])
         position = position + 1;
     else
         khazAlgarIconFrame:Hide();
     end
     if ChromieTimeTrackerDB.AdvShowMidnight and (isUnlocked[7]) then
-        CTT_setupGarrisonIconFrame(midnightIconFrame,iconSize,"MN",(left + (step * position)),top,C_LandingPagesTextures["Midnight"], "Atlas", L["MiddleClickOption_Midnight"])
+        CTT_setupGarrisonIconFrame(ChromieTimeTrackerRootFrame, midnightIconFrame,iconSize,"MN",(left + (step * position)),top,C_LandingPagesTextures["Midnight"], "Atlas", L["MiddleClickOption_Midnight"])
         position = position + 1;
     else
         midnightIconFrame:Hide();
     end
+
+end
 
 end
 
