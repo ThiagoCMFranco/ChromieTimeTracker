@@ -551,6 +551,50 @@ treeW:ReleaseChildren()
 
 end
 
+function CTT_LoadProfileSettings()
+
+    treeW:ReleaseChildren()
+
+    scrollContainerProfileSettings = AceGUI:Create("SimpleGroup")
+    scrollContainerProfileSettings:SetFullWidth(true)
+    scrollContainerProfileSettings:SetFullHeight(true)
+    scrollContainerProfileSettings:SetLayout("Fill")
+
+    treeW:AddChild(scrollContainerProfileSettings)
+
+    scrollFrameProfileSettings = AceGUI:Create("ScrollFrame")
+    scrollFrameProfileSettings:SetLayout("Flow")
+    scrollContainerProfileSettings:AddChild(scrollFrameProfileSettings)
+
+    local lblImportExportDescription = AceGUI:Create("Label")
+    
+    lblImportExportDescription:SetText(L["lblImportExportDescription"])
+    SetACE3WidgetFontSize(lblImportExportDescription, 12)
+    lblImportExportDescription:SetWidth(580)
+    scrollFrameProfileSettings:AddChild(lblImportExportDescription)
+
+    local btnExport = AceGUI:Create("Button")
+
+    btnExport:SetText(L["buttonExportSettings"])
+    btnExport:SetWidth(200)
+    btnExport:SetCallback("OnClick", function() 
+        ExportModule:ShowExportWindow(ChromieTimeTrackerDB)
+    end)
+    scrollFrameProfileSettings:AddChild(btnExport)
+
+        local btnImport = AceGUI:Create("Button")
+
+    btnImport:SetText(L["buttonImportSettings"])
+    btnImport:SetWidth(200)
+    btnImport:SetCallback("OnClick", function() 
+        ImportModule:ShowImportWindow(function(novaTabela)
+            ChromieTimeTrackerDB = novaTabela 
+        end)
+    end)
+    scrollFrameProfileSettings:AddChild(btnImport)
+
+end
+
 function CTT_LoadReportEnhancementSettings()
     treeW:ReleaseChildren()
 
@@ -1665,6 +1709,11 @@ tree = {
             },
         }
     },
+    {
+        value = "Pro",
+        text = L["Settings_Menu_Profiles"],
+        icon = "Interface\\Icons\\inv_misc_gear_01",
+    },
     { 
         value = "C", 
         text = L["Settings_Menu_Credit"],
@@ -1702,6 +1751,8 @@ tree = {
         CTT_LoadExperienceSettings()
     elseif group == "Rmx" then
         CTT_LoadRemixSettings()
+    elseif group == "Pro" then
+        CTT_LoadProfileSettings()
     elseif group == "Int" then
         CTT_LoadIntegrationSettings()
     elseif string.find(group, "MoPReportIntegration") then
