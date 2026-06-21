@@ -2729,6 +2729,12 @@ function CTT_setupSlashCommands()
             CTT_LoadAvancedModeIcons()
 
             print(L["RunCommandMessage_ResetAll"])
+        elseif(arg == "ExportSettings") then
+            ExportModule:ShowExportWindow(ChromieTimeTrackerDB)
+        elseif (arg == "ImportSettings") then
+            ImportModule:ShowImportWindow(function(novaTabela)
+            ChromieTimeTrackerDB = novaTabela 
+            end)
         else
             if not addonRootFrame:IsShown() then
                 addonRootFrame:Hide()

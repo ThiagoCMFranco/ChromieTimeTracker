@@ -15,7 +15,7 @@
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
 ## Author: Thiago Franco (Topolino)
-## Version: 3.2.2
+## Version: 3.3.0
 ## RequiredDeps:
 ## X-Curse-Project-ID: 1209023
 ## SavedVariables: ChromieTimeTrackerSharedDB
@@ -28,6 +28,8 @@ Libs\LibStub\LibStub.lua
 Libs\LibSharedMedia-3.0\lib.xml
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
+Libs\LibSerialize\lib.xml
+Libs\LibDeflate\LibDeflate.lua
 
 #Versioning Information
 Version_Data.lua
@@ -44,6 +46,8 @@ Utils\Toast.lua
 Utils\FlashMessage.lua
 Utils\Functions.lua
 Utils\VersionChecker.lua
+Utils\ExportModule.lua
+Utils\ImportModule.lua
 
 # Main Files
 ChromieTimeTracker.lua
