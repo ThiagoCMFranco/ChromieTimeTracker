@@ -31,6 +31,7 @@ Track Emissary Quests from Legion and Battle for Azeroth in your Class Hall and 
 Track Legion Invasions in the Broken Isles on Legion report window.
 Track Alliance attacks on Zandalar and Horde attacks on Kul Tiras in the Battle for Azeroth Missions report window.
 Track Black Empire Strikes and Horrific Visions in the Battle for Azeroth Missions report window.
+Track Covenant Strikes on The Maw in the Shadowlands Covenant Sanctum report window.
 Check your current Covenant Sanctum choice.  
 Track follower action resources (Garrison Resource, Order Resource, War Resource e Reservoir Anima).  
 Check the remaining time for available Garrison, Class Hall, War Effort and Covenant Sanctum missions.  

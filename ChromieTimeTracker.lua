@@ -1142,6 +1142,11 @@ eventListenerFrame:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "PLAYER_LOGIN" then
         C_Timer.After(0.1,function()
+            if(ChromieTimeTrackerSharedDB.AutoApplyGlobalProfile) then
+                Profile:LoadFromGlobalProfile(function(novaTabela)
+                    ChromieTimeTrackerDB = novaTabela 
+                end, ChromieTimeTrackerSharedDB, true)
+            end
             CTT_updateChromieTime()
             if((ChromieTimeTrackerDB.WelcomeMessageVisibility == nil) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 1) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
                 print(L["ChatAddonLoadedMessage"] .. CTT_getChromieTime() .. ".")
