@@ -566,9 +566,93 @@ function CTT_LoadProfileSettings()
     scrollFrameProfileSettings:SetLayout("Flow")
     scrollContainerProfileSettings:AddChild(scrollFrameProfileSettings)
 
+    
+    StaticPopupDialogs["POPUP_DIALOG_CONFIRM_SAVE_GLOBAL_PROFILE"] = {
+    text = L["Dialog_SaveGlobalProfile_Message"],
+    button1 = L["Dialog_Yes"],
+    button2 = L["Dialog_No"],
+    OnAccept = function()
+        Profile:SaveToGlobalProfile(ChromieTimeTrackerDB, ChromieTimeTrackerSharedDB)
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+  }
+
+    StaticPopupDialogs["POPUP_DIALOG_CONFIRM_LOAD_GLOBAL_PROFILE"] = {
+    text = L["Dialog_LoadGlobalProfile_Message"],
+    button1 = L["Dialog_Yes"],
+    button2 = L["Dialog_No"],
+    OnAccept = function()
+        Profile:LoadFromGlobalProfile(function(novaTabela)
+            ChromieTimeTrackerDB = novaTabela 
+        end, ChromieTimeTrackerSharedDB, false)
+        CTT_updateChromieTime()
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+  }
+
+
+
+    local LabelProfile_Title = AceGUI:Create("Label")
+    LabelProfile_Title:SetText("|cFFFFC90E" .. L["Settings_Menu_Profiles"] .. "|r")
+    SetACE3WidgetFontSize(LabelProfile_Title, 20)
+    LabelProfile_Title:SetWidth(640)
+    scrollFrameProfileSettings:AddChild(LabelProfile_Title)
+
+    local lblProfileDescription = AceGUI:Create("Label")
+    
+    lblProfileDescription:SetText("\n" .. L["lblProfileDescription"])
+    SetACE3WidgetFontSize(lblProfileDescription, 12)
+    lblProfileDescription:SetWidth(580)
+    scrollFrameProfileSettings:AddChild(lblProfileDescription)
+
+    local btnSaveToGlobalProfile = AceGUI:Create("Button")
+
+    btnSaveToGlobalProfile:SetText(L["buttonSaveToGlobalProfile"])
+    btnSaveToGlobalProfile:SetWidth(200)
+    btnSaveToGlobalProfile:SetCallback("OnClick", function() 
+        StaticPopup_Show ("POPUP_DIALOG_CONFIRM_SAVE_GLOBAL_PROFILE")
+    end)
+    scrollFrameProfileSettings:AddChild(btnSaveToGlobalProfile)
+
+    local btnLoadFromGlobalProfile = AceGUI:Create("Button")
+
+    btnLoadFromGlobalProfile:SetText(L["buttonLoadFromGlobalProfile"])
+    btnLoadFromGlobalProfile:SetWidth(200)
+    btnLoadFromGlobalProfile:SetCallback("OnClick", function() 
+        StaticPopup_Show ("POPUP_DIALOG_CONFIRM_LOAD_GLOBAL_PROFILE")
+    end)
+    scrollFrameProfileSettings:AddChild(btnLoadFromGlobalProfile)
+
+    local chkAutoApplyGlobalProfile = AceGUI:Create("CheckBox")
+    chkAutoApplyGlobalProfile:SetLabel(L["chkAutoApplyGlobalProfile"])
+    chkAutoApplyGlobalProfile:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerSharedDB.AutoApplyGlobalProfile = chkAutoApplyGlobalProfile:GetValue()
+    end)
+    chkAutoApplyGlobalProfile:SetWidth(700)
+    scrollFrameProfileSettings:AddChild(chkAutoApplyGlobalProfile)
+    chkAutoApplyGlobalProfile:SetValue(ChromieTimeTrackerSharedDB.AutoApplyGlobalProfile)
+
+    local headingProfiles = AceGUI:Create("Heading")
+    headingProfiles:SetRelativeWidth(1)
+    scrollFrameProfileSettings:AddChild(headingProfiles)
+
+
+
+    local LabelExportImport_Title = AceGUI:Create("Label")
+    LabelExportImport_Title:SetText("|cFFFFC90E" .. L["ExportImport_Title"] .. "|r")
+    SetACE3WidgetFontSize(LabelExportImport_Title, 20)
+    LabelExportImport_Title:SetWidth(640)
+    scrollFrameProfileSettings:AddChild(LabelExportImport_Title)
+
     local lblImportExportDescription = AceGUI:Create("Label")
     
-    lblImportExportDescription:SetText(L["lblImportExportDescription"])
+    lblImportExportDescription:SetText("\n" .. L["lblImportExportDescription"])
     SetACE3WidgetFontSize(lblImportExportDescription, 12)
     lblImportExportDescription:SetWidth(580)
     scrollFrameProfileSettings:AddChild(lblImportExportDescription)
@@ -582,7 +666,7 @@ function CTT_LoadProfileSettings()
     end)
     scrollFrameProfileSettings:AddChild(btnExport)
 
-        local btnImport = AceGUI:Create("Button")
+    local btnImport = AceGUI:Create("Button")
 
     btnImport:SetText(L["buttonImportSettings"])
     btnImport:SetWidth(200)

@@ -13,9 +13,8 @@ local LibDeflate = LibStub:GetLibrary("LibDeflate")
 local frame = nil
 
 local function CreateExportWindow()
-    if frame then return frame end -- Evita criar mais de uma janela
+    if frame then return frame end
 
-    -- Janela Principal
     frame = CreateFrame("Frame", "WoWAddonExportFrame", UIParent, "BackdropTemplate")
     frame:SetSize(450, 350)
     frame:SetPoint("CENTER")
@@ -35,35 +34,29 @@ local function CreateExportWindow()
         tile = true, tileSize = 16, edgeSize = 16,
         insets = { left = 4, right = 4, top = 4, bottom = 4 }
     })
-    frame:SetBackdropColor(0.05, 0.05, 0.05, 0.8) -- Deixa o fundo quase preto e semi-transparente
+    frame:SetBackdropColor(0.05, 0.05, 0.05, 0.8)
 
-    -- Título
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     title:SetPoint("TOP", frame, "TOP", 0, -10)
     title:SetText(L["buttonExportSettings"])
 
-    -- Botão Fechar
     local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
 
-    -- Container de Rolagem (ScrollFrame)
     local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
     scrollFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -35)
     scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -35, 15)
 
-    -- Campo de Texto (EditBox)
     local editBox = CreateFrame("EditBox", nil, scrollFrame)
     editBox:SetMultiLine(true)
     editBox:SetMaxLetters(999999) -- Limite alto para suportar DBs grandes
     editBox:SetFontObject("GameFontHighlightSmall")
     editBox:SetWidth(380)
     
-    -- Scripts do EditBox para facilitar a cópia
     editBox:SetScript("OnEscapePressed", function() frame:Hide() end)
     
     scrollFrame:SetScrollChild(editBox)
     
-    -- Guarda a referência do editbox no frame principal para atualizar depois
     frame.editBox = editBox
 
     return frame
@@ -79,7 +72,6 @@ function ExportModule:ShowExportWindow(databaseTable)
         return
     end
 
-    -- Garante que a janela foi criada
     local f = CreateExportWindow()
     
     -- 1. Serializa a tabela Lua em uma string binária
@@ -91,11 +83,9 @@ function ExportModule:ShowExportWindow(databaseTable)
     -- 3. Codifica o resultado em formato seguro para impressão/cópia no WoW
     local exportString = LibDeflate:EncodeForPrint(compressedData)
     
-    -- Injeta o texto na caixa e exibe a janela
     f.editBox:SetText(exportString)
     f:Show()
     
-    -- Auto-seleciona o texto para o usuário apenas dar Ctrl+C
     f.editBox:HighlightText()
     f.editBox:SetFocus()
 end
