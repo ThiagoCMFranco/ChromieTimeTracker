@@ -35,7 +35,7 @@ local function CreateImportWindow()
         tile = true, tileSize = 16, edgeSize = 16,
         insets = { left = 4, right = 4, top = 4, bottom = 4 }
     })
-    frame:SetBackdropColor(0.05, 0.05, 0.05, 0.8) -- Deixa o fundo quase preto e semi-transparente
+    frame:SetBackdropColor(0.05, 0.05, 0.05, 0.8)
 
     -- Título
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -67,11 +67,9 @@ local function CreateImportWindow()
     importButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 15)
     importButton:SetText(L["buttonSaveApply"])
     
-    -- Anexamos o botão diretamente na tabela do frame
     frame.importButton = importButton
 
     importButton:SetScript("OnClick", function(self)
-        -- SE O BOTÃO JÁ FOI CONVERTIDO EM RECARREGAR:
         if self.isReadyToReload then
             frame:Hide()
             ReloadUI()
@@ -98,20 +96,18 @@ end
 -- FUNÇÃO PÚBLICA PARA IMPORTAR
 -------------------------------------------------------------------------------
 function ImportModule:ShowImportWindow(databaseCallback)
-    -- Garante a criação ou reutilização do frame
+    
     local f = CreateImportWindow()
     f:Show()
     f.editBox:SetText("") 
     f.editBox:SetFocus()  
     
-    -- Reseta as propriedades guardadas no frame principal (f)
     f.importButton.isReadyToReload = false
     f.importButton:SetText(L["buttonSaveApply"])
     f.editBox:SetEnabled(true)
     
     f.callback = function(encodedText)
         local luaTable = nil
-        local err = "String de importação corrompida ou inválida."
 
         local success, result = pcall(function()
             local compressedData = LibDeflate:DecodeForPrint(encodedText)
@@ -143,7 +139,6 @@ function ImportModule:ShowImportWindow(databaseCallback)
             f.importButton:SetText(L["buttonReloadUI"])
         else
             print(L["importFail"])
-            print("Detalhe: " .. err)
             f:Hide()
         end
     end
