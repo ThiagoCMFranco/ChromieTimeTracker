@@ -239,3 +239,6 @@ L["GlobalImportFail"] = "|cffff0000[Erro]|r Não há um perfil global válido sa
 L["GlobalExportFail"] = "|cffff0000[Erro]|r Não foi possível salvar o perfil global."
 L["Dialog_SaveGlobalProfile_Message"] = "Desesja salvar o perfil atual como perfil global?"
 L["Dialog_LoadGlobalProfile_Message"] = "Desesja carregar o perfil global para este personagem?"
+L["EnhancementTabTooltip_Title"] =  "Caixa de Informações"
+L["EnhancementTabSummary_Title"] =  "Janela de Resumo"
+L["EnhancementTabJourneys_Title"] =  "Janelas de Jornadas"
