@@ -382,6 +382,29 @@ function GeneratorFunction(owner, rootDescription)
         rootDescription:CreateDivider()
     end
 
+    if (ChromieTimeTrackerDB.ContextMenuShowGreatVault or ChromieTimeTrackerDB.ContextMenuShowGreatVault == nil) then
+        rootDescription:CreateButton(L["GreatVault"], function(data)
+            PlaySound(808)
+
+            if not WeeklyRewardsFrame then
+                UIParentLoadAddOn("Blizzard_WeeklyRewards")
+                --MiniWeeklyRewardsActivityMixin:OnActivityClicked()
+            end
+
+            if WeeklyRewardsFrame then
+                if WeeklyRewardsFrame:IsShown() then
+                    WeeklyRewardsFrame:Hide()
+                else
+                    WeeklyRewardsFrame:Show()
+                end
+            end
+        end);
+
+        rootDescription:CreateDivider()
+
+    end
+
+
     rootDescription:CreateButton(L["Settings"], function(data)
     	PlaySound(808)
             ChromieTimeTracker:ToggleSettingsFrame()
@@ -2314,6 +2337,24 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
             emissaryMissionExpiringFrame:SetFrameLevel(9)
             emissaryMissionExpiringFrame:SetNormalTexture('questlog-questtypeicon-clockorange')
 
+            emissaryMissionWaitingFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionWaitingFrame_1:SetPoint('TOPLEFT', 60 * 1, -30)
+            emissaryMissionWaitingFrame_1:SetSize(50,50)
+            emissaryMissionWaitingFrame_1:SetFrameLevel(5)
+            emissaryMissionWaitingFrame_1:SetNormalTexture('worldquest-tracker-bg-noemissary')
+
+            emissaryMissionWaitingFrame_2 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionWaitingFrame_2:SetPoint('TOPLEFT', 60 * 2, -30)
+            emissaryMissionWaitingFrame_2:SetSize(50,50)
+            emissaryMissionWaitingFrame_2:SetFrameLevel(5)
+            emissaryMissionWaitingFrame_2:SetNormalTexture('worldquest-tracker-bg-noemissary')
+
+            emissaryMissionWaitingFrame_3 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
+            emissaryMissionWaitingFrame_3:SetPoint('TOPLEFT', 60 * 3, -30)
+            emissaryMissionWaitingFrame_3:SetSize(50,50)
+            emissaryMissionWaitingFrame_3:SetFrameLevel(5)
+            emissaryMissionWaitingFrame_3:SetNormalTexture('worldquest-tracker-bg-noemissary')
+
             emissaryMissionIconFrame_1 = CreateFrame('CheckButton', nil, garrisonUIEmissaryMissionsFrame, 'UIButtonTemplate')
             emissaryMissionIconFrame_1:SetPoint('TOPLEFT', 60 * 1, -30)
             emissaryMissionIconFrame_1:SetSize(50,50)
@@ -2613,8 +2654,21 @@ function drawGarrisonReportEmissaryMissionsWidget(_garrisonID)
                 _garTabHover:Hide()
             end
 
-        if(_garrisonID == 3 or _garrisonID == 9) then
-            if(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow == nil) then
+        if(_garrisonID == 3) then
+            if(ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow == nil) then
+                if bountyList ~= nil then
+                    garrisonUIEmissaryMissionsFrame:Show()
+                    garrisonUIEmissaryMissionsFrameDisabled:Hide()
+                else
+                    garrisonUIEmissaryMissionsFrame:Hide()
+                    garrisonUIEmissaryMissionsFrameDisabled:Show()
+                end
+            else
+                garrisonUIEmissaryMissionsFrame:Hide()
+                garrisonUIEmissaryMissionsFrameDisabled:Hide()
+            end
+        elseif(_garrisonID == 9) then
+            if(ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow or ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow == nil) then
                 if bountyList ~= nil then
                     garrisonUIEmissaryMissionsFrame:Show()
                     garrisonUIEmissaryMissionsFrameDisabled:Hide()

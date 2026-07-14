@@ -107,7 +107,7 @@
 				invasionsIconButton_1:GetHighlightTexture():SetAlpha(0.5)
 				invasionsIconButton_1:SetPoint('CENTER', 0,0)
 				invasionsIconButton_1:SetSize(58,58)
-				if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+				if ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow then
 					garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 200)
 				else
 					garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)

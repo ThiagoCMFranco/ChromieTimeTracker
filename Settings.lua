@@ -779,6 +779,29 @@ function CTT_LoadReportEnhancementSettings()
                     end
                 end)
             chkShowLegionInvasionsOnReportWindow:SetWidth(700)
+
+            local chkShowLegionEmissaryMissionsOnReportWindow = AceGUI:Create("CheckBox")
+            chkShowLegionEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
+            chkShowLegionEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow = chkShowLegionEmissaryMissionsOnReportWindow:GetValue()
+                if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+                local _garrisonId = GarrisonLandingPage.garrTypeID
+                if(_garrisonId == 3) then
+                        if ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow then
+                            if (garrisonUIEmissaryMissionsFrame) then
+                                garrisonUIEmissaryMissionsFrame:Show();
+                            end
+                        else
+                            if (garrisonUIEmissaryMissionsFrame) then
+                                garrisonUIEmissaryMissionsFrame:Hide();
+                            end
+                        end
+                            HideUIPanel(GarrisonLandingPage);
+                            ShowGarrisonLandingPage(_garrisonId)
+                        end
+                    end
+                end)
+            chkShowLegionEmissaryMissionsOnReportWindow:SetWidth(700)
             
             container:AddChild(LabelEnhancementsLegionTooltip_Title)
             container:AddChild(chkShowLegionInvasionTracker)
@@ -788,6 +811,7 @@ function CTT_LoadReportEnhancementSettings()
             container:AddChild(chkShowWorldBosses)
             container:AddChild(LabelEnhancementsLegionSummary_Title)
             container:AddChild(chkShowLegionInvasionsOnReportWindow)
+            container:AddChild(chkShowLegionEmissaryMissionsOnReportWindow)
 
             chkShowLegionInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionTracker)
             chkShowLegionArgusInvasionTracker:SetValue(ChromieTimeTrackerDB.ShowLegionArgusInvasionTracker)
@@ -795,6 +819,7 @@ function CTT_LoadReportEnhancementSettings()
             chkShowEmissaryMissionsRewards:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
             chkShowWorldBosses:SetValue(ChromieTimeTrackerDB.ShowWorldBosses)
             chkShowLegionInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow)
+            chkShowLegionEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowLegionEmissaryMissionsOnReportWindow)
 
         elseif group == "tabEnhGeneral" then
 
@@ -826,28 +851,6 @@ function CTT_LoadReportEnhancementSettings()
     SetACE3WidgetFontSize(LabelEnhancementsGeneralSummary_Title, 18)
     LabelEnhancementsGeneralSummary_Title:SetWidth(640)
 
-    local chkShowEmissaryMissionsOnReportWindow = AceGUI:Create("CheckBox")
-    chkShowEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
-    chkShowEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
-        ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = chkShowEmissaryMissionsOnReportWindow:GetValue()
-        if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
-        local _garrisonId = GarrisonLandingPage.garrTypeID
-        if(_garrisonId == 3 or _garrisonId == 9) then
-                if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
-                    if (garrisonUIEmissaryMissionsFrame) then
-                        garrisonUIEmissaryMissionsFrame:Show();
-                    end
-                else
-                    if (garrisonUIEmissaryMissionsFrame) then
-                        garrisonUIEmissaryMissionsFrame:Hide();
-                    end
-                end
-                    HideUIPanel(GarrisonLandingPage);
-                    ShowGarrisonLandingPage(_garrisonId)
-                end
-            end
-        end)
-    chkShowEmissaryMissionsOnReportWindow:SetWidth(700)
 
     local chkShowMissionExpirationTimeOnReportWindow = AceGUI:Create("CheckBox")
     chkShowMissionExpirationTimeOnReportWindow:SetLabel(L["chkShowMissionExpirationTimeOnReportWindow"])
@@ -886,13 +889,11 @@ function CTT_LoadReportEnhancementSettings()
     container:AddChild(chkShowCurrencyOnReportWindow)
     container:AddChild(chkShowReportTabsOnReportWindow)
     container:AddChild(chkShowMissionExpirationTimeOnReportWindow)
-    container:AddChild(chkShowEmissaryMissionsOnReportWindow)        
 
     chkShowReportTabsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
     chkShowMissionExpirationTimeOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow)
     chkShowCurrencyOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnReportWindow)
     chkShowCurrencyOnTooltips:SetValue(ChromieTimeTrackerDB.ShowCurrencyOnTooltips)
-    chkShowEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow)
 
         elseif group == "tabEnhBattleForAzeroth" then
 
@@ -954,12 +955,37 @@ function CTT_LoadReportEnhancementSettings()
                 end)
             chkShowNzothInvasionsOnReportWindow:SetWidth(700)
 
+            local chkShowBfAEmissaryMissionsOnReportWindow = AceGUI:Create("CheckBox")
+            chkShowBfAEmissaryMissionsOnReportWindow:SetLabel(L["chkShowEmissaryMissionsOnReportWindow"])
+            chkShowBfAEmissaryMissionsOnReportWindow:SetCallback("OnValueChanged", function(widget, event, text) 
+                ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow = chkShowBfAEmissaryMissionsOnReportWindow:GetValue()
+                if (GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
+                local _garrisonId = GarrisonLandingPage.garrTypeID
+                if(_garrisonId == 9) then
+                        if ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow then
+                            if (garrisonUIEmissaryMissionsFrame) then
+                                garrisonUIEmissaryMissionsFrame:Show();
+                            end
+                        else
+                            if (garrisonUIEmissaryMissionsFrame) then
+                                garrisonUIEmissaryMissionsFrame:Hide();
+                            end
+                        end
+                            HideUIPanel(GarrisonLandingPage);
+                            ShowGarrisonLandingPage(_garrisonId)
+                        end
+                    end
+                end)
+            chkShowBfAEmissaryMissionsOnReportWindow:SetWidth(700)
+
             container:AddChild(LabelEnhancementsBfASummary_Title)
             container:AddChild(chkShowBattleForAzerothInvasionsOnReportWindow)
             container:AddChild(chkShowNzothInvasionsOnReportWindow)
+            container:AddChild(chkShowBfAEmissaryMissionsOnReportWindow)
 
             chkShowBattleForAzerothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowBattleForAzerothInvasionsOnReportWindow)
             chkShowNzothInvasionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowNzothInvasionsOnReportWindow)
+            chkShowBfAEmissaryMissionsOnReportWindow:SetValue(ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow)
 
         elseif group == "tabEnhShadowlands" then
 
@@ -1454,6 +1480,14 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     end)
     chkShowPinExperienceLock:SetWidth(700)
     scrollFrameContewxtMenu:AddChild(chkShowPinExperienceLock)
+
+    local chkShowGreatVault = AceGUI:Create("CheckBox")
+    chkShowGreatVault:SetLabel(L["ContextMenu_ShowGreatVault"])
+    chkShowGreatVault:SetCallback("OnValueChanged", function(widget, event, text) 
+        ChromieTimeTrackerDB.ContextMenuShowGreatVault = chkShowGreatVault:GetValue()
+    end)
+    chkShowGreatVault:SetWidth(700)
+    scrollFrameContewxtMenu:AddChild(chkShowGreatVault)
     
 
     chkContextMenuShowGarrison:SetValue(ChromieTimeTrackerDB.ContextMenuShowGarrison)
@@ -1467,6 +1501,8 @@ scrollFrameContewxtMenu:AddChild(lblSelectContextMenuOptions)
     chkShowPinChromie:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinChromie)
     chkShowPinExperienceLock:SetValue(ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock)
     ddlTrackerAddon:SetValue(ChromieTimeTrackerDB.DefaultTrackerAddon)
+    chkShowGreatVault:SetValue(ChromieTimeTrackerDB.ContextMenuShowGreatVault)
+    
 end
 ---
 
