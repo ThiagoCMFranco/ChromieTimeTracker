@@ -155,7 +155,7 @@
 	        isGarrisonUIFirstLoad_InvasionWidget = false
 			garrisonUIInvasionsFrame = CreateFrame("Frame", "ChromieTimeTrackerGarrisonUIInvasionsFrame", GarrisonLandingPageReport, "")
 			garrisonUIInvasionsFrame:ClearAllPoints()
-			if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+			if ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow then
 				garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 200)
 			else
 				garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
@@ -189,7 +189,7 @@
 						invasionsIconButton_1:SetHighlightTexture(bfainvasion[5])
 						invasionsIconButton_1:GetHighlightTexture():SetAlpha(0.5)
 						invasionsIconButton_1:SetSize(58,58)
-						if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+						if ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow then
 							garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 200)
 						else
 							garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
@@ -253,7 +253,7 @@
 								end
 								invasionsIconButton_2:SetHighlightTexture(nzothinvasion[i][4])
 								invasionsIconButton_2:GetHighlightTexture():SetAlpha(0.5)
-								if ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow then
+								if ChromieTimeTrackerDB.ShowBfAEmissaryMissionsOnReportWindow then
 									garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 200)
 								else
 									garrisonUIInvasionsFrame:SetPoint("TOPLEFT", GarrisonLandingPageReport, "BOTTOMLEFT", 40, 120)
