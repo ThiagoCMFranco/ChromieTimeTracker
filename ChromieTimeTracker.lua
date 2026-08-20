@@ -387,8 +387,7 @@ function GeneratorFunction(owner, rootDescription)
             PlaySound(808)
 
             if not WeeklyRewardsFrame then
-                UIParentLoadAddOn("Blizzard_WeeklyRewards")
-                --MiniWeeklyRewardsActivityMixin:OnActivityClicked()
+                C_AddOns.LoadAddOn("Blizzard_WeeklyRewards")
             end
 
             if WeeklyRewardsFrame then
