@@ -194,3 +194,45 @@
 		return ArgusIvasionTable
 
 	end
+
+	GetBrokenShoreBuildingsStatus = function()
+
+	local BrokenShoreBuildingsTable = {}
+
+    if not C_ContributionCollector then 
+        --print("Erro: C_ContributionCollector não está disponível neste cliente.")
+        return BrokenShoreBuildingsTable
+    end
+
+    --print("--- Rastreando Prédios da Costa Partida ---")
+    
+    -- IDs fixos da Costa Partida: 1 = Torre dos Magos, 2 = Centro de Comando, 3 = Disruptor
+    for id = 1, 4 do
+        local name = C_ContributionCollector.GetName(id)
+        
+        -- A função GetState nativa retorna: Estado e Porcentagem
+        local state, percent = C_ContributionCollector.GetState(id)
+
+        -- Traduzindo o estado numérico para texto explicativo
+        local stateText = "Desconhecido"
+        if state == 1 then stateText = "Sob Construção (Doação)"
+        elseif state == 2 then stateText = "Ativo / Construído"
+        elseif state == 3 then stateText = "Sob Ataque"
+        elseif state == 4 then stateText = "Destruído (Recarregando)"
+        end
+
+        -- Se a porcentagem vier nula, definimos como 0
+        percent = percent or 0
+
+		if(name ~= nil and name ~= "")then
+        	--print(string.format("[%d] %s -> Estado: %s (%d) | Progresso: %.2f%%", id, name, stateText, state or 0, percent*100))
+			local item = {id, name, C_Map.GetMapInfo(646).name, state, stateText, percent*100, "LegionfallMapBanner"}
+			table.insert(BrokenShoreBuildingsTable, item)
+		end
+    end
+
+	return BrokenShoreBuildingsTable
+end
+
+-- Executa a função
+--C_Timer.After(2, GetBrokenShoreBuildingsStatus)
