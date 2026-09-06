@@ -59,3 +59,6 @@ Modules\LegionInvasion.lua
 Modules\BattleForAzerothInvasions.lua
 Modules\ConvenantInvasions.lua
 Utils\RingMenu.lua
+
+Modules\JourneysExtendedDetails.lua
+Modules\GarrisonExtendedDetails.lua

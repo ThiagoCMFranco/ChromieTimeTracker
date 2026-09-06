@@ -2066,6 +2066,226 @@ E:SetScript('OnEvent', function(self, event, addon)
 end)
 
 
+--Add garrison and expansions buttons to Extended Details Frame - Início
+
+-- Inicialização das tabelas globais do Addon
+extendedDetailsTabs = extendedDetailsTabs or {}
+extendedDetailsTabsHover = extendedDetailsTabsHover or {}
+
+ejDetailsTabs = ejDetailsTabs or {}
+ejDetailsTabsHover = ejDetailsTabsHover or {}
+
+local E = CreateFrame('Frame')
+E:RegisterEvent('ADDON_LOADED')
+E:SetScript('OnEvent', function(self, event, addon)
+
+    C_Timer.After(5, function()
+
+        local l_Covenant = "Not_Selected"
+        local _CovData = getCovenantData() or {}
+
+        local garrisonData = {
+            {"MoPReport", EXPANSION_NAME4, C_PandariaTabTextures[PlayerInfo["Faction"]]},
+            {2, GARRISON_LANDING_PAGE_TITLE, C_GarrisonTabTextures[PlayerInfo["Faction"]]},
+            {3, ORDER_HALL_LANDING_PAGE_TITLE, C_ClassTabTextures[PlayerInfo["Class"]]},
+            {9, GARRISON_TYPE_8_0_LANDING_PAGE_TITLE, C_WarCampaignTabTextures[PlayerInfo["Faction"]]},
+            {111, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, C_CovenantChoicesTabTextures[_CovData[1]]},
+            {"DF", DRAGONFLIGHT_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["DragonIsles"]},
+            {"TWW", WAR_WITHIN_LANDING_PAGE_TITLE, C_LandingPagesTabTextures["KhazAlgar"]},
+            {"MN", EXPANSION_NAME11, C_LandingPagesTabTextures["Midnight"]},
+        }
+
+        if (EncounterJournal == nil) then
+            EncounterJournal_LoadUI()
+        end
+        
+        local MoPReportLoaded = checkAddonLoaded("MoPReport", "MoPReport")
+        local MoPReportHasIntegrationSuport = (MoPReportIntegration and MoPReportIntegration.MoPReport_hasIntegrationSuport)
+        
+        if not MoPReportLoaded or not ChromieTimeTrackerDB.IntegrationMoPReport or not MoPReportHasIntegrationSuport then
+            for i = #garrisonData, 1, -1 do
+                if garrisonData[i][1] == "MoPReport" then
+                    table.remove(garrisonData, i)
+                    break
+                end
+            end
+        end
+        
+        -- Limpa tabelas para evitar duplicação em reloads
+        extendedDetailsTabs = {}
+        extendedDetailsTabsHover = {}
+        ejDetailsTabs = {}
+        ejDetailsTabsHover = {}
+
+        -- ============================================================================
+        -- FLUXO 1: CRIANDO AS ABAS DO GARRISON
+        -- ============================================================================
+        for _, _garrisonTab in ipairs(garrisonData) do
+            local garrisonTabFrame = CreateFrame('CheckButton', nil, GarrisonDetailsFrame, 'UIButtonTemplate')
+            garrisonTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#extendedDetailsTabs + 1) - 20))
+            garrisonTabFrame:SetSize(30, 30)
+            garrisonTabFrame:SetNormalTexture(_garrisonTab[3])
+            garrisonTabFrame:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrame.tabIndex = #extendedDetailsTabs + 1
+            garrisonTabFrame.pageID = _garrisonTab[1]
+            garrisonTabFrame.tooltip = _garrisonTab[2]
+        
+            local garrisonTabFrameHover = CreateFrame('CheckButton', garrisonTabFrame, GarrisonDetailsFrame, '')
+            garrisonTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#extendedDetailsTabs + 1) - 20))
+            garrisonTabFrameHover:SetSize(30, 30)
+            garrisonTabFrameHover:SetNormalTexture('bags-glow-artifact')
+            garrisonTabFrameHover:SetScript('OnClick', SelectGarrison)
+            garrisonTabFrameHover:SetFrameLevel(12)
+            garrisonTabFrameHover.pageID = _garrisonTab[1]
+            garrisonTabFrameHover.tooltip = _garrisonTab[2]
+            
+            table.insert(extendedDetailsTabs, garrisonTabFrame)
+            table.insert(extendedDetailsTabsHover, garrisonTabFrameHover)
+        end
+
+        -- ============================================================================
+        -- FLUXO 2: CRIANDO AS ABAS DO ENCOUNTER JOURNAL
+        -- ============================================================================
+        for _, _garrisonTab in ipairs(garrisonData) do
+            local ejTabFrame = CreateFrame('CheckButton', nil, EJDetailsFrame, 'UIButtonTemplate')
+            ejTabFrame:SetPoint('TOPRIGHT', 38, -(40 * (#ejDetailsTabs + 1) - 20))
+            ejTabFrame:SetSize(30, 30)
+            ejTabFrame:SetNormalTexture(_garrisonTab[3])
+            ejTabFrame:SetScript('OnClick', SelectGarrison) -- Altere a função de clique se o EJ tiver uma própria
+            ejTabFrame.tabIndex = #ejDetailsTabs + 1
+            ejTabFrame.pageID = _garrisonTab[1]
+            ejTabFrame.tooltip = _garrisonTab[2]
+        
+            local ejTabFrameHover = CreateFrame('CheckButton', ejTabFrame, EJDetailsFrame, '')
+            ejTabFrameHover:SetPoint('TOPRIGHT', 38, -(40 * (#ejDetailsTabs + 1) - 20))
+            ejTabFrameHover:SetSize(30, 30)
+            ejTabFrameHover:SetNormalTexture('bags-glow-artifact')
+            ejTabFrameHover:SetScript('OnClick', SelectGarrison)
+            ejTabFrameHover:SetFrameLevel(12)
+            ejTabFrameHover.pageID = _garrisonTab[1]
+            ejTabFrameHover.tooltip = _garrisonTab[2]
+            
+            table.insert(ejDetailsTabs, ejTabFrame)
+            table.insert(ejDetailsTabsHover, ejTabFrameHover)
+        end
+        
+        -- ============================================================================
+        -- CONFIGURAÇÃO DOS EVENTOS DE HOVER (GARRISON)
+        -- ============================================================================
+        for _, _garTab in pairs(extendedDetailsTabs) do
+            _garTab:SetScript("OnEnter", function(self)
+                if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow and extendedDetailsTabsHover[_garTab.tabIndex] then
+                    extendedDetailsTabsHover[_garTab.tabIndex]:Show()
+                end
+            end)
+            _garTab:SetShown(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
+        end
+
+        for _, _garTabHover in pairs(extendedDetailsTabsHover) do
+            _garTabHover:SetScript("OnEnter", function(self)
+                if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                    CTT_ShowIconTooltip(GameTooltip, _garTabHover.tooltip)
+                    GameTooltip:Show()
+                end
+            end)
+            _garTabHover:SetScript("OnLeave", function(self)
+                GameTooltip:Hide()
+                _garTabHover:Hide()
+            end)
+            _garTabHover:Hide()
+        end
+
+        -- ============================================================================
+        -- CONFIGURAÇÃO DOS EVENTOS DE HOVER (ENCOUNTER JOURNAL)
+        -- ============================================================================
+        for _, _ejTab in pairs(ejDetailsTabs) do
+            _ejTab:SetScript("OnEnter", function(self)
+                if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow and ejDetailsTabsHover[_ejTab.tabIndex] then
+                    ejDetailsTabsHover[_ejTab.tabIndex]:Show()
+                end
+            end)
+            _ejTab:SetShown(ChromieTimeTrackerDB.ShowReportTabsOnReportWindow)
+        end
+
+        for _, _ejTabHover in pairs(ejDetailsTabsHover) do
+            _ejTabHover:SetScript("OnEnter", function(self)
+                if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+                    CTT_ShowIconTooltip(GameTooltip, _ejTabHover.tooltip)
+                    GameTooltip:Show()
+                end
+            end)
+            _ejTabHover:SetScript("OnLeave", function(self)
+                GameTooltip:Hide()
+                _ejTabHover:Hide()
+            end)
+            _ejTabHover:Hide()
+        end
+
+    end)
+
+    self:UnregisterEvent(event)
+end)
+
+-- Função para alternar a visibilidade das abas dos outros contextos
+local function ToggleOtherContextTabs(show)
+    -- Lista com as tabelas de abas para ocultar/exibir
+    local tabLists = { 
+        garrisonTabs, 
+        garrisonTabsHover, 
+        expansionTabs, 
+        expansionTabsHover 
+    }
+
+    for _, list in ipairs(tabLists) do
+        if list then
+            for _, button in pairs(list) do
+                if button and button.Hide and button.Show then
+                    if show then
+                        -- Só reexibe se a configuração global permitir
+                        if ChromieTimeTrackerDB.ShowReportTabsOnReportWindow then
+                            if list == garrisonTabs or list == expansionTabs then
+                                button:Show()
+                            end
+                        end
+                    else
+                        button:Hide()
+                    end
+                end
+            end
+        end
+    end
+end
+
+manageExpansionIconsVisibility = function ()
+    -- Aplica ao frame do Garrison
+    if GarrisonDetailsFrame then
+        GarrisonDetailsFrame:HookScript("OnShow", function()
+            ToggleOtherContextTabs(false) -- Oculta as outras abas
+        end)
+
+        GarrisonDetailsFrame:HookScript("OnHide", function()
+            ToggleOtherContextTabs(true) -- Reexibe as outras abas
+        end)
+    end
+
+    -- Aplica ao frame do Encounter Journal
+    if EJDetailsFrame then
+        EJDetailsFrame:HookScript("OnShow", function()
+            ToggleOtherContextTabs(false) -- Oculta as outras abas
+        end)
+
+        EJDetailsFrame:HookScript("OnHide", function()
+            ToggleOtherContextTabs(true) -- Reexibe as outras abas
+        end)
+    end
+end
+
+C_Timer.After(1, manageExpansionIconsVisibility)
+
+
+
 integratedAddonsTabs = {}
 integratedAddonsTabsHover = {}
 
