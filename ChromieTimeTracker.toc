@@ -39,6 +39,10 @@ localization\enUS.lua
 localization\ptBR.lua
 localization\ruRU.lua
 
+# Game Localization
+localization\GameLocalization\Midnight\QuestsDatabase-enUS.lua
+localization\GameLocalization\Midnight\QuestsDatabase-ptBR.lua
+
 # Internal Databases
 Data\QuestsDatabase.lua
 
