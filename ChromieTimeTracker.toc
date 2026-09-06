@@ -62,3 +62,5 @@ Modules\LegionInvasion.lua
 Modules\BattleForAzerothInvasions.lua
 Modules\ConvenantInvasions.lua
 Utils\RingMenu.lua
+
+Modules\ProgressionMonitor.lua
