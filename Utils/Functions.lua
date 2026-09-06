@@ -610,3 +610,15 @@ ToggleEncounterJournal()
 ToggleEncounterJournal()
 
 end
+
+function IsQuestInProgress(questID)
+    -- Percorre o quest log do jogador e verifica se a missão está ativa
+    for i = 1, C_QuestLog.GetNumQuestLogEntries() do
+        local info = C_QuestLog.GetInfo(i)
+        if info and info.questID == questID then
+            return true
+        end
+    end
+    
+    return false
+end

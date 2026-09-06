@@ -403,6 +403,13 @@ function GeneratorFunction(owner, rootDescription)
 
     end
 
+    rootDescription:CreateButton("Guia de Campanha", function(data)
+    	PlaySound(808)
+        ProgressMonitor:CampaignGuide()
+	end);
+
+    rootDescription:CreateDivider()
+
 
     rootDescription:CreateButton(L["Settings"], function(data)
     	PlaySound(808)

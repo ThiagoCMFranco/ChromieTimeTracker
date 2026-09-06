@@ -39,6 +39,9 @@ localization\enUS.lua
 localization\ptBR.lua
 localization\ruRU.lua
 
+# Internal Databases
+Data\QuestsDatabase.lua
+
 # Utilities
 Utils\3rdPartyFix.lua
 Utils\Data.lua
