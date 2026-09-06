@@ -35,12 +35,12 @@ function Profile:SaveToGlobalProfile(databaseTable, variableToSave)
 end
 
 
-function Profile:LoadFromGlobalProfile(databaseCallback, variableToLoad, silent)
+function Profile:LoadFromProfile(databaseCallback, variableToLoad, profile, silent)
 
         local luaTable = nil
 
         local success, result = pcall(function()
-            local compressedData = LibDeflate:DecodeForPrint(variableToLoad.GlobalProfile)
+            local compressedData = LibDeflate:DecodeForPrint(variableToLoad)
             if not compressedData then return nil end
 
             local serializedData = LibDeflate:DecompressDeflate(compressedData)
@@ -63,7 +63,9 @@ function Profile:LoadFromGlobalProfile(databaseCallback, variableToLoad, silent)
             
             -- Feedback Visual de Sucesso
             if((ChromieTimeTrackerDB.WelcomeMessageVisibility == nil) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 1) or (ChromieTimeTrackerDB.WelcomeMessageVisibility == 2 and currentExpansionName ~= L['currentExpansionLabel'])) then
-                print(L["AddonName"] .. " - " .. L["GlobalImportSuccess"])
+                if (profile == "GLOBAL") then
+                    print(L["AddonName"] .. " - " .. L["GlobalImportSuccess"])    
+                end
             end
             if not silent then
                 ChromieTimeTrackerUtil:ExtendedFlashMessage(L["GlobalImportSuccess"], 5, 1.5, 2, 39516)

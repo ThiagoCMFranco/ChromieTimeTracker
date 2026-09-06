@@ -587,9 +587,9 @@ function CTT_LoadProfileSettings()
     button1 = L["Dialog_Yes"],
     button2 = L["Dialog_No"],
     OnAccept = function()
-        Profile:LoadFromGlobalProfile(function(novaTabela)
+        Profile:LoadFromProfile(function(novaTabela)
             ChromieTimeTrackerDB = novaTabela 
-        end, ChromieTimeTrackerSharedDB, false)
+        end, ChromieTimeTrackerSharedDB.GlobalProfile, "GLOBAL", false)
         CTT_updateChromieTime()
     end,
     timeout = 0,
@@ -1754,70 +1754,86 @@ StaticPopupDialogs["POPUP_DIALOG_CONFIRM_RESET_SETTINGS"] = {
     OnAccept = function()
         --Set default values for all settings
 
-        --General
-        ChromieTimeTrackerDB.Mode = 2;
-        ChromieTimeTrackerDB.MainWindowVisibility = 1;
-        ChromieTimeTrackerDB.WelcomeMessageVisibility = 1;
-        ChromieTimeTrackerDB.ToastVisibility = 1;
-        ChromieTimeTrackerDB.LockDragDrop = false;
-        ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
-        ChromieTimeTrackerDB.LockMiddleClickOption = false;
-        ChromieTimeTrackerDB.HideMinimapIcon = false;
-        ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
-        ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
+        --Backup do posicionamento
+        BasePoint = ChromieTimeTrackerDB.BasePoint;
+        RelativePoint = ChromieTimeTrackerDB.RelativePoint;
+        OffsetX = ChromieTimeTrackerDB.OffsetX;
+        OffsetY = ChromieTimeTrackerDB.OffsetY;
 
-        --Set initial values for Context Menu settings
-        ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
-        ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
-        ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
-        ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
-        ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
-        ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
-        ChromieTimeTrackerDB.ContextMenuShowMidnight = true;
-        ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
+        Profile:LoadFromProfile(function(novaTabela)
+            ChromieTimeTrackerDB = novaTabela 
 
-        ChromieTimeTrackerDB.DefaultTrackerAddon = 1;
-        ChromieTimeTrackerDB.ContextMenuShowPinChromie = true;
-        ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock = true;
+            --Restaura as coordenadas do backup
+            ChromieTimeTrackerDB.BasePoint = BasePoint
+            ChromieTimeTrackerDB.RelativePoint = RelativePoint
+            ChromieTimeTrackerDB.OffsetX = OffsetX
+            ChromieTimeTrackerDB.OffsetY = OffsetY
+        end, C_DefaultConfigString, "DEFAULT", false)        
 
-        --Set initial values for Avanced Mode settings
-        ChromieTimeTrackerDB.AdvButtonsPosition = 2;
-        ChromieTimeTrackerDB.AdvButtonsAlignment = 2;
-        ChromieTimeTrackerDB.AdvShowGarrison = true;
-        ChromieTimeTrackerDB.AdvShowClassHall = true;
-        ChromieTimeTrackerDB.AdvShowWarEffort = true;
-        ChromieTimeTrackerDB.AdvShowCovenant = true;
-        ChromieTimeTrackerDB.AdvShowDragonIsles = true;
-        ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
-        ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
-        ChromieTimeTrackerDB.AdvHideTimelineBox = false;
-
-        --Alternate Mode
-        ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
-
-        --Set initial values for Enhancement settings
-        ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
-        ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
-        ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
-        ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
-        ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
-        ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow = true;
-
-        --Experience Alerts
-        ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 75;
-        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = false;
-        ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = false;
-
-        ChromieTimeTrackerDB.ShowExperienceAlertFlash = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 75;
-        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = false;
-        ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = false;
-
-        ChromieTimeTrackerDB.ShowExperienceAlertChat = false;
-        ChromieTimeTrackerDB.ExperienceAlertLevelChat = 75;
-        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = false;
-        ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = false;
+        ----General
+        --ChromieTimeTrackerDB.Mode = 2;
+        --ChromieTimeTrackerDB.MainWindowVisibility = 1;
+        --ChromieTimeTrackerDB.WelcomeMessageVisibility = 1;
+        --ChromieTimeTrackerDB.ToastVisibility = 1;
+        --ChromieTimeTrackerDB.LockDragDrop = false;
+        --ChromieTimeTrackerDB.DefaultMiddleClickOption = "";
+        --ChromieTimeTrackerDB.LockMiddleClickOption = false;
+        --ChromieTimeTrackerDB.HideMinimapIcon = false;
+        --ChromieTimeTrackerDB.HideWelcomeWindowInFutureVersionChanges = false;
+        --ChromieTimeTrackerDB.HideDeveloperCreditOnTooltips = false;
+--
+        ----Set initial values for Context Menu settings
+        --ChromieTimeTrackerDB.ContextMenuShowGarrison = true;
+        --ChromieTimeTrackerDB.ContextMenuShowClassHall = true;
+        --ChromieTimeTrackerDB.ContextMenuShowWarEffort = true;
+        --ChromieTimeTrackerDB.ContextMenuShowCovenant = true;
+        --ChromieTimeTrackerDB.ContextMenuShowDragonIsles = true;
+        --ChromieTimeTrackerDB.ContextMenuShowKhazAlgar = true;
+        --ChromieTimeTrackerDB.ContextMenuShowMidnight = true;
+        --ChromieTimeTrackerDB.ContextMenuShowUnlockedOnly = false;
+--
+        --ChromieTimeTrackerDB.DefaultTrackerAddon = 1;
+        --ChromieTimeTrackerDB.ContextMenuShowPinChromie = true;
+        --ChromieTimeTrackerDB.ContextMenuShowPinExperienceLock = true;
+--
+        ----Set initial values for Avanced Mode settings
+        --ChromieTimeTrackerDB.AdvButtonsPosition = 2;
+        --ChromieTimeTrackerDB.AdvButtonsAlignment = 2;
+        --ChromieTimeTrackerDB.AdvShowGarrison = true;
+        --ChromieTimeTrackerDB.AdvShowClassHall = true;
+        --ChromieTimeTrackerDB.AdvShowWarEffort = true;
+        --ChromieTimeTrackerDB.AdvShowCovenant = true;
+        --ChromieTimeTrackerDB.AdvShowDragonIsles = true;
+        --ChromieTimeTrackerDB.AdvShowKhazAlgar = true;
+        --ChromieTimeTrackerDB.AdvShowUnlockedOnly = false;
+        --ChromieTimeTrackerDB.AdvHideTimelineBox = false;
+--
+        ----Alternate Mode
+        --ChromieTimeTrackerDB.AlternateModeShowIconOnly = false;
+--
+        ----Set initial values for Enhancement settings
+        --ChromieTimeTrackerDB.ShowCurrencyOnReportWindow = true;
+        --ChromieTimeTrackerDB.ShowCurrencyOnTooltips = true;
+        --ChromieTimeTrackerDB.ShowReportTabsOnReportWindow = true;
+        --ChromieTimeTrackerDB.ShowMissionExpirationTimeOnReportWindow = true;
+        --ChromieTimeTrackerDB.ShowEmissaryMissionsOnReportWindow = true;
+        --ChromieTimeTrackerDB.ShowLegionInvasionsOnReportWindow = true;
+--
+        ----Experience Alerts
+        --ChromieTimeTrackerDB.ShowExperienceAlertPopup = false;
+        --ChromieTimeTrackerDB.ExperienceAlertLevelPopup = 75;
+        --ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLogin = false;
+        --ChromieTimeTrackerDB.ShowExperienceAlertPopupOnLevelUp = false;
+--
+        --ChromieTimeTrackerDB.ShowExperienceAlertFlash = false;
+        --ChromieTimeTrackerDB.ExperienceAlertLevelFlash = 75;
+        --ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLogin = false;
+        --ChromieTimeTrackerDB.ShowExperienceAlertFlashOnLevelUp = false;
+--
+        --ChromieTimeTrackerDB.ShowExperienceAlertChat = false;
+        --ChromieTimeTrackerDB.ExperienceAlertLevelChat = 75;
+        --ChromieTimeTrackerDB.ShowExperienceAlertChatOnLogin = false;
+        --ChromieTimeTrackerDB.ShowExperienceAlertChatOnLevelUp = false;
 
         CTT_updateChromieTime()
         CTT_showMainFrame()
