@@ -250,6 +250,13 @@ C_SpecialTrackPinCoordinates =
             y = 0.4440
         },
 	name = ""
+    },
+    ["Soridormi_Silvermoon"] = {uiMapID = 2393,
+        position = {
+            x = 0.5568,
+            y = 0.6981
+        },
+	name = ""
     }
 }
 

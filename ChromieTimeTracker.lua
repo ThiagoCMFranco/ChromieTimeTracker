@@ -378,6 +378,14 @@ function GeneratorFunction(owner, rootDescription)
         hideSeparator = false
     end
 
+    if (ChromieTimeTrackerDB.ContextMenuShowPinSkipMidnightCampaign or ChromieTimeTrackerDB.ContextMenuShowPinSkipMidnightCampaign == nil) then
+        rootDescription:CreateButton(L["ContextMenuPinsSoridormiSilvermoon"], function(data)
+	    C_SpecialTrackPinCoordinates["Soridormi_Silvermoon"].name = L["ContextMenuPinsSoridormiSilvermoon"]
+	    CTT_addPin(C_SpecialTrackPinCoordinates["Soridormi_Silvermoon"], ChromieTimeTrackerDB.DefaultTrackerAddon)
+        end);
+        hideSeparator = false
+    end
+
     if not hideSeparator then
         rootDescription:CreateDivider()
     end
