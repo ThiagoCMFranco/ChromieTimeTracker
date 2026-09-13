@@ -146,7 +146,7 @@ function CTT_addPin(pin, scope)
     elseif(scope == 3 and MapPinEnhancedLoaded) then --"MapPinEnhanced"
     	local zone = C_Map.GetMapInfo(pin.uiMapID)
     	local MPEPIN = SlashCmdList["MapPinEnhanced"]
-            MPEPIN(zone.name .. " " .. 100 * pin.position.x .. " " .. 100 * pin.position.y .. " " .. pin.name)
+            MPEPIN("#" .. zone.mapID .. " " .. 100 * pin.position.x .. " " .. 100 * pin.position.y .. " " .. pin.name)
     else -- 1 or nil -> "Blizzard"
     	C_Map.SetUserWaypoint(pin);
     	C_SuperTrack.SetSuperTrackedUserWaypoint(true)
