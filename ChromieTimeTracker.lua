@@ -1590,6 +1590,20 @@ function CTT_ShowToolTip(tooltip, mode)
                 end
             end
 
+            if (ChromieTimeTrackerDB.ShowLegionBrokenShoreBuildingsStatus) then
+                local LegionArgusInvasionLine = LegionBrokenShoreBuildingsStatusTooltipLine(true)
+                local showBuildingsProgressHeader= true
+
+                if(LegionArgusInvasionLine ~= "") then
+                    if (showBuildingsProgressHeader) then
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["BrokenShore_BuildingStatus_Header"]
+                    else
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
+                    end
+                    _LegionRemixExtraData = _LegionRemixExtraData .. LegionArgusInvasionLine
+                end
+            end
+
             if (ChromieTimeTrackerDB.ShowLegionEmissaryMissions) then
                 _LegionRemixExtraData = _LegionRemixExtraData .. "\n" .. listEmissaryMissions(ChromieTimeTrackerDB.ShowEmissaryMissionsRewards)
             end
@@ -1675,6 +1689,20 @@ function CTT_ShowToolTip(tooltip, mode)
                 if(LegionArgusInvasionLine ~= "") then
                     if (showInvasionHeader) then
                         _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["Legion_Invasion_Header"]
+                    else
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
+                    end
+                    _LegionRemixExtraData = _LegionRemixExtraData .. LegionArgusInvasionLine
+                end
+            end
+
+            if (ChromieTimeTrackerDB.ShowLegionBrokenShoreBuildingsStatus) then
+                local LegionArgusInvasionLine = LegionBrokenShoreBuildingsStatusTooltipLine(true)
+                local showBuildingsProgressHeader= true
+
+                if(LegionArgusInvasionLine ~= "") then
+                    if (showBuildingsProgressHeader) then
+                        _LegionRemixExtraData = _LegionRemixExtraData .. "\n\n" .. L["BrokenShore_BuildingStatus_Header"]
                     else
                         _LegionRemixExtraData = _LegionRemixExtraData .. "\n"
                     end
